@@ -1,7 +1,7 @@
 {
   "name": "intermodular",
   "label": "Intermodular",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Easy file operations between node.js modules and auto logging to help building zero-config boilerplates, postinstall and other scripts.",
   "keywords": [
     "zero configuration",
