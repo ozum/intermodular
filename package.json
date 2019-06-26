@@ -111,6 +111,6 @@
     "typedoc-plugin-npm-externals": "^1.0.0",
     "typescript": "^3.5.2",
     "vuepress": "^1.0.1",
-    "vuepress-bar": "^0.1.0"
+    "vuepress-bar": "^0.1.1"
   }
 }
