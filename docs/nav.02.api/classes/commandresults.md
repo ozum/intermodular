@@ -18,7 +18,7 @@ Class to access status and error objects of executed CLI commands.
 
 ● **exit**: *boolean* = true
 
-*Defined in [command-results.ts:18](https://github.com/ozum/intermodular/blob/8cb9a40/src/command-results.ts#L18)*
+*Defined in [command-results.ts:18](https://github.com/ozum/intermodular/blob/42b5788/src/command-results.ts#L18)*
 
 Whether to exit from command.
 
@@ -28,7 +28,7 @@ ___
 
 ● **results**: *`ExecaSyncReturnValue`[]* =  []
 
-*Defined in [command-results.ts:13](https://github.com/ozum/intermodular/blob/8cb9a40/src/command-results.ts#L13)*
+*Defined in [command-results.ts:13](https://github.com/ozum/intermodular/blob/42b5788/src/command-results.ts#L13)*
 
 Results of the executed commands. May be used to access `status` and `error`.
 
@@ -40,7 +40,7 @@ ___
 
 ● **get status**(): *number | null*
 
-*Defined in [command-results.ts:41](https://github.com/ozum/intermodular/blob/8cb9a40/src/command-results.ts#L41)*
+*Defined in [command-results.ts:41](https://github.com/ozum/intermodular/blob/42b5788/src/command-results.ts#L41)*
 
 Overall status of the commands. If multiple commands are executed, contains first non-zero exit status code.
 If all commands are completed without error, this is `0`.
@@ -55,7 +55,7 @@ ___
 
 ▸ **add**(`execaReturns`: `ExecaSyncReturnValue` | `ExecaSyncError`): *void*
 
-*Defined in [command-results.ts:26](https://github.com/ozum/intermodular/blob/8cb9a40/src/command-results.ts#L26)*
+*Defined in [command-results.ts:26](https://github.com/ozum/intermodular/blob/42b5788/src/command-results.ts#L26)*
 
 Add `result` to the command results.
 

@@ -10,7 +10,7 @@ sidebar_label: Globals
 
 Ƭ **Command**: *string | [string, string[]]*
 
-*Defined in [types/index.ts:60](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L60)*
+*Defined in [types/index.ts:60](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L60)*
 
 Type for providing CLI command. It may either
 - a string to store executable name without arguments.
@@ -28,7 +28,7 @@ ___
 
 Ƭ **ExecaCommandSync**: *[Command](README.md#command) | [string, string[], `SyncOptions`] | [string, string[], `SyncOptions<null>`] | [string, `SyncOptions`] | [string, `SyncOptions<null>`]*
 
-*Defined in [types/index.ts:44](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L44)*
+*Defined in [types/index.ts:44](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L44)*
 
 Type for providing CLI command to pass to execa. It may either
 - a string to store executable name without arguments.
@@ -49,7 +49,7 @@ ___
 
 Ƭ **FileFormat**: *"json" | "yaml"*
 
-*Defined in [types/index.ts:89](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L89)*
+*Defined in [types/index.ts:89](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L89)*
 
 Supported file formats for parsing and data files.
 
@@ -59,7 +59,7 @@ ___
 
 Ƭ **JSONData**: *`Primitive` | `JSONObject` | `JSONArray`*
 
-*Defined in [types/index.ts:26](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L26)*
+*Defined in [types/index.ts:26](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L26)*
 
 Data type which represents JSON Data.
 
@@ -69,7 +69,7 @@ ___
 
 Ƭ **ParallelCommands**: *`Record<string, Command | null | undefined>`*
 
-*Defined in [types/index.ts:70](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L70)*
+*Defined in [types/index.ts:70](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L70)*
 
 Array of CLI commands to execute concurrently in parallel.
 
@@ -79,7 +79,7 @@ ___
 
 Ƭ **SerialCommands**: *string | [string, string[]] | [string, string[], `SyncOptions<string>`] | [string, string[], `SyncOptions<null>`] | [string, `SyncOptions<string>`] | [string, `SyncOptions<null>`] | object[]*
 
-*Defined in [types/index.ts:65](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L65)*
+*Defined in [types/index.ts:65](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L65)*
 
 Array of CLI commands to execute serially.
 

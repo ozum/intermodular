@@ -18,7 +18,7 @@ Conditions which should be met to apply a modification to a key/value.
 
 ● **ifEqual**? : *any*
 
-*Defined in [data-file.ts:31](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L31)*
+*Defined in [data-file.ts:31](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L31)*
 
 Allows modification if only value stored at `path` equals/deeply equals to it's value.
 
@@ -28,7 +28,7 @@ ___
 
 ● **ifExists**? : *undefined | false | true*
 
-*Defined in [data-file.ts:27](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L27)*
+*Defined in [data-file.ts:27](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L27)*
 
 Allows modification if only `path` does not exists.
 
@@ -38,7 +38,7 @@ ___
 
 ● **ifNotEqual**? : *any*
 
-*Defined in [data-file.ts:35](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L35)*
+*Defined in [data-file.ts:35](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L35)*
 
 Allows modification if only value stored at `path` equals/deeply equals to it's value.
 
@@ -48,7 +48,7 @@ ___
 
 ● **ifNotExists**? : *undefined | false | true*
 
-*Defined in [data-file.ts:23](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L23)*
+*Defined in [data-file.ts:23](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L23)*
 
 Allows modification if only `path` exists.
 

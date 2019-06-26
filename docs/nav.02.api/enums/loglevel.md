@@ -14,7 +14,7 @@ Levels to be used when logging.
 
 ● **Debug**: = "debug"
 
-*Defined in [types/index.ts:99](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L99)*
+*Defined in [types/index.ts:99](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L99)*
 
 ___
 
@@ -22,7 +22,7 @@ ___
 
 ● **Error**: = "error"
 
-*Defined in [types/index.ts:95](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L95)*
+*Defined in [types/index.ts:95](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L95)*
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 ● **Info**: = "info"
 
-*Defined in [types/index.ts:97](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L97)*
+*Defined in [types/index.ts:97](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L97)*
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 ● **Silly**: = "silly"
 
-*Defined in [types/index.ts:100](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L100)*
+*Defined in [types/index.ts:100](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L100)*
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 ● **Verbose**: = "verbose"
 
-*Defined in [types/index.ts:98](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L98)*
+*Defined in [types/index.ts:98](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L98)*
 
 ___
 
@@ -54,6 +54,6 @@ ___
 
 ● **Warn**: = "warn"
 
-*Defined in [types/index.ts:96](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L96)*
+*Defined in [types/index.ts:96](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L96)*
 
 ___

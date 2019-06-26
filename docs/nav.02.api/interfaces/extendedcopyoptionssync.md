@@ -52,7 +52,7 @@ ___
 
 ● **ifEqual**? : *string | `Record<string, any>`*
 
-*Defined in [intermodular.ts:19](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L19)*
+*Defined in [intermodular.ts:19](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L19)*
 
 allows modification if only value stored at `path` equals/deeply equals to it's value.
 
@@ -62,7 +62,7 @@ ___
 
 ● **ifNotEqual**? : *string | `Record<string, any>`*
 
-*Defined in [intermodular.ts:21](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L21)*
+*Defined in [intermodular.ts:21](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L21)*
 
 allows modification if only value stored at `path` not equals/deeply equals to it's value.
 

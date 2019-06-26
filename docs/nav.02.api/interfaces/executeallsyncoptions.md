@@ -307,7 +307,7 @@ ___
 
 ● **stopOnError**? : *undefined | false | true*
 
-*Defined in [types/index.ts:76](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L76)*
+*Defined in [types/index.ts:76](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L76)*
 
 Whether to stop executing further commands if an error occurs.
 
@@ -331,7 +331,7 @@ ___
 
 ● **throwOnError**? : *undefined | false | true*
 
-*Defined in [types/index.ts:80](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L80)*
+*Defined in [types/index.ts:80](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L80)*
 
 Whether to throw if an error occurs.
 

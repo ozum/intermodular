@@ -14,7 +14,7 @@ Dependency types for Node.js modules.
 
 ● **Dependencies**: = "dependencies"
 
-*Defined in [types/index.ts:110](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L110)*
+*Defined in [types/index.ts:110](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L110)*
 
 Production dependencies
 
@@ -24,7 +24,7 @@ ___
 
 ● **DevDependencies**: = "devDependencies"
 
-*Defined in [types/index.ts:114](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L114)*
+*Defined in [types/index.ts:114](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L114)*
 
 Dependencies for development only.
 
@@ -34,7 +34,7 @@ ___
 
 ● **OptionalDependencies**: = "optionalDependencies"
 
-*Defined in [types/index.ts:123](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L123)*
+*Defined in [types/index.ts:123](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L123)*
 
 Dependencies which can be used, but not stop installation if not found or failed to install.
 
@@ -44,7 +44,7 @@ ___
 
 ● **PeerDependencies**: = "peerDependencies"
 
-*Defined in [types/index.ts:118](https://github.com/ozum/intermodular/blob/8cb9a40/src/types/index.ts#L118)*
+*Defined in [types/index.ts:118](https://github.com/ozum/intermodular/blob/42b5788/src/types/index.ts#L118)*
 
 Dependencies which are not installed by default.
 

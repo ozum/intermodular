@@ -22,7 +22,7 @@ Makes easier to work with data files by providing data level attributes and meth
 
 ● **data**: *`T`*
 
-*Defined in [data-file.ts:56](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L56)*
+*Defined in [data-file.ts:56](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L56)*
 
 Data contained in file as a JavaScript object. This data is serialized and written to disk when [saveSync](datafile.md#savesync)  method is executed.
 
@@ -32,7 +32,7 @@ ___
 
 ● **format**: *[FileFormat](../README.md#fileformat)*
 
-*Defined in [data-file.ts:51](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L51)*
+*Defined in [data-file.ts:51](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L51)*
 
 Data format of the file
 
@@ -44,7 +44,7 @@ ___
 
 ▸ **assign**(`path`: string | string[] | undefined, `data`: `Record<string, any>`, `conditions`: [ModifyCondition](../interfaces/modifycondition.md)): *this*
 
-*Defined in [data-file.ts:220](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L220)*
+*Defined in [data-file.ts:220](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L220)*
 
 Merges all keys and values of `data` shallowly into `path` of file data. If a portion of path doesn't exist, it's created.
 Differnet to object assign, keys may be merged conditionally such as `ifExists` or `ifNotExists`.
@@ -71,7 +71,7 @@ ___
 
 ▸ **delete**(`path`: string | string[], `conditions?`: [ModifyCondition](../interfaces/modifycondition.md)): *this*
 
-*Defined in [data-file.ts:202](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L202)*
+*Defined in [data-file.ts:202](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L202)*
 
 Deletes the property at `path` of file data.
 
@@ -98,7 +98,7 @@ ___
 
 ▸ **get**(`path`: string | string[], `defaultValue?`: any): *any*
 
-*Defined in [data-file.ts:162](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L162)*
+*Defined in [data-file.ts:162](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L162)*
 
 Gets the value at `path` of file data. If the resolved value is undefined, the `defaultValue` is returned in its place.
 
@@ -126,7 +126,7 @@ ___
 
 ▸ **has**(`path`: string | string[]): *boolean*
 
-*Defined in [data-file.ts:147](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L147)*
+*Defined in [data-file.ts:147](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L147)*
 
 Returns whether given `path` exists in file data.
 
@@ -153,7 +153,7 @@ ___
 
 ▸ **orderKeys**(`keys`: `keyof T`[]): *this*
 
-*Defined in [data-file.ts:252](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L252)*
+*Defined in [data-file.ts:252](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L252)*
 
 When keys/values added which are previously does not exist, they are added to the end of the file during file write.
 This method allows reordering of the keys. `keys` are placed at the beginning in given order whereas remaining keys
@@ -179,7 +179,7 @@ ___
 
 ▸ **saveSync**(`__namedParameters`: object): *this*
 
-*Defined in [data-file.ts:125](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L125)*
+*Defined in [data-file.ts:125](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L125)*
 
 Saves file if it is modified. Use `force` options to save unmodified files.
 
@@ -199,7 +199,7 @@ ___
 
 ▸ **set**(`path`: string | string[], `value`: any, `conditions?`: [ModifyCondition](../interfaces/modifycondition.md)): *this*
 
-*Defined in [data-file.ts:179](https://github.com/ozum/intermodular/blob/8cb9a40/src/data-file.ts#L179)*
+*Defined in [data-file.ts:179](https://github.com/ozum/intermodular/blob/42b5788/src/data-file.ts#L179)*
 
 Sets the value at `path` of file data. If a portion of path doesn't exist, it's created.
 Arrays are created for missing index properties while objects are created for all other missing properties.

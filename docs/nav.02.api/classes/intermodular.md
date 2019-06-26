@@ -45,7 +45,7 @@ packageJson.saveSync();
 
 \+ **new Intermodular**(`__namedParameters`: object): *[Intermodular](intermodular.md)*
 
-*Defined in [intermodular.ts:76](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L76)*
+*Defined in [intermodular.ts:76](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L76)*
 
 Creates an instance.
 
@@ -71,7 +71,7 @@ ___
 
 ● **myRoot**: *string* =  pkgDir.sync(dirname(parentModule() || "")) || ""
 
-*Defined in [intermodular.ts:70](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L70)*
+*Defined in [intermodular.ts:70](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L70)*
 
 Root directory of the parent module, which installs your module.
 This is the directory which contains `package.json` file of the parent module.
@@ -82,7 +82,7 @@ ___
 
 ● **parentModuleRoot**: *string* =  pkgDir.sync(join(this.myRoot, "..")) || ""
 
-*Defined in [intermodular.ts:76](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L76)*
+*Defined in [intermodular.ts:76](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L76)*
 
 Root directory of your module which requires this module.
 This is the directory which contains `package.json` file of your module.
@@ -93,7 +93,7 @@ ___
 
 ● **sourceModule**: *[Module](module.md)*
 
-*Defined in [intermodular.ts:59](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L59)*
+*Defined in [intermodular.ts:59](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L59)*
 
 [Module](module.md) instance of node module which is used as source for modification operations such as copy, update.
 
@@ -103,7 +103,7 @@ ___
 
 ● **targetModule**: *[Module](module.md)*
 
-*Defined in [intermodular.ts:64](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L64)*
+*Defined in [intermodular.ts:64](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L64)*
 
 [Module](module.md) instance of node module which is used as target for modification operations such as copy, update.
 
@@ -115,7 +115,7 @@ ___
 
 ▸ **copySync**(`pathInSourceModule`: string, `pathInTargetModule`: string, `__namedParameters`: object): *void*
 
-*Defined in [intermodular.ts:208](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L208)*
+*Defined in [intermodular.ts:208](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L208)*
 
 Copies a file or directory from `pathInSourceModule` relative to source module root to `pathInTargetModule`relative to
 target module root. The directory can have contents. Like cp -r.
@@ -157,7 +157,7 @@ ___
 
 ▸ **log**(`message`: string, `level`: [LogLevel](../enums/loglevel.md)): *void*
 
-*Defined in [intermodular.ts:129](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L129)*
+*Defined in [intermodular.ts:129](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L129)*
 
 Logs `message` with `level`.
 
@@ -176,7 +176,7 @@ ___
 
 ▸ **logIfDefined**(`message`: string | undefined, `level`: [LogLevel](../enums/loglevel.md)): *void*
 
-*Defined in [intermodular.ts:139](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L139)*
+*Defined in [intermodular.ts:139](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L139)*
 
 Logs `message` with `level` if it is defined.
 
@@ -195,7 +195,7 @@ ___
 
 ▸ **isEnvSet**(`variable`: string): *boolean*
 
-*Defined in [intermodular.ts:164](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L164)*
+*Defined in [intermodular.ts:164](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L164)*
 
 Returns whether `variable` is set in environment variables and not empty.
 
@@ -215,7 +215,7 @@ ___
 
 ▸ **parseEnv**<**T**>(`variable`: string, `defaultValue?`: [T]()): *string | number | `Record<string, any>` | `T` | undefined*
 
-*Defined in [intermodular.ts:178](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L178)*
+*Defined in [intermodular.ts:178](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L178)*
 
 Parses and returns `variable` environment variable. If possible, parses and returns it as a JavaScript object.
 Otherwise returns `defaultValue`.
@@ -241,7 +241,7 @@ ___
 
 ▸ **resolveModuleRoot**(`name`: string): *string | undefined*
 
-*Defined in [intermodular.ts:153](https://github.com/ozum/intermodular/blob/8cb9a40/src/intermodular.ts#L153)*
+*Defined in [intermodular.ts:153](https://github.com/ozum/intermodular/blob/42b5788/src/intermodular.ts#L153)*
 
 Returns path of the root of module with given `name`.
 
