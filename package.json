@@ -36,13 +36,14 @@
   "scripts": {
     "build": "tsc",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "npm-run-all -p docs:build-api-html docs:build-api-md & vuepress build docs",
+    "docs:build": "npm-run-all -p docs:build-api-html docs:build-api-md && vuepress build docs",
     "docs:build-api-html": "rm -rf docs/.vuepress/public/api-site && typedoc --plugin typedoc-plugin-example-tag,typedoc-neo-theme --theme ./node_modules/typedoc-neo-theme/bin/default --mode file --out docs/.vuepress/public/api-site",
     "docs:build-api-md": "rm -rf docs/nav.02.api && typedoc --platform vuepress --plugin typedoc-plugin-example-tag,typedoc-plugin-markdown --excludeExternals --excludePrivate --excludeProtected --theme markdown --mode file --out docs/nav.02.api --readme none && cp assets/api-docs/* docs/nav.02.api/",
     "lint": "eslint --ignore-path .gitignore --cache 'src/**/*.+(js|jsx|ts|tsx|vue)'",
     "format": "prettier --write --config .prettierrc --check 'src/**/*.+(js|jsx|json|less|css|ts|tsx|md|vue|gql)'",
     "test": "NODE_ENV=test jest --coverage",
-    "release": "npm-run-all -p lint test format build docs:build && git add -A && git commit --amend --no-edit && git checkout master && git pull origin master && git push --follow-tags origin master && npm publish"
+    "prepublishOnly": "npm run build",
+    "release": "npm-run-all -p lint test format && git add -A && git commit -m 'format' && git checkout master && git pull origin master && git push --follow-tags origin master && npm publish"
   },
   "dependencies": {
     "@types/fs-extra": "^7.0.0",

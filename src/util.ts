@@ -1,7 +1,7 @@
 /* eslint-disable import/export */
 import JSON5 from "json5";
 import { readFileSync, existsSync } from "fs";
-import { normalize, extname } from "path";
+import { normalize } from "path";
 import winston, { Logger } from "winston";
 import yaml from "js-yaml";
 import pickBy from "lodash.pickby";
