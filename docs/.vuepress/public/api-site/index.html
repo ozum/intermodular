@@ -1,0 +1,185 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>intermodular</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<ul class="results-priority" style="display:none">
+					</ul>
+					<a href="index.html" class="title">intermodular</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+			</ul>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html" style="display:none"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<div class="col-7 offset-3 col-content">
+			<h1> intermodular</h1>
+			<div class="tsd-panel tsd-typography">
+				<a href="#intermodular" id="intermodular" style="color: inherit; text-decoration: none;">
+					<h1>Intermodular</h1>
+				</a>
+				<blockquote>
+					<p>Easy file operations between node.js modules and auto logging to help building zero-config boilerplates, postinstall and other scripts.</p>
+				</blockquote>
+				<a href="#🏠-a-hrefhttpsgithubcomozumintermodularhomepagea" id="🏠-a-hrefhttpsgithubcomozumintermodularhomepagea" style="color: inherit; text-decoration: none;">
+					<h3>🏠 <a href="https://github.com/ozum/intermodular">Homepage</a></h3>
+				</a>
+				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+					<h2>Install</h2>
+				</a>
+				<pre><code class="language-sh">npm install intermodular</code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h1>Usage</h1>
+				</a>
+				<p>See <a href="https://github.com/ozum/intermodular">Homepage</a> for full documentation and API.</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">const</span> targetModule = intermodular.targetModule;
+<span class="hljs-keyword">const</span> packageJson = targetModule.getDataFileSync(<span class="hljs-string">"package.json"</span>); <span class="hljs-comment">// `DataFile` instance</span>
+
+<span class="hljs-comment">// Copy all config files from `.../your-module/common-config/` to `.../target-module/` (root).</span>
+intermodular.copySync(<span class="hljs-string">"common-config"</span>, <span class="hljs-string">"."</span>);
+targetModule.install(<span class="hljs-string">"lodash"</span>);
+targetModule.executeSync(<span class="hljs-string">"rm"</span>, [<span class="hljs-string">"-rf"</span>, <span class="hljs-string">"dist"</span>]);
+packageJson.set(<span class="hljs-string">"description"</span>, <span class="hljs-string">`My awesome <span class="hljs-subst">${targetModule.name}</span>`</span>, { ifNotExists: <span class="hljs-literal">true</span> });
+
+<span class="hljs-keyword">if</span> (intermodular.targetModule.isTypeScript) {
+  intermodular.copySync(<span class="hljs-string">"config/tsconfig.json"</span>, <span class="hljs-string">"."</span>);
+}</code></pre>
+				<a href="#author" id="author" style="color: inherit; text-decoration: none;">
+					<h2>Author</h2>
+				</a>
+				<p>👤 <strong>Özüm Eldoğan</strong></p>
+				<ul>
+					<li>Github: <a href="https://github.com/ozum">@ozum</a></li>
+				</ul>
+				<a href="#show-your-support" id="show-your-support" style="color: inherit; text-decoration: none;">
+					<h2>Show your support</h2>
+				</a>
+				<p>Give a ⭐️ if this project helped you!</p>
+				<a href="#📝-license" id="📝-license" style="color: inherit; text-decoration: none;">
+					<h2>📝 License</h2>
+				</a>
+				<p>Copyright © 2019 <a href="https://github.com/ozum">Özüm Eldoğan</a>.<br />
+				This project is <a href="https://github.com/ozum/intermodular/blob/master/LICENSE">MIT</a> licensed.</p>
+			</div>
+			<!--{&quot;plugin&quot;:[&quot;typedoc-plugin-example-tag&quot;,&quot;typedoc-neo-theme&quot;],&quot;theme&quot;:&quot;./node_modules/typedoc-neo-theme/bin/default&quot;,&quot;mode&quot;:0,&quot;out&quot;:&quot;docs/.vuepress/public/api-site&quot;,&quot;exclude&quot;:[&quot;**/*+(.test|.spec|.e2e).ts&quot;,&quot;*/util/**/*&quot;,&quot;*/helper/**/*&quot;]}-->
+		</div>
+		<div class="col-2 col-menu secondary-menu">
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum root">
+						<a href="enums/dependencytype.html" class="tsd-kind-icon">Dependency<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum root">
+						<a href="enums/loglevel.html" class="tsd-kind-icon">Log<wbr>Level</a>
+					</li>
+					<li class=" tsd-kind-class root">
+						<a href="classes/commandresults.html" class="tsd-kind-icon">Command<wbr>Results</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter root">
+						<a href="classes/datafile.html" class="tsd-kind-icon">Data<wbr>File</a>
+					</li>
+					<li class=" tsd-kind-class root">
+						<a href="classes/intermodular.html" class="tsd-kind-icon">Intermodular</a>
+					</li>
+					<li class=" tsd-kind-class root">
+						<a href="classes/module.html" class="tsd-kind-icon">Module</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter root">
+						<a href="interfaces/executeallsyncoptions.html" class="tsd-kind-icon">Execute<wbr>All<wbr>Sync<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported root">
+						<a href="interfaces/extendedcopyoptionssync.html" class="tsd-kind-icon">Extended<wbr>Copy<wbr>Options<wbr>Sync</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported root">
+						<a href="interfaces/modifycondition.html" class="tsd-kind-icon">Modify<wbr>Condition</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="globals.html#command" class="tsd-kind-icon">Command</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="globals.html#execacommandsync" class="tsd-kind-icon">Execa<wbr>Command<wbr>Sync</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="globals.html#fileformat" class="tsd-kind-icon">File<wbr>Format</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="globals.html#jsondata" class="tsd-kind-icon">JSONData</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="globals.html#parallelcommands" class="tsd-kind-icon">Parallel<wbr>Commands</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="globals.html#serialcommands" class="tsd-kind-icon">Serial<wbr>Commands</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

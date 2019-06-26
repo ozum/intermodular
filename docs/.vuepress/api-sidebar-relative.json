@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Classes",
+    "children": [
+      "classes/commandresults",
+      "classes/datafile",
+      "classes/intermodular",
+      "classes/module"
+    ]
+  },
+  {
+    "title": "Enums",
+    "children": [
+      "enums/dependencytype",
+      "enums/loglevel"
+    ]
+  },
+  {
+    "title": "Interfaces",
+    "children": [
+      "interfaces/executeallsyncoptions",
+      "interfaces/extendedcopyoptionssync",
+      "interfaces/modifycondition"
+    ]
+  }
+]

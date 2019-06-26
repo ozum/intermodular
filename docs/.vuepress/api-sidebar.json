@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Classes",
+    "children": [
+      "nav.02.api/classes/commandresults",
+      "nav.02.api/classes/datafile",
+      "nav.02.api/classes/intermodular",
+      "nav.02.api/classes/module"
+    ]
+  },
+  {
+    "title": "Enums",
+    "children": [
+      "nav.02.api/enums/dependencytype",
+      "nav.02.api/enums/loglevel"
+    ]
+  },
+  {
+    "title": "Interfaces",
+    "children": [
+      "nav.02.api/interfaces/executeallsyncoptions",
+      "nav.02.api/interfaces/extendedcopyoptionssync",
+      "nav.02.api/interfaces/modifycondition"
+    ]
+  }
+]

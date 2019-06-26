@@ -1,0 +1,763 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Intermodular | intermodular</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<ul class="results-priority" style="display:none">
+					</ul>
+					<a href="../index.html" class="title">intermodular</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="intermodular.html">Intermodular</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html" style="display:none"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<div class="col-7 offset-3 col-content">
+			<h1>Class Intermodular</h1>
+			<section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography tsd-comment-shorttext">
+					<div class="lead">
+						<p>Easy file operations between node.js modules and auto logging to help building zero-config boilerplates, postinstall and other scripts.</p>
+					</div>
+					<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+						<h4>Example</h4>
+					</a>
+					<pre><code class="language-typescript"><span class="hljs-keyword">import</span> Intermodular <span class="hljs-keyword">from</span> <span class="hljs-string">"intermodular"</span>;
+
+<span class="hljs-keyword">const</span> intermodular = <span class="hljs-keyword">new</span> Intermodular(); <span class="hljs-comment">// (Defaults) Source: Your module, Target: Module installed your module as a dependency.</span>
+intermodular.copySync(<span class="hljs-string">"common-config"</span>, <span class="hljs-string">"."</span>); <span class="hljs-comment">// Copy all files from your modules `common-config` to target module's root.</span>
+
+<span class="hljs-keyword">if</span> (targetModule.isTypeScript) {
+  intermodular.copySync(<span class="hljs-string">"config/tsconfig.json"</span>, <span class="hljs-string">"."</span>);
+}
+
+<span class="hljs-keyword">const</span> targetModule = intermodular.targetModule;
+<span class="hljs-keyword">const</span> moduleName = targetModule.name;
+targetModule.install(<span class="hljs-string">"lodash"</span>); <span class="hljs-comment">// Install lodash.</span>
+targetModule.getDependencyVersion(<span class="hljs-string">"lodash"</span>); <span class="hljs-comment">// Get version info from package.json</span>
+targetModule.executeSync(<span class="hljs-string">"rm"</span>, [<span class="hljs-string">"-rf"</span>, <span class="hljs-string">"some-directory"</span>]); <span class="hljs-comment">// Execute shell command.</span>
+targetModule.pathOf(<span class="hljs-string">"config/tsconfig.json"</span>); <span class="hljs-comment">// Absolute path.</span>
+
+<span class="hljs-comment">// Do some individual data level operations:</span>
+<span class="hljs-keyword">const</span> packageJson = targetModule.getDataFileSync(<span class="hljs-string">"package.json"</span>); <span class="hljs-comment">// `DataFile` instance</span>
+packageJson.set(<span class="hljs-string">"keywords"</span>, [<span class="hljs-string">"some-key"</span>], { ifNotExists: <span class="hljs-literal">true</span> });
+packageJson.set(<span class="hljs-string">"description"</span>, <span class="hljs-string">`My awesome <span class="hljs-subst">${moduleName}</span>`</span>, { ifNotExists: <span class="hljs-literal">true</span> });
+packageJson.assign(<span class="hljs-string">"scripts"</span>, { build: <span class="hljs-string">"tsc"</span>, test: <span class="hljs-string">"jest"</span>, }, { ifNotExists: <span class="hljs-literal">true</span> });
+packageJson.orderKeys([<span class="hljs-string">"name"</span>, <span class="hljs-string">"version"</span>, <span class="hljs-string">"description"</span>, <span class="hljs-string">"keywords"</span>, <span class="hljs-string">"scripts"</span>]); <span class="hljs-comment">// Other keys come after.</span>
+packageJson.saveSync();</code></pre>
+					</div><div class="tsd-comment tsd-typography tsd-comment-text">
+					<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+						<h4>Example</h4>
+					</a>
+					<pre><code class="language-typescript"><span class="hljs-keyword">import</span> Intermodular <span class="hljs-keyword">from</span> <span class="hljs-string">"intermodular"</span>;
+
+<span class="hljs-keyword">const</span> intermodular = <span class="hljs-keyword">new</span> Intermodular(); <span class="hljs-comment">// (Defaults) Source: Your module, Target: Module installed your module as a dependency.</span>
+intermodular.copySync(<span class="hljs-string">"common-config"</span>, <span class="hljs-string">"."</span>); <span class="hljs-comment">// Copy all files from your modules `common-config` to target module's root.</span>
+
+<span class="hljs-keyword">if</span> (targetModule.isTypeScript) {
+  intermodular.copySync(<span class="hljs-string">"config/tsconfig.json"</span>, <span class="hljs-string">"."</span>);
+}
+
+<span class="hljs-keyword">const</span> targetModule = intermodular.targetModule;
+<span class="hljs-keyword">const</span> moduleName = targetModule.name;
+targetModule.install(<span class="hljs-string">"lodash"</span>); <span class="hljs-comment">// Install lodash.</span>
+targetModule.getDependencyVersion(<span class="hljs-string">"lodash"</span>); <span class="hljs-comment">// Get version info from package.json</span>
+targetModule.executeSync(<span class="hljs-string">"rm"</span>, [<span class="hljs-string">"-rf"</span>, <span class="hljs-string">"some-directory"</span>]); <span class="hljs-comment">// Execute shell command.</span>
+targetModule.pathOf(<span class="hljs-string">"config/tsconfig.json"</span>); <span class="hljs-comment">// Absolute path.</span>
+
+<span class="hljs-comment">// Do some individual data level operations:</span>
+<span class="hljs-keyword">const</span> packageJson = targetModule.getDataFileSync(<span class="hljs-string">"package.json"</span>); <span class="hljs-comment">// `DataFile` instance</span>
+packageJson.set(<span class="hljs-string">"keywords"</span>, [<span class="hljs-string">"some-key"</span>], { ifNotExists: <span class="hljs-literal">true</span> });
+packageJson.set(<span class="hljs-string">"description"</span>, <span class="hljs-string">`My awesome <span class="hljs-subst">${moduleName}</span>`</span>, { ifNotExists: <span class="hljs-literal">true</span> });
+packageJson.assign(<span class="hljs-string">"scripts"</span>, { build: <span class="hljs-string">"tsc"</span>, test: <span class="hljs-string">"jest"</span>, }, { ifNotExists: <span class="hljs-literal">true</span> });
+packageJson.orderKeys([<span class="hljs-string">"name"</span>, <span class="hljs-string">"version"</span>, <span class="hljs-string">"description"</span>, <span class="hljs-string">"keywords"</span>, <span class="hljs-string">"scripts"</span>]); <span class="hljs-comment">// Other keys come after.</span>
+packageJson.saveSync();</code></pre>
+			</div></section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Intermodular</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="intermodular.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="intermodular.html#_logger" class="tsd-kind-icon">_logger</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="intermodular.html#_overwrite" class="tsd-kind-icon">_overwrite</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="intermodular.html#myroot" class="tsd-kind-icon">myRoot</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="intermodular.html#parentmoduleroot" class="tsd-kind-icon">parentModuleRoot</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="intermodular.html#sourcemodule" class="tsd-kind-icon">sourceModule</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="intermodular.html#targetmodule" class="tsd-kind-icon">targetModule</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="intermodular.html#_logtemplate" class="tsd-kind-icon">_logTemplate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="intermodular.html#copysync" class="tsd-kind-icon">copySync</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="intermodular.html#log" class="tsd-kind-icon">log</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="intermodular.html#logifdefined" class="tsd-kind-icon">logIfDefined</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="intermodular.html#isenvset" class="tsd-kind-icon">isEnvSet</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="intermodular.html#parseenv" class="tsd-kind-icon">parseEnv</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="intermodular.html#resolvemoduleroot" class="tsd-kind-icon">resolveModuleRoot</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Intermodular<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="intermodular.html" class="tsd-signature-type">Intermodular</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in intermodular.ts:76</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Creates an instance.</p>
+							</div></div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>log<wbr>Level<span class="tsd-signature-symbol">: </span><a href="../enums/loglevel.html" class="tsd-signature-type">LogLevel</a></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>is default log level to show. (&quot;error&quot;, &quot;warn&quot;, &quot;info&quot;, &quot;verbose&quot;, &quot;debug&quot; or &quot;silly&quot;)</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>overwrite<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>is default overwrite option for operations. Changes all write operation&#39;s default behavior. Also wverwrite option can be set for each operation individually.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>package<wbr>Manager<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"npm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"yarn"</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>is package manager to use in modules.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>source<wbr>Root<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>is absolute path of source root, which is used as source for copying files etc.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>target<wbr>Root<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>is absolute path of target root, which is used as target for copying files etc.</p>
+											</div>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="intermodular.html" class="tsd-signature-type">Intermodular</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_logger" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _logger</h3>
+					<div class="tsd-signature tsd-kind-icon">_logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Logger</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in intermodular.ts:53</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_overwrite" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _overwrite</h3>
+					<div class="tsd-signature tsd-kind-icon">_overwrite<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in intermodular.ts:54</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="myroot" class="tsd-anchor"></a>
+					<h3>my<wbr>Root</h3>
+					<div class="tsd-signature tsd-kind-icon">my<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;pkgDir.sync(dirname(parentModule() || &quot;&quot;)) || &quot;&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in intermodular.ts:70</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Root directory of the parent module, which installs your module.
+							This is the directory which contains <code>package.json</code> file of the parent module.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="parentmoduleroot" class="tsd-anchor"></a>
+					<h3>parent<wbr>Module<wbr>Root</h3>
+					<div class="tsd-signature tsd-kind-icon">parent<wbr>Module<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;pkgDir.sync(join(this.myRoot, &quot;..&quot;)) || &quot;&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in intermodular.ts:76</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p>Root directory of your module which requires this module.
+							This is the directory which contains <code>package.json</code> file of your module.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="sourcemodule" class="tsd-anchor"></a>
+					<h3>source<wbr>Module</h3>
+					<div class="tsd-signature tsd-kind-icon">source<wbr>Module<span class="tsd-signature-symbol">:</span> <a href="module.html" class="tsd-signature-type">Module</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in intermodular.ts:59</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p><a href="module.html">Module</a> instance of node module which is used as source for modification operations such as copy, update.</p>
+					</div></div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="targetmodule" class="tsd-anchor"></a>
+					<h3>target<wbr>Module</h3>
+					<div class="tsd-signature tsd-kind-icon">target<wbr>Module<span class="tsd-signature-symbol">:</span> <a href="module.html" class="tsd-signature-type">Module</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in intermodular.ts:64</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+						<div class="lead">
+							<p><a href="module.html">Module</a> instance of node module which is used as target for modification operations such as copy, update.</p>
+					</div></div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="_logtemplate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _log<wbr>Template</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">_log<wbr>Template<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">keyof object</span>, args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in intermodular.ts:119</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Logs precompiled template message with <code>key</code> using <code>args</code>.</p>
+							</div></div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <span class="tsd-signature-type">keyof object</span></h5>
+								</li>
+								<li>
+									<h5>args: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="copysync" class="tsd-anchor"></a>
+					<h3>copy<wbr>Sync</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">copy<wbr>Sync<span class="tsd-signature-symbol">(</span>pathInSourceModule<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, pathInTargetModule<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, __namedParameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in intermodular.ts:208</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Copies a file or directory from <code>pathInSourceModule</code> relative to source module root to <code>pathInTargetModule</code>relative to
+										target module root. The directory can have contents. Like cp -r.
+									Note that if src is a directory it will copy everything inside of this directory, not the entire directory itself.</p>
+								</div>
+								<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+									<h4>Example</h4>
+								</a>
+								<pre><code class="language-typescript"><span class="hljs-comment">// Copy everything in `/path/to/project/node_modules/module-a/src/config/` to `/path/to/project/`</span>
+util.copySync(<span class="hljs-string">"src/config"</span>, <span class="hljs-string">"."</span>);</code></pre>
+								</div><div class="tsd-comment tsd-typography tsd-comment-text">
+								<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+									<h4>Example</h4>
+								</a>
+								<pre><code class="language-typescript"><span class="hljs-comment">// Copy everything in `/path/to/project/node_modules/module-a/src/config/` to `/path/to/project/`</span>
+util.copySync(<span class="hljs-string">"src/config"</span>, <span class="hljs-string">"."</span>);</code></pre>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>pathInSourceModule: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>is source to copy from.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> pathInTargetModule: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;pathInSourceModule</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>is destination to copy to. Cannot be a directory.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> __namedParameters: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>dereference<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>whether to dereference symlinks.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>error<wbr>OnExist<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>if true, when overwrite is false and the destination exists, throws an error.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>filter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>is <code>(src, dest) =&gt; boolean</code> function to filter copied files. Return true to include, false to exclude.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>if<wbr>Equal<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>allows modification if only value stored at <code>path</code> equals/deeply equals to it&#39;s value.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>if<wbr>Not<wbr>Equal<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>allows modification if only value stored at <code>path</code> not equals/deeply equals to it&#39;s value.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>overwrite<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>whether to overwrite existing file or directory. Note that the copy operation will silently fail if you set this to false and the destination exists. Use the errorOnExist option to change this behavior.</p>
+											</div>
+										</li>
+										<li class="tsd-parameter">
+											<h5>preserve<wbr>Timestamps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+											<div class="tsd-comment tsd-typography tsd-comment-text">
+												<p>whether to set last modification and access times to the ones of the original source files. When false, timestamp behavior is OS-dependent.</p>
+											</div>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="log" class="tsd-anchor"></a>
+					<h3>log</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">log<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, level<span class="tsd-signature-symbol">?: </span><a href="../enums/loglevel.html" class="tsd-signature-type">LogLevel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in intermodular.ts:129</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Logs <code>message</code> with <code>level</code>.</p>
+							</div></div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>message: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>is message text to log.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> level: <a href="../enums/loglevel.html" class="tsd-signature-type">LogLevel</a><span class="tsd-signature-symbol"> =&nbsp;LogLevel.Info</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>is log level. (&quot;error&quot;, &quot;warn&quot;, &quot;info&quot;, &quot;verbose&quot;, &quot;debug&quot; or &quot;silly&quot;)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="logifdefined" class="tsd-anchor"></a>
+					<h3>log<wbr>IfDefined</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">log<wbr>IfDefined<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span>, level<span class="tsd-signature-symbol">?: </span><a href="../enums/loglevel.html" class="tsd-signature-type">LogLevel</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in intermodular.ts:139</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Logs <code>message</code> with <code>level</code> if it is defined.</p>
+							</div></div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>message: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>is message text to log.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> level: <a href="../enums/loglevel.html" class="tsd-signature-type">LogLevel</a><span class="tsd-signature-symbol"> =&nbsp;LogLevel.Info</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>is log level. (&quot;error&quot;, &quot;warn&quot;, &quot;info&quot;, &quot;verbose&quot;, &quot;debug&quot; or &quot;silly&quot;)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="isenvset" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> is<wbr>Env<wbr>Set</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Env<wbr>Set<span class="tsd-signature-symbol">(</span>variable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in intermodular.ts:164</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Returns whether <code>variable</code> is set in environment variables and not empty.</p>
+							</div></div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>variable: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>is name of the environment variable to check.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>whether given environment variable is set and not empty.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
+					<a name="parseenv" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> parse<wbr>Env</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Env&lt;T&gt;<span class="tsd-signature-symbol">(</span>variable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, defaultValue<span class="tsd-signature-symbol">?: </span><a href="" class="tsd-signature-type">T</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in intermodular.ts:178</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Parses and returns <code>variable</code> environment variable. If possible, parses and returns it as a JavaScript object.
+									Otherwise returns <code>defaultValue</code>.</p>
+							</div></div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>variable: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>is Name of the environment variable</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> defaultValue: <a href="" class="tsd-signature-type">T</a></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>is value to return if no environment variable is set or is empty.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">number</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">T</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">undefined</span>
+							</h4>
+							<p>environment variable (if possible as an object) or default value.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="resolvemoduleroot" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> resolve<wbr>Module<wbr>Root</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">resolve<wbr>Module<wbr>Root<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in intermodular.ts:153</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
+								<div class="lead">
+									<p>Returns path of the root of module with given <code>name</code>.</p>
+								</div>
+								<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+									<h4>Example</h4>
+								</a>
+								<pre><code class="language-typescript">project.resolveModule(<span class="hljs-string">"fs-extra"</span>); <span class="hljs-comment">// /path/to/project/node_modules/fs-extra</span></code></pre>
+								</div><div class="tsd-comment tsd-typography tsd-comment-text">
+								<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+									<h4>Example</h4>
+								</a>
+								<pre><code class="language-typescript">project.resolveModule(<span class="hljs-string">"fs-extra"</span>); <span class="hljs-comment">// /path/to/project/node_modules/fs-extra</span></code></pre>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography tsd-comment-text">
+										<p>of the module to get root path of.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">undefined</span>
+							</h4>
+							<p>root path of given module.</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<!--{&quot;plugin&quot;:[&quot;typedoc-plugin-example-tag&quot;,&quot;typedoc-neo-theme&quot;],&quot;theme&quot;:&quot;./node_modules/typedoc-neo-theme/bin/default&quot;,&quot;mode&quot;:0,&quot;out&quot;:&quot;docs/.vuepress/public/api-site&quot;,&quot;exclude&quot;:[&quot;**/*+(.test|.spec|.e2e).ts&quot;,&quot;*/util/**/*&quot;,&quot;*/helper/**/*&quot;]}-->
+		</div>
+		<div class="col-2 col-menu secondary-menu">
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum root">
+						<a href="../enums/dependencytype.html" class="tsd-kind-icon">Dependency<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum root">
+						<a href="../enums/loglevel.html" class="tsd-kind-icon">Log<wbr>Level</a>
+					</li>
+					<li class=" tsd-kind-class root">
+						<a href="commandresults.html" class="tsd-kind-icon">Command<wbr>Results</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter root">
+						<a href="datafile.html" class="tsd-kind-icon">Data<wbr>File</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class root">
+						<a href="intermodular.html" class="tsd-kind-icon">Intermodular</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="intermodular.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="intermodular.html#_logger" class="tsd-kind-icon">_logger</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="intermodular.html#_overwrite" class="tsd-kind-icon">_overwrite</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="intermodular.html#myroot" class="tsd-kind-icon">my<wbr>Root</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="intermodular.html#parentmoduleroot" class="tsd-kind-icon">parent<wbr>Module<wbr>Root</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="intermodular.html#sourcemodule" class="tsd-kind-icon">source<wbr>Module</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="intermodular.html#targetmodule" class="tsd-kind-icon">target<wbr>Module</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="intermodular.html#_logtemplate" class="tsd-kind-icon">_log<wbr>Template</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="intermodular.html#copysync" class="tsd-kind-icon">copy<wbr>Sync</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="intermodular.html#log" class="tsd-kind-icon">log</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="intermodular.html#logifdefined" class="tsd-kind-icon">log<wbr>IfDefined</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="intermodular.html#isenvset" class="tsd-kind-icon">is<wbr>Env<wbr>Set</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
+								<a href="intermodular.html#parseenv" class="tsd-kind-icon">parse<wbr>Env</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="intermodular.html#resolvemoduleroot" class="tsd-kind-icon">resolve<wbr>Module<wbr>Root</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-class root">
+						<a href="module.html" class="tsd-kind-icon">Module</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter root">
+						<a href="../interfaces/executeallsyncoptions.html" class="tsd-kind-icon">Execute<wbr>All<wbr>Sync<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported root">
+						<a href="../interfaces/extendedcopyoptionssync.html" class="tsd-kind-icon">Extended<wbr>Copy<wbr>Options<wbr>Sync</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-not-exported root">
+						<a href="../interfaces/modifycondition.html" class="tsd-kind-icon">Modify<wbr>Condition</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="../globals.html#command" class="tsd-kind-icon">Command</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="../globals.html#execacommandsync" class="tsd-kind-icon">Execa<wbr>Command<wbr>Sync</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="../globals.html#fileformat" class="tsd-kind-icon">File<wbr>Format</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="../globals.html#jsondata" class="tsd-kind-icon">JSONData</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="../globals.html#parallelcommands" class="tsd-kind-icon">Parallel<wbr>Commands</a>
+					</li>
+					<li class=" tsd-kind-type-alias root">
+						<a href="../globals.html#serialcommands" class="tsd-kind-icon">Serial<wbr>Commands</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

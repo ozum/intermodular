@@ -1,0 +1,23 @@
+{
+  "name": "test-target-module",
+  "version": "0.0.1",
+  "description": "Test target module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash.get": "^4.4.2"
+  },
+  "devDependencies": {
+    "lodash.sortby": "^4.7.0"
+  },
+  "peerDependencies": {
+    "lodash.has": "^4.5.2"
+  },
+  "optionalDependencies": {
+    "lodash.unset": "^4.5.2"
+  }
+}
