@@ -29,7 +29,7 @@ const TEMPLATES = {
   fileNotRenamedExists: [LogLevel.Warn, `File ${u("renamed")}: '{{ em source }}' → '{{ em target }}'. Target already exists.`],
 
   // data-file related messages
-  dataFileNotChanged: [LogLevel.Info, `'{{ em file }}' is not changed and not saved. Use force to save unchanged files.`],
+  dataFileNotChanged: [LogLevel.Info, `'{{ em file }}' does not need to be saved, it is same on disk. Use force to save unchanged files.`],
   dataFileSaved: [LogLevel.Info, `File saved: '{{ em file }}'`],
   dataFileUpdated: [LogLevel.Info, `Key {{ op }}: '{{ em file }}' '{{ em key }}' {{ op }}.`],
   dataFileNotUpdated: [
