@@ -46,6 +46,7 @@
     "release": "npm-run-all -p lint test format && (git diff --quiet && git diff --staged --quiet || git commit -am 'format code') && git checkout master && git pull origin master && git push --follow-tags origin master && npm publish"
   },
   "dependencies": {
+    "@types/cosmiconfig": "^5.0.3",
     "@types/fs-extra": "^7.0.0",
     "chalk": "^2.4.2",
     "concurrently": "^4.1.0",
@@ -71,7 +72,6 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/cosmiconfig": "^5.0.3",
     "@types/jest": "^24.0.15",
     "@types/js-yaml": "^3.12.1",
     "@types/json5": "0.0.30",
