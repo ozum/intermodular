@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@types/cosmiconfig": "^5.0.3",
+    "@types/fs-extra": "^8.0.0",
     "chalk": "^2.4.2",
     "concurrently": "^4.1.0",
     "cosmiconfig": "^5.2.1",
@@ -71,7 +72,6 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/fs-extra": "^8.0.0",
     "@types/jest": "^24.0.15",
     "@types/js-yaml": "^3.12.1",
     "@types/json5": "0.0.30",
