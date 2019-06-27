@@ -30,7 +30,7 @@ function getTemplates(): { [key in keyof typeof TEMPLATES]: [LogLevel, Handlebar
     fileNotOpIsEqual: [LogLevel.Warn, `File ${u("not {{ op }}")}: {{ em file }} is not met requested equality condition.`],
     fileNotOpIsNotEqual: [LogLevel.Warn, `File ${u("not {{ op }}")}: {{ em file }} is not met requested non-equality condition.`],
 
-    fileRenamed: [LogLevel.Warn, `File ${u("renamed")}: '{{ em source }}' → '{{ em target }}'`],
+    fileRenamed: [LogLevel.Info, `File ${u("renamed")}: '{{ em source }}' → '{{ em target }}'`],
     fileNotRenamedExists: [LogLevel.Warn, `File ${u("renamed")}: '{{ em source }}' → '{{ em target }}'. Target already exists.`],
 
     // data-file related messages
