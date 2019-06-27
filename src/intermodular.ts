@@ -104,7 +104,7 @@ export default class Intermodular {
       this._logger,
       this._overwrite,
       packageManager,
-      this.sourceModule.name
+      this.sourceModule.nameWithoutUser
     );
     this._logTemplate("construction", { source: this.sourceModule.name, target: this.targetModule.name });
   }
