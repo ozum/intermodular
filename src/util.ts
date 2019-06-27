@@ -1,12 +1,13 @@
 /* eslint-disable import/export */
 import JSON5 from "json5";
 import { readFileSync, existsSync } from "fs";
-import { normalize } from "path";
+import { normalize, join } from "path";
 import winston, { Logger } from "winston";
 import yaml from "js-yaml";
 import pickBy from "lodash.pickby";
 import { SyncOptions } from "execa";
 import { ConcurrentlyOptions } from "concurrently";
+import pkgDir from "pkg-dir";
 import { JSONObject, LogLevel, FileFormat, ExecaCommandSync, ParallelCommands, ExecuteAllSyncOptions } from "./types";
 import TEMPLATES from "./messages";
 import Module from "./module";
@@ -16,6 +17,19 @@ import Module from "./module";
  * @ignore
  */
 const knownExtensions = new Set(["json", "yaml"]);
+
+/**
+ * Finds and returns top most `package.json` directory.
+ *
+ * @private
+ * @ignore
+ * @param startDir is directory to start search from.
+ * @returns top most `package.json`s directory.
+ */
+export function findTopPackageDir(startDir: string, level: number = 0): string | undefined {
+  const currentPkgDir = pkgDir.sync(join(startDir, level === 0 ? "." : ".."));
+  return currentPkgDir ? findTopPackageDir(currentPkgDir, level + 1) || currentPkgDir : undefined;
+}
 
 /**
  * Deletes "@" signs from `name` and replaces "/" characters with "-" and returns it

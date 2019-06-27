@@ -7,7 +7,7 @@ import { dirname, join, relative, resolve, basename } from "path";
 import { copySync, CopyOptionsSync, lstatSync, existsSync } from "fs-extra";
 import chalk from "chalk";
 import Module from "./module";
-import { createLogger, logTemplate, getNotModifyReasonTemplateKey } from "./util";
+import { createLogger, logTemplate, getNotModifyReasonTemplateKey, findTopPackageDir } from "./util";
 import { LogLevel } from "./types";
 import TEMPLATES from "./messages";
 
@@ -73,7 +73,7 @@ export default class Intermodular {
    * Root directory of your module which requires this module.
    * This is the directory which contains `package.json` file of your module.
    */
-  public readonly parentModuleRoot: string = pkgDir.sync(join(this.myRoot, "..")) || "";
+  public readonly parentModuleRoot: string = findTopPackageDir(join(this.myRoot, "..")) || "";
 
   /**
    * Creates an instance.
