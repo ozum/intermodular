@@ -369,8 +369,9 @@ export default class Module {
    */
   public getDataFileSync(pathInModule: string, { defaultFormat = "json" }: { defaultFormat: FileFormat } = {} as any): DataFile {
     const absolutePath = this.pathOf(pathInModule);
-    const format = (extname(this.pathOf(pathInModule)).slice(1) || defaultFormat) as FileFormat;
-    return new DataFile(absolutePath, pathInModule, this._logger, this.getPrettierConfigSync(absolutePath) || {}, format);
+    const extension = extname(this.pathOf(pathInModule)).slice(1) as FileFormat;
+    const format = extension || defaultFormat;
+    return new DataFile(absolutePath, pathInModule, this._logger, this.getPrettierConfigSync(`${absolutePath}.${format}`) || {}, format);
   }
 
   /**

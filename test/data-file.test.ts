@@ -30,11 +30,11 @@ describe("DataFile", () => {
   });
 
   it("should create file if not exists.", () => {
-    const localDataFile = tm.getDataFileSync("none.json");
+    const localDataFile = tm.getDataFileSync(".nonerc");
     localDataFile.set("name", "George");
     localDataFile.saveSync();
-    expect(tm.parseSync("none.json")).toEqual({ name: "George" });
-    tm.removeSync("none.json");
+    expect(tm.parseSync(".nonerc")).toEqual({ name: "George" });
+    tm.removeSync(".nonerc");
   });
 
   describe("saveSync", () => {
