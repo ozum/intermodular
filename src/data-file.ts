@@ -1,6 +1,6 @@
 /* eslint-disable no-return-assign */
 import OS from "os";
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, existsSync } from "fs";
 import { Logger } from "winston";
 import has from "lodash.has";
 import get from "lodash.get";
@@ -58,8 +58,8 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
   /**
    * @hidden
    */
-  public constructor(filePath: string, shortPath: string, logger: Logger, prettierConfig: prettier.Options) {
-    const { data, format } = parseString(readFileSync(filePath, "utf8"));
+  public constructor(filePath: string, shortPath: string, logger: Logger, prettierConfig: prettier.Options, defaultFormat: FileFormat) {
+    const { data, format } = existsSync(filePath) ? parseString(readFileSync(filePath, "utf8")) : { data: {}, format: defaultFormat };
     this.data = data as T;
     this.format = format;
     this._logger = logger;
@@ -123,8 +123,10 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
    * @param force forces file to be saved even when it is unmodified.
    */
   public saveSync({ force = false } = {}): this {
-    const { data, format } = parseString(readFileSync(this._path, "utf8"));
-    if (!force && !this._skipModificationCheckOnSave && format === this.format && isEqual(data, this.data)) {
+    const exists = existsSync(this._path);
+    const sameData = exists && isEqual(parseString(readFileSync(this._path, "utf8")), { data: this.data, format: this.format });
+
+    if (exists && !force && !this._skipModificationCheckOnSave && sameData) {
       this._logTemplate("dataFileNotChanged", { file: this._shortPath });
     } else {
       writeFileSync(this._path, prettier.format(serialize(this.data, this.format), this._prettierConfig), "utf8");

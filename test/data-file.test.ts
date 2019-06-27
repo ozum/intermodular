@@ -14,6 +14,29 @@ afterAll(async () => {
 });
 
 describe("DataFile", () => {
+  it("should infer format from filename if file would be created.", () => {
+    const localDataFile = tm.getDataFileSync("none.yaml");
+    expect(localDataFile.format).toBe("yaml");
+  });
+
+  it("should use default format if file format cannot be inferred.", () => {
+    const localDataFile = tm.getDataFileSync("none");
+    expect(localDataFile.format).toBe("json");
+  });
+
+  it("should use optional format if file format cannot be inferred.", () => {
+    const localDataFile = tm.getDataFileSync("none", { defaultFormat: "yaml" });
+    expect(localDataFile.format).toBe("yaml");
+  });
+
+  it("should create file if not exists.", () => {
+    const localDataFile = tm.getDataFileSync("none.json");
+    localDataFile.set("name", "George");
+    localDataFile.saveSync();
+    expect(tm.parseSync("none.json")).toEqual({ name: "George" });
+    tm.removeSync("none.json");
+  });
+
   describe("saveSync", () => {
     it("should save file.", () => {
       dataFile.set("surname", "Doe");

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { readFileSync, outputFileSync, removeSync, existsSync, renameSync } from "fs-extra";
-import { join, normalize, relative, sep } from "path";
+import { join, normalize, relative, sep, extname } from "path";
 import cosmiconfig from "cosmiconfig";
 import prettier from "prettier";
 import isEqual from "lodash.isequal";
@@ -364,11 +364,13 @@ export default class Module {
    * Gets [[DataFile]] for `pathInModule` file. [[DataFile]] provide useful utilities to work with data files.
    *
    * @param pathInModule is file path relative to module root.
+   * @param defaultFormat is default file format to be used during file creation if file is not found and format cannot be inferred from file extension.
    * @returns [[DataFile]] instance for `pathInModule`.
    */
-  public getDataFileSync(pathInModule: string): DataFile {
+  public getDataFileSync(pathInModule: string, { defaultFormat = "json" }: { defaultFormat: FileFormat } = {} as any): DataFile {
     const absolutePath = this.pathOf(pathInModule);
-    return new DataFile(absolutePath, pathInModule, this._logger, this.getPrettierConfigSync(absolutePath) || {});
+    const format = (extname(this.pathOf(pathInModule)).slice(1) || defaultFormat) as FileFormat;
+    return new DataFile(absolutePath, pathInModule, this._logger, this.getPrettierConfigSync(absolutePath) || {}, format);
   }
 
   /**
