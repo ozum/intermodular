@@ -226,6 +226,10 @@ export default class Intermodular {
         ? `${target}/${basename(pathInSourceModule)}`
         : target;
 
+    if (source === target) {
+      return;
+    }
+
     // For logging purposes, create a filter function wrapper around original filter function.
     const filterFunction = (src: string, dest: string): boolean => {
       let notModifyReason: keyof typeof TEMPLATES | undefined;

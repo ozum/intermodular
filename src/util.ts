@@ -32,17 +32,6 @@ export function findTopPackageDir(startDir: string, level: number = 0): string |
 }
 
 /**
- * Deletes "@" signs from `name` and replaces "/" characters with "-" and returns it
- * Useful for npm packages whose names contain user name such as @microsoft/typescript
- *
- * @private
- * @ignore
- */
-export function safeName(name: string): string {
-  return name.replace("@", "").replace("/", "-");
-}
-
-/**
  * Returns `input` if it is an array, otherwise an array containing `input` as only element.
  *
  * @private

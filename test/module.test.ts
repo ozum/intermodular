@@ -56,7 +56,13 @@ describe("Module", () => {
   });
 
   it("should have safe name", () => {
-    expect(tm.safeName).toBe("test-target-module");
+    const localModule = new Module(join(__dirname, "supplements/module-with-username"), "" as any, false, "npm", "xyz");
+    expect(localModule.safeName).toBe("user-module-with-username");
+  });
+
+  it("should have name without user", () => {
+    const localModule = new Module(join(__dirname, "supplements/module-with-username"), "" as any, false, "npm", "xyz");
+    expect(localModule.nameWithoutUser).toBe("module-with-username");
   });
 
   describe("isCompiled", () => {
