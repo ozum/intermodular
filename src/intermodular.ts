@@ -3,7 +3,7 @@
 import parentModule from "parent-module";
 import pkgDir from "pkg-dir";
 import { Logger } from "winston";
-import { dirname, join, relative, resolve, basename } from "path";
+import { dirname, relative, resolve, basename } from "path";
 import { copySync, CopyOptionsSync, lstatSync, existsSync } from "fs-extra";
 import chalk from "chalk";
 import Module from "./module";

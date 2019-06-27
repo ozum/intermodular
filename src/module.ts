@@ -340,12 +340,13 @@ export default class Module {
    * @param newPathInModule is new path to rename relative to module root.
    * @param overwrite is whether to allow rename operation if target path already exists. Silently ignores operation if overwrite is not allowed and target path exists.
    */
-  public renameSync(oldPathInModule: string, newPathInModule: string, { overwrite = false } = {}): void {
+  public renameSync(oldPathInModule: string, newPathInModule: string, { overwrite = this._overwrite } = {}): void {
     const [oldPath, newPath] = [this.pathOf(oldPathInModule), this.pathOf(newPathInModule)];
     if (this.existsSync(newPathInModule) && !overwrite) {
       this._logTemplate("fileNotRenamedExists", { source: oldPathInModule, target: newPathInModule });
     } else {
       renameSync(oldPath, newPath);
+      this._logTemplate("fileRenamed", { source: oldPathInModule, target: newPathInModule });
     }
   }
 
