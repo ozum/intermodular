@@ -97,10 +97,6 @@ export default class Intermodular {
     overwrite?: boolean;
     packageManager?: "npm" | "yarn";
   } = {}) {
-    if (!targetRoot && !this.parentModuleRoot) {
-      throw new Error("No parent module is available and no 'targetRoot' is provided.");
-    }
-
     this._logger = createLogger(logLevel);
     this._overwrite = overwrite;
     this.sourceModule = new Module(sourceRoot ? resolve(sourceRoot) : this.myRoot, this._logger, this._overwrite, packageManager);

@@ -225,6 +225,26 @@ describe("Module", () => {
     });
   });
 
+  describe("renameSync", () => {
+    it("should rename file", () => {
+      tm.renameSync("to-rename.txt", "to-rename-new.txt");
+      expect(tm.readSync("to-rename-new.txt")).toBe("source\n");
+      tm.renameSync("to-rename-new.txt", "to-rename.txt");
+    });
+
+    it("should not overwrite file", () => {
+      tm.renameSync("to-rename.txt", "to-rename-existing.txt");
+      expect(tm.readSync("to-rename-existing.txt")).toBe("existing\n");
+    });
+
+    it("should overwrite file optionally", () => {
+      tm.renameSync("to-rename.txt", "to-rename-existing.txt", { overwrite: true });
+      expect(tm.readSync("to-rename-existing.txt")).toBe("source\n");
+      tm.renameSync("to-rename-existing.txt", "to-rename.txt");
+      tm.writeSync("to-rename-existing.txt", "existing\n", { overwrite: true });
+    });
+  });
+
   describe("getDataFileSync", () => {
     it("should return DataFile instance for a json file.", () => {
       const dataFile = tm.getDataFileSync("data.json");

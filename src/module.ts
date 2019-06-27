@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { readFileSync, outputFileSync, removeSync, existsSync } from "fs-extra";
+import { readFileSync, outputFileSync, removeSync, existsSync, renameSync } from "fs-extra";
 import { join, normalize, relative, sep } from "path";
 import cosmiconfig from "cosmiconfig";
 import prettier from "prettier";
@@ -294,9 +294,9 @@ export default class Module {
 
     if (!templateKey) {
       const path = this.pathOf(pathInModule);
-      const content = usePrettier
-        ? prettier.format(serialize(data, format), this.getPrettierConfigSync(pathInModule) || {})
-        : serialize(data, format);
+      const prettierConfig = usePrettier ? this.getPrettierConfigSync(pathInModule) || {} : undefined;
+      const serialized = serialize(data, format);
+      const content = prettierConfig && prettierConfig.parser ? prettier.format(serialized, prettierConfig) : serialized;
 
       outputFileSync(path, content, "utf8");
       templateKey = "fileOp";
@@ -331,6 +331,22 @@ export default class Module {
    */
   public existsSync(pathInModule: string): boolean {
     return existsSync(this.pathOf(pathInModule));
+  }
+
+  /**
+   * Renames given path.
+   *
+   * @param oldPathInModule is old path to rename relative to module root.
+   * @param newPathInModule is new path to rename relative to module root.
+   * @param overwrite is whether to allow rename operation if target path already exists. Silently ignores operation if overwrite is not allowed and target path exists.
+   */
+  public renameSync(oldPathInModule: string, newPathInModule: string, { overwrite = false } = {}): void {
+    const [oldPath, newPath] = [this.pathOf(oldPathInModule), this.pathOf(newPathInModule)];
+    if (this.existsSync(newPathInModule) && !overwrite) {
+      this._logTemplate("fileNotRenamedExists", { source: oldPathInModule, target: newPathInModule });
+    } else {
+      renameSync(oldPath, newPath);
+    }
   }
 
   /**
