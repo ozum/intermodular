@@ -16,35 +16,13 @@ afterAll(async () => {
   await remove(join(targetRoot, "different-name.json"));
 });
 
-// Mock readonly property
-// Object.defineProperty(im, "myRoot", { value: sourceRoot });
-// Object.defineProperty(im, "parentModuleRoot", { value: targetRoot });
-
-// im.copySync("files-src", "files-target");
-// im.targetModule.removeSync("sil2.json", { ifEqual: "njjjj" });
-
-// const f = im.targetModule.getDataFileSync("package.1.json");
-// f.delete("scripts.ali", { ifEqual: "xbbb", ifNotEqual: "ddd", ifExists: true, ifNotExists: true });
-// f.set("scripts.ozum", "k2s2333");
-// f.saveSync();
-
-// console.log(im.targetModule.config);
-
-// const data = x.parseFileSync("package.json");
-// data.scripts.ozum = "hhh";
-// x.writeFileSync("sil.json", data);
-
 describe("Intermodular", () => {
-  it("should throw if no target can be found.", () => {
-    expect(() => new Intermodular()).toThrow("No parent module is available");
-  });
-
   it("should detect its own root", () => {
     expect(im.myRoot).toBe(join(__dirname, ".."));
   });
 
   it("should detect its parent module root", () => {
-    expect(im.parentModuleRoot).toBe("");
+    expect(im.parentModuleRoot).toBe(join(__dirname, ".."));
   });
 
   it("should use itself as a default source module", () => {

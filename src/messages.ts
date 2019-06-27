@@ -25,7 +25,7 @@ function getTemplates(): { [key in keyof typeof TEMPLATES]: [LogLevel, Handlebar
     construction: [LogLevel.Info, `Intermodular: {{source}} → {{target}}`],
 
     fileCopy: [LogLevel.Debug, `  ↳  {{ em source }} → {{ em target }}`],
-    fileOp: [LogLevel.Info, `File {{ op }}: {{ em file }}.`],
+    fileOp: [LogLevel.Info, `File {{ op }}: {{ em file }}`],
     fileNotOpExists: [LogLevel.Warn, `File ${u("not {{ op }}")}: '{{ em file }}' already exists.`],
     fileNotOpIsEqual: [LogLevel.Warn, `File ${u("not {{ op }}")}: {{ em file }} is not met requested equality condition.`],
     fileNotOpIsNotEqual: [LogLevel.Warn, `File ${u("not {{ op }}")}: {{ em file }} is not met requested non-equality condition.`],

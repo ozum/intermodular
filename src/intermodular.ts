@@ -73,7 +73,7 @@ export default class Intermodular {
    * Root directory of your module which requires this module.
    * This is the directory which contains `package.json` file of your module.
    */
-  public readonly parentModuleRoot: string = findTopPackageDir(join(this.myRoot, "..")) || "";
+  public readonly parentModuleRoot: string = findTopPackageDir(this.myRoot) || "";
 
   /**
    * Creates an instance.
