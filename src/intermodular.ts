@@ -111,6 +111,7 @@ export default class Intermodular {
       packageManager,
       this.sourceModule.name
     );
+    this._logTemplate("construction", { source: this.sourceModule.name, target: this.targetModule.name });
   }
 
   /**

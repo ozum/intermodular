@@ -22,6 +22,8 @@ function getTemplates(): { [key in keyof typeof TEMPLATES]: [LogLevel, Handlebar
   const { red, green } = chalk;
 
   const TEMPLATES = {
+    construction: [LogLevel.Info, `Intermodular: {{source}} → {{target}}`],
+
     fileCopy: [LogLevel.Debug, `  ↳  {{ em source }} → {{ em target }}`],
     fileOp: [LogLevel.Info, `File {{ op }}: {{ em file }}.`],
     fileNotOpExists: [LogLevel.Warn, `File ${u("not {{ op }}")}: '{{ em file }}' already exists.`],
