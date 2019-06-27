@@ -1,7 +1,7 @@
 {
   "name": "intermodular",
   "label": "Intermodular",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Easy file operations between node.js modules and auto logging to help building zero-config boilerplates, postinstall and other scripts.",
   "keywords": [
     "zero configuration",
@@ -43,7 +43,7 @@
     "format": "prettier --write --config .prettierrc --check 'src/**/*.+(js|jsx|json|less|css|ts|tsx|md|vue|gql)'",
     "test": "NODE_ENV=test jest --coverage",
     "prepublishOnly": "npm run build",
-    "release": "npm-run-all -p lint test format && git add -A && git commit -m 'format' && git checkout master && git pull origin master && git push --follow-tags origin master && npm publish"
+    "release": "npm-run-all -p lint test format && (git diff --quiet && git diff --staged --quiet || git commit -am 'format code') && git checkout master && git pull origin master && git push --follow-tags origin master && npm publish"
   },
   "dependencies": {
     "@types/fs-extra": "^7.0.0",

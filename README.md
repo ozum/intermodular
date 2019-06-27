@@ -2,7 +2,7 @@
 
 > Easy file operations between node.js modules and auto logging to help building zero-config boilerplates, postinstall and other scripts.
 
-### 🏠 [Homepage](https://intermodular.netlify.com)
+### 🏠 [Homepage](https://intermodular.ozum.net)
 
 ## Install
 
@@ -12,7 +12,7 @@ npm install intermodular
 
 # Usage
 
-See [Homepage](https://intermodular.netlify.com) for full documentation and API.
+See [Homepage](https://intermodular.ozum.net) for full documentation and API.
 
 ```ts
 const targetModule = intermodular.targetModule;
