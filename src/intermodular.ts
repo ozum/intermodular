@@ -1,4 +1,3 @@
-/** dwdwd @preferred */
 /* eslint-disable no-nested-ternary, @typescript-eslint/no-explicit-any */
 import parentModule from "parent-module";
 import pkgDir from "pkg-dir";
@@ -257,6 +256,6 @@ export default class Intermodular {
       return shouldCopy[id];
     };
 
-    return copySync(source, target, { overwrite, errorOnExist, dereference, preserveTimestamps, filter: filterFunction });
+    copySync(source, target, { overwrite, errorOnExist, dereference, preserveTimestamps, filter: filterFunction });
   }
 }
