@@ -46,6 +46,7 @@ export default class Module {
   private readonly _logger: Logger;
   private readonly _overwrite: boolean;
   private readonly _packageManager: "npm" | "yarn" = "npm";
+  private readonly _configName?: string;
 
   /**
    * Absolute path of the module's root directory, where `package.json` is located.
@@ -69,7 +70,7 @@ export default class Module {
    * For example your module (source module) is named `my-boilerplate` and `my-project` uses by installing `my-boilerplate`,
    * then `my-project/.my-boilerplate.rc.json` (or any cosmiconfig supported file name) configuration file located in root of `my-project` is used.
    */
-  public readonly config: cosmiconfig.Config;
+  public config: cosmiconfig.Config = {};
 
   /**
    * @ignore
@@ -94,7 +95,8 @@ export default class Module {
     this._logger = logger;
     this._overwrite = overwrite;
     this._packageManager = packageManager;
-    this.config = configName ? (cosmiconfig(configName).searchSync(this.root) || { config: {} }).config : {};
+    this._configName = configName;
+    this.reloadConfig();
   }
 
   /**
@@ -158,6 +160,13 @@ export default class Module {
    */
   public get isTypeScript(): boolean {
     return this.tsConfig !== undefined || this.package.types !== undefined;
+  }
+
+  /**
+   * Reloads configuration. This may be useful if you create or update your configuration file.
+   */
+  public reloadConfig(): void {
+    this.config = this._configName ? (cosmiconfig(this._configName).searchSync(this.root) || { config: {} }).config : {};
   }
 
   /**

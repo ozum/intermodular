@@ -35,6 +35,15 @@ describe("Module", () => {
     expect(localModule.config).toEqual({});
   });
 
+  it("should reload config", () => {
+    const localModule = new Module(targetRoot, { log: () => 1 } as any, false, "npm", "boilerplate");
+    expect(localModule.config).toEqual({});
+    localModule.writeSync(".boilerplaterc.json", { reloaded: true });
+    localModule.reloadConfig();
+    expect(localModule.config).toEqual({ reloaded: true });
+    localModule.removeSync(".boilerplaterc.json");
+  });
+
   it("should have root", () => {
     expect(tm.root).toBe(targetRoot);
   });
