@@ -380,7 +380,8 @@ export default class Module {
     const absolutePath = this.pathOf(pathInModule);
     const extension = extname(this.pathOf(pathInModule)).slice(1) as FileFormat;
     const format = extension || defaultFormat;
-    return new DataFile(absolutePath, pathInModule, this._logger, this.getPrettierConfigSync(`${absolutePath}.${format}`) || {}, format);
+    const prettierConfig = this.getPrettierConfigSync(extension ? absolutePath : `${absolutePath}.${format}`) || {};
+    return new DataFile(absolutePath, pathInModule, this._logger, prettierConfig, format);
   }
 
   /**
