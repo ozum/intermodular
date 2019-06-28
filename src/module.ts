@@ -411,7 +411,8 @@ export default class Module {
     const path = this.pathOf(pathInModule);
     const prettierConfig = prettier.resolveConfig.sync(path);
     if (prettierConfig && !prettierConfig.parser) {
-      prettierConfig.parser = prettier.getFileInfo.sync(path).inferredParser as typeof prettierConfig.parser;
+      const inferredParser = prettier.getFileInfo.sync(path).inferredParser as typeof prettierConfig.parser;
+      prettierConfig.parser = inferredParser === "json" ? "json-stringify" : inferredParser; // Prettier API infers `json`, but CLI infers `json-stringify`. Stay compatible.
     }
     return prettierConfig;
   }
