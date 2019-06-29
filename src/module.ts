@@ -1,21 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { readFileSync, outputFileSync, removeSync, existsSync, renameSync } from "fs-extra";
-import { join, normalize, relative, sep, extname } from "path";
+import set from "lodash.set";
+import get from "lodash.get";
+import pickBy from "lodash.pickby";
+import cloneDeep from "lodash.clonedeep";
+import { readFileSync, outputFileSync, removeSync, existsSync, renameSync, realpathSync } from "fs-extra";
+import { join, normalize, relative, sep, extname, dirname } from "path";
 import cosmiconfig from "cosmiconfig";
 import prettier from "prettier";
 import isEqual from "lodash.isequal";
 import { Logger } from "winston";
 import execa, { SyncOptions, ExecaSyncReturnValue } from "execa";
-import {
-  arrify,
-  readJSONSync,
-  serialize,
-  parseString,
-  logTemplate,
-  getNotModifyReasonTemplateKey,
-  getConcurrentlyArgs,
-  applyCommandDefaults,
-} from "./util";
+import which from "which";
+import { ConcurrentlyOptions } from "concurrently";
+import { arrify, readJSONSync, serialize, parseString, logTemplate, getNotModifyReasonTemplateKey } from "./util";
 import {
   JSONObject,
   FileFormat,
@@ -115,6 +112,62 @@ export default class Module {
     if (message !== undefined) {
       this._logger.log(level, message);
     }
+  }
+
+  /**
+   * `execa.sync` parameters are (file, [arguments], [options]). `arguments` is optional, so 2nd parameter may be either `arguments` or `options`.
+   * This function rerturns 3 parameters after applying default options to given options.
+   *
+   * @private
+   * @ignore
+   * @param command is comand to parse binary and arguments.
+   * @param options are default options to apply.
+   * @returns 3 parameters for execa.sync()
+   */
+  private _applyCommandDefaults<T extends SyncOptions | ConcurrentlyOptions>(
+    command: ExecaCommandSync,
+    options: T
+  ): [string, string[], T?] {
+    const clonedOptions = cloneDeep(options); // To not modify supplied deep objects, clone.
+
+    if (!get(clonedOptions, "env.PATH")) {
+      const binPath = join(this.root, "node_modules/.bin");
+      set(clonedOptions, "env.PATH", `${binPath}:${process.env.PATH}`);
+    }
+
+    if (Array.isArray(command)) {
+      return command[1] && !Array.isArray(command[1])
+        ? [command[0], [], Object.assign({}, clonedOptions, command[1])]
+        : [command[0], command[1], Object.assign({}, clonedOptions, command[2])];
+    }
+    return [command, [], clonedOptions];
+  }
+
+  /**
+   * Given an object containing keys as script names, values as commands, returns parameters to feed to concurrently.
+   *
+   * @private
+   * @ignore
+   * @param commands is object with script name as key, [[Command]] as value.
+   * @param killOthers is whether concurrently args `--kill-others-on-fail` should be added.
+   * @returns arguments to use with concurrently.
+   */
+  private _getConcurrentlyArgs(commands: ParallelCommands, options: ExecuteAllSyncOptions): string[] {
+    const colors = ["bgBlue", "bgGreen", "bgMagenta", "bgCyan", "bgWhite", "bgRed", "bgBlack", "bgYellow"];
+
+    const definedCommands = pickBy(commands) as { [key: string]: ExecaCommandSync }; // Clear empty keys
+    // prettier-ignore
+    return [
+      options.stopOnError || options.throwOnError ? "--kill-others-on-fail" : "",
+      "--prefix", "[{name}]",
+      "--names", Object.keys(definedCommands).join(","),
+      "--prefix-colors", colors.join(","),
+      ...Object.values(definedCommands).map(command => {
+        const [cmd, args] = this._applyCommandDefaults(command, {});
+        return JSON.stringify(`${cmd} ${args.join(" ")}`.trim());
+        // return JSON.stringify(typeof c === "string" ? c : `${cmd} ${args.join(" ")}`)
+      }),
+    ].filter(Boolean);
   }
 
   /**
@@ -430,6 +483,68 @@ export default class Module {
     return `.${sep}${relativePath}`;
   }
 
+  /* istanbul ignore next */
+  /**
+   * Finds and returns path of given command, trying to following steps:
+   * 1. If it is a command defined in env.PATH, returns it's path. (PATH includes `node_modules/.bin`)
+   * 2. Searches if given node module is installed.
+   * 2.a. If executable is given, looks `bin[executable]` in module's package.json.
+   * 2.b. If no executable is given, looks `bin[module name]` in module's package.json.
+   * 2.c. If found returns it's path.
+   * 3. Throws error.
+   * module name is used by default.
+   *
+   * @param modName is module name to find executable from.
+   * @param executable is xecutable name. (Defaults to module name)
+   * @param  cwd is current working directory.
+   * @returns path to binary.
+   * @throws Error if no binary cannot be found.
+   * @example
+   * project.resolveBin("typescript", { executable: "tsc" }); // Searches typescript module, looks `bin.tsc` in package.json and returns it's path.
+   * project.resolveBin("tsc"); // If `tsc` is defined in PATH, returns `tsc`s path, otherwise searches "tsc" module, which returns no result and throws error.
+   * project.resolveBin("some-cmd"); // Searches "some-cmd" module and
+   */
+  public resolveBin(modName: string, { executable = "", cwd = process.cwd() }: { executable?: string; cwd?: string } = {} as any): string {
+    let pathFromWhich;
+    let binPath;
+    try {
+      const whichExecutable = which.sync(executable || modName, { path: `${join(this.root, "node_modules/.bin")}:${process.env.PATH}` });
+      pathFromWhich = realpathSync(whichExecutable);
+    } catch (_error) {
+      // ignore _error
+    }
+
+    try {
+      const modPkgPath = require.resolve(`${modName}/package.json`);
+      const modPkgDir = dirname(modPkgPath!);
+      const { bin } = require(modPkgPath!); // eslint-disable-line import/no-dynamic-require, global-require, @typescript-eslint/no-var-requires
+
+      if (typeof bin === "string" && (!executable || bin === executable)) {
+        binPath = bin;
+      } else if (typeof bin === "object" && executable && bin[executable]) {
+        binPath = bin[executable];
+      } else if (typeof bin === "object" && !executable) {
+        binPath = Object.keys(bin).length === 1 ? Object.values(bin)[0] : bin[modName];
+      }
+
+      if (!binPath) {
+        throw new Error(`There is no "bin.${executable || modName}" or default (string or single entry object) "bin" in package.json.`);
+      }
+      const fullPathToBin = join(modPkgDir, binPath);
+
+      if (fullPathToBin === pathFromWhich) {
+        return executable || modName;
+      }
+      return fullPathToBin.replace(cwd + sep, `.${sep}`);
+    } catch (e) {
+      if (pathFromWhich) {
+        return executable || modName;
+      }
+
+      throw new Error(`Cannot resolve bin: "${executable || modName}" in "${modName}" module.`);
+    }
+  }
+
   /**
    * Executes given command using `spawn.sync` with given arguments and options.
    *
@@ -450,7 +565,7 @@ export default class Module {
     args?: string[] | SyncOptions | SyncOptions<null>,
     options?: SyncOptions | SyncOptions<null>
   ): ExecaSyncReturnValue | ExecaSyncReturnValue<Buffer> {
-    const execaArgs = applyCommandDefaults([bin, args, options] as ExecaCommandSync, { stdio: "inherit", cwd: this.root });
+    const execaArgs = this._applyCommandDefaults([bin, args, options] as ExecaCommandSync, { stdio: "inherit", cwd: this.root });
     return execa.sync(...execaArgs);
   }
 
@@ -499,8 +614,8 @@ export default class Module {
 
     commands.filter(Boolean).every(command => {
       const execaArgs: [string, string[], SyncOptions?] = isParallelCommands(command)
-        ? [this.bin("concurrently"), getConcurrentlyArgs(command, defaultOptions), defaultOptions]
-        : applyCommandDefaults(command, defaultOptions);
+        ? [this.bin("concurrently"), this._getConcurrentlyArgs(command, defaultOptions), defaultOptions]
+        : this._applyCommandDefaults(command, defaultOptions);
 
       try {
         const result = execa.sync(...execaArgs);

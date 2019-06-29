@@ -4,11 +4,8 @@ import { readFileSync, existsSync } from "fs";
 import { normalize, join } from "path";
 import winston, { Logger } from "winston";
 import yaml from "js-yaml";
-import pickBy from "lodash.pickby";
-import { SyncOptions } from "execa";
-import { ConcurrentlyOptions } from "concurrently";
 import pkgDir from "pkg-dir";
-import { JSONObject, LogLevel, FileFormat, ExecaCommandSync, ParallelCommands, ExecuteAllSyncOptions } from "./types";
+import { JSONObject, LogLevel, FileFormat } from "./types";
 import TEMPLATES from "./messages";
 import Module from "./module";
 
@@ -144,55 +141,6 @@ export function logTemplate(key: keyof typeof TEMPLATES, args: Record<string, an
  */
 export function ucFirst(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-/**
- * `execa.sync` parameters are (file, [arguments], [options]). `arguments` is optional, so 2nd parameter may be either `arguments` or `options`.
- * This function rerturns 3 parameters after applying default options to given options.
- *
- * @private
- * @ignore
- * @param command is comand to parse binary and arguments.
- * @param defaultOptions are default options to apply.
- * @returns 3 parameters for execa.sync()
- */
-export function applyCommandDefaults<T extends SyncOptions | ConcurrentlyOptions>(
-  command: ExecaCommandSync,
-  defaultOptions: T
-): [string, string[], T?] {
-  if (Array.isArray(command)) {
-    return command[1] && !Array.isArray(command[1])
-      ? [command[0], [], Object.assign({}, defaultOptions, command[1])]
-      : [command[0], command[1], Object.assign({}, defaultOptions, command[2])];
-  }
-  return [command, [], defaultOptions];
-}
-
-/**
- * Given an object containing keys as script names, values as commands, returns parameters to feed to concurrently.
- *
- * @private
- * @ignore
- * @param commands is object with script name as key, [[Command]] as value.
- * @param killOthers is whether concurrently args `--kill-others-on-fail` should be added.
- * @returns arguments to use with concurrently.
- */
-export function getConcurrentlyArgs(commands: ParallelCommands, options: ExecuteAllSyncOptions): string[] {
-  const colors = ["bgBlue", "bgGreen", "bgMagenta", "bgCyan", "bgWhite", "bgRed", "bgBlack", "bgYellow"];
-
-  const definedCommands = pickBy(commands) as { [key: string]: ExecaCommandSync }; // Clear empty keys
-  // prettier-ignore
-  return [
-      options.stopOnError || options.throwOnError ? "--kill-others-on-fail" : "",
-      "--prefix", "[{name}]",
-      "--names", Object.keys(definedCommands).join(","),
-      "--prefix-colors", colors.join(","),
-      ...Object.values(definedCommands).map(command => {
-        const [cmd, args] = applyCommandDefaults(command, {});
-        return JSON.stringify(`${cmd} ${args.join(" ")}`.trim());
-        // return JSON.stringify(typeof c === "string" ? c : `${cmd} ${args.join(" ")}`)
-      }),
-    ].filter(Boolean);
 }
 
 /**

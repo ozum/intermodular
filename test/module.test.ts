@@ -294,6 +294,20 @@ describe("Module", () => {
     });
   });
 
+  describe("resolveBin", () => {
+    it("should find local executable in node_modules/.bin", () => {
+      expect(tm.resolveBin("local-executable")).toBe("local-executable");
+    });
+
+    it("should find global executable", () => {
+      expect(tm.resolveBin("ls")).toBe("ls");
+    });
+
+    it("should find local executable of given module", () => {
+      expect(tm.resolveBin("typescript", { executable: "tsc" })).toBe("tsc");
+    });
+  });
+
   describe("install/uninstall", () => {
     it("should install module with npm.", async () => {
       const localModule = new Module(installTestModuleRoot, "" as any, false, "npm", "xyz");
