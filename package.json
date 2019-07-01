@@ -43,7 +43,8 @@
     "format": "prettier --write --config .prettierrc --check 'src/**/*.+(js|jsx|json|less|css|ts|tsx|md|vue|gql)'",
     "test": "NODE_ENV=test jest --coverage",
     "prepublishOnly": "npm run build",
-    "release": "npm-run-all -p lint test format && (git diff --quiet && git diff --staged --quiet || git commit -am 'format code') && git checkout master && git pull origin master && git push --follow-tags origin master && npm publish"
+    "prerelease": "npm-run-all -p lint test format",
+    "release": "(git diff --quiet && git diff --staged --quiet || git commit -am 'format code') && git checkout master && git pull origin master && git push --follow-tags origin master && npm publish"
   },
   "dependencies": {
     "@types/cosmiconfig": "^5.0.3",
