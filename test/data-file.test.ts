@@ -116,8 +116,18 @@ describe("DataFile", () => {
       expect(dataFile.get("ids")).toEqual([1, 2, 3]);
     });
 
+    it("should change whole object if path is undefined.", () => {
+      dataFile.assign(undefined, { manager: { id: 0, name: "Mike" } });
+      expect(dataFile.data).toEqual({
+        ids: [1, 2, 3],
+        manager: { id: 0, name: "Mike" },
+        name: "data json",
+        product: { color: "red", name: "pen", size: 3 },
+      });
+    });
+
     it("should change whole object if no path is given.", () => {
-      dataFile.assign(undefined, { manager: { id: 1, name: "George" } });
+      dataFile.assign({ manager: { id: 1, name: "George" } });
       expect(dataFile.data).toEqual({
         ids: [1, 2, 3],
         manager: { id: 1, name: "George" },
@@ -125,6 +135,7 @@ describe("DataFile", () => {
         product: { color: "red", name: "pen", size: 3 },
       });
     });
+
     it("should accept path as an array.", () => {
       dataFile.assign(["manager"], { id: 2 });
       expect(dataFile.get("manager.id")).toBe(2);

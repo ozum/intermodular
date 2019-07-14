@@ -41,7 +41,7 @@ targetModule.hasAnyDependency("babel");
 ### Single Command
 
 ```ts
- // Execute shell command.
+// Execute shell command.
 targetModule.executeSync("rm", ["-rf", "dist"]);
 ```
 
@@ -52,12 +52,13 @@ targetModule.executeSync("rm", ["-rf", "dist"]);
 targetModule.executeAllSync(["rm", ["-rf", "dist"]], "tsc");
 
 // Run `rm -rf dist` and `rm -rf build` concurrently, then execute `tsc`
-targetModule.executeAllSync({
+targetModule.executeAllSync(
+  {
     "Delete 1": ["rm", ["-rf", "dist"]],
-    "Delete 2": ["rm", ["-rf", "build"]]
+    "Delete 2": ["rm", ["-rf", "build"]],
   },
   "tsc"
-); 
+);
 ```
 
 ## Work with Prettier
@@ -97,6 +98,7 @@ const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` 
 packageJson.set("keywords", ["some-key"], { ifNotExists: true });
 packageJson.set("description", `My awesome ${moduleName}`, { ifNotExists: true });
 packageJson.assign("scripts", { build: "tsc", test: "jest" }, { ifNotExists: true });
+packageJson.assign({ author: { name: "my-name", email:"mymail@mymail.com" }, { ifNotExists: true });
 packageJson.orderKeys(["name", "version", "description", "keywords", "scripts"]); // Other keys come after.
 packageJson.saveSync();
 ```

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import OS from "os";
 import chalk from "chalk";
 import mapValues from "lodash.mapvalues";
@@ -12,10 +13,16 @@ Handlebars.registerHelper({
   u: (str: string) => `${chalk.underline(str)}`,
 });
 
+/** @ignore */
 const u = chalk.underline;
+/** @ignore */
 const em = chalk.yellow;
-const { red, green } = chalk;
+/** @ignore */
+const red = chalk.red;
+/** @ignore */
+const green = chalk.green;
 
+/** @ignore */
 const TEMPLATES = {
   construction: [LogLevel.Info, `Intermodular: {{source}} → {{target}}`],
 

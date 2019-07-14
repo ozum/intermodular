@@ -209,8 +209,19 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
   }
 
   /**
+   * Merges all keys and values of `data` shallowly into root of file data.
+   * Different to object assign, keys may be merged conditionally such as `ifExists` or `ifNotExists`.
+   *
+   * @param data is the object to merge given path.
+   * @param conditions should be met to apply a modifications for each key/value individually.
+   * @example
+   * const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
+   * packageJson.assign({ name: "some-module", version: "1.0.0", }, { ifNotExists: true });
+   */
+  public assign(data: Record<string, any>, conditions?: ModifyCondition): this;
+  /**
    * Merges all keys and values of `data` shallowly into `path` of file data. If a portion of path doesn't exist, it's created.
-   * Differnet to object assign, keys may be merged conditionally such as `ifExists` or `ifNotExists`.
+   * Different to object assign, keys may be merged conditionally such as `ifExists` or `ifNotExists`.
    *
    * @param path is data path of the property to delete.
    * @param data is the object to merge given path.
@@ -219,7 +230,16 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
    * const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
    * packageJson.assign("scripts", { build: "tsc", test: "jest", }, { ifNotExists: true });
    */
-  public assign(path: string | string[] | undefined, data: Record<string, any>, conditions: ModifyCondition = {} as any): this {
+  public assign(path: string | string[] | undefined, data: Record<string, any>, conditions?: ModifyCondition): this;
+  public assign(
+    pathOrData: string | string[] | undefined | Record<string, any>,
+    dataOrConditions?: Record<string, any> | ModifyCondition,
+    conditionsOrVoid?: ModifyCondition
+  ): this {
+    const [path, data, conditions] = (Array.isArray(pathOrData) || typeof pathOrData === "string" || pathOrData === undefined
+      ? [pathOrData, dataOrConditions, conditionsOrVoid || {}]
+      : ["", pathOrData, conditionsOrVoid || {}]) as [string | string[] | undefined, Record<string, any>, ModifyCondition];
+
     if (path && !has(this.data, path)) {
       set(this.data, path, {});
     }
