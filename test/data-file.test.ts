@@ -107,6 +107,7 @@ describe("DataFile", () => {
       expect(dataFile.get("product")).toEqual({ name: "pen", color: "blue" });
       dataFile.assign("product", { color: "red", size: 3 });
       expect(dataFile.get("product")).toEqual({ name: "pen", color: "red", size: 3 });
+      expect(dataFile.modifiedKeys).toEqual({ set: ["surname", "product.name", "product.color", "product.size"], deleted: ["surname"] });
     });
 
     it("should not assign to array.", () => {

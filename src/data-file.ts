@@ -44,6 +44,7 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
   private readonly _shortPath: string;
   private readonly _prettierConfig: prettier.Options;
   private _skipModificationCheckOnSave: boolean = false;
+  private _modifiedKeys: { set: Set<string>; deleted: Set<string> } = { set: new Set(), deleted: new Set() };
 
   /**
    * Data format of the file
@@ -185,6 +186,7 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
       this._logTemplate("dataFileUpdatedWithValue", { old: oldValue, new: value });
     } else if (this._shouldModify(path, "set", conditions)) {
       set(this.data as Record<string, any>, path, value);
+      this._modifiedKeys.set.add(Array.isArray(path) ? path.join(".") : path);
       this._logTemplate("dataFileUpdatedWithValue", { old: oldValue, new: value });
     }
     return this;
@@ -204,6 +206,7 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
   public delete(path: string | string[], conditions?: ModifyCondition): this {
     if (this._shouldModify(path, "deleted", conditions)) {
       unset(this.data, path);
+      this._modifiedKeys.deleted.add(Array.isArray(path) ? path.join(".") : path);
     }
     return this;
   }
@@ -259,6 +262,13 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
     });
 
     return this;
+  }
+
+  /**
+   * Deleted and modified keys (paths) in data file.
+   */
+  public get modifiedKeys(): { set: string[]; deleted: string[] } {
+    return { set: Array.from(this._modifiedKeys.set), deleted: Array.from(this._modifiedKeys.deleted) };
   }
 
   /**

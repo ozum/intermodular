@@ -12,6 +12,7 @@ import { Logger } from "winston";
 import execa, { SyncOptions, ExecaSyncReturnValue } from "execa";
 import which from "which";
 import { ConcurrentlyOptions } from "concurrently";
+import deleteEmpty from "delete-empty";
 import { arrify, readJSONSync, serialize, parseString, logTemplate, getNotModifyReasonTemplateKey } from "./util";
 import {
   JSONObject,
@@ -350,6 +351,7 @@ export default class Module {
    * @param ifEqual allows modification if only value stored at `path` equals/deeply equals to it's value.
    * @param ifNotEqual allows modification if only value stored at `path` not equals/deeply equals to it's value.
    * @param prettier is whether to use prettier to format file.
+   * @returns file path relative to module root if file is written.
    */
   public writeSync(
     pathInModule: string,
@@ -361,7 +363,7 @@ export default class Module {
       ifEqual,
       ifNotEqual,
     }: { format?: FileFormat; overwrite?: boolean; prettier?: boolean; ifEqual?: string | object; ifNotEqual?: string | object } = {} as any
-  ): void {
+  ): string | undefined {
     let templateKey = getNotModifyReasonTemplateKey(this, pathInModule, { overwrite, ifEqual, ifNotEqual });
 
     if (!templateKey) {
@@ -375,6 +377,8 @@ export default class Module {
     }
 
     this._logTemplate(templateKey, { file: pathInModule, op: "written" });
+
+    return templateKey ? undefined : pathInModule;
   }
 
   /**
@@ -383,8 +387,12 @@ export default class Module {
    * @param pathInModule is file path relative to module root.
    * @param ifEqual allows modification if only value stored at `path` equals/deeply equals to it's value.
    * @param ifNotEqual allows modification if only value stored at `path` equals/deeply equals to it's value.
+   * @returns file path relative to module root if file is removed.
    */
-  public removeSync(pathInModule: string, { ifEqual, ifNotEqual }: { ifEqual?: string | object; ifNotEqual?: string | object } = {}): void {
+  public removeSync(
+    pathInModule: string,
+    { ifEqual, ifNotEqual }: { ifEqual?: string | object; ifNotEqual?: string | object } = {}
+  ): string | undefined {
     let templateKey = getNotModifyReasonTemplateKey(this, pathInModule, { overwrite: true, ifEqual, ifNotEqual });
 
     if (!templateKey) {
@@ -393,6 +401,17 @@ export default class Module {
     }
 
     this._logTemplate(templateKey, { file: pathInModule, op: "deleted" });
+
+    return templateKey ? undefined : pathInModule;
+  }
+
+  /**
+   * Removes empty directories recursively for given path relative to module root.
+   *
+   * @param pathInModule is file path relative to module root.
+   */
+  public removeEmptyDirsSync(pathInModule: string): void {
+    deleteEmpty.sync(join(this.pathOf(pathInModule)));
   }
 
   /**
@@ -411,15 +430,17 @@ export default class Module {
    * @param oldPathInModule is old path to rename relative to module root.
    * @param newPathInModule is new path to rename relative to module root.
    * @param overwrite is whether to allow rename operation if target path already exists. Silently ignores operation if overwrite is not allowed and target path exists.
+   * @returns whether file is renamed.
    */
-  public renameSync(oldPathInModule: string, newPathInModule: string, { overwrite = this._overwrite } = {}): void {
+  public renameSync(oldPathInModule: string, newPathInModule: string, { overwrite = this._overwrite } = {}): boolean {
     const [oldPath, newPath] = [this.pathOf(oldPathInModule), this.pathOf(newPathInModule)];
     if (this.existsSync(newPathInModule) && !overwrite) {
       this._logTemplate("fileNotRenamedExists", { source: oldPathInModule, target: newPathInModule });
-    } else {
-      renameSync(oldPath, newPath);
-      this._logTemplate("fileRenamed", { source: oldPathInModule, target: newPathInModule });
+      return false;
     }
+    renameSync(oldPath, newPath);
+    this._logTemplate("fileRenamed", { source: oldPathInModule, target: newPathInModule });
+    return true;
   }
 
   /**

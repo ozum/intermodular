@@ -1,4 +1,4 @@
-import { remove } from "fs-extra";
+import { remove, mkdirpSync, removeSync } from "fs-extra";
 import { join } from "path";
 import get from "lodash.get";
 import Intermodular from "../src/intermodular";
@@ -237,6 +237,19 @@ describe("Module", () => {
       tm.writeSync("created/g.json", "a");
       tm.removeSync("created/g.json", { ifEqual: "a" });
       expect(tm.existsSync("created/g.json")).toBe(true);
+    });
+  });
+
+  describe("removeEmptyDirsSync", () => {
+    it("should remove empty directories", () => {
+      mkdirpSync(tm.pathOf("empty-dir-test/a/a1/a11"));
+      mkdirpSync(tm.pathOf("empty-dir-test/a/a2/a21"));
+      tm.writeSync("empty-dir-test/a/a2/a21/x.txt", "a");
+      tm.removeEmptyDirsSync("empty-dir-test");
+      const shouldExist = tm.existsSync("empty-dir-test/a/a2");
+      const shouldNotExist = !tm.existsSync("empty-dir-test/a/a1");
+      removeSync(tm.pathOf("empty-dir-test"));
+      expect(shouldExist && shouldNotExist).toBe(true);
     });
   });
 

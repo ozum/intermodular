@@ -197,6 +197,7 @@ export default class Intermodular {
    * @param dereference whether to dereference symlinks.
    * @param preserveTimestamps whether to set last modification and access times to the ones of the original source files. When false, timestamp behavior is OS-dependent.
    * @param filter is `(src, dest) => boolean` function to filter copied files. Return true to include, false to exclude.
+   * @returns array of file paths copied to target. File paths are relative to target module root.
    * @example
    * // Copy everything in `/path/to/project/node_modules/module-a/src/config/` to `/path/to/project/`
    * util.copySync("src/config", ".");
@@ -213,10 +214,10 @@ export default class Intermodular {
       preserveTimestamps = false,
       filter,
     }: ExtendedCopyOptionsSync = {}
-  ): void {
+  ): string[] {
     const source = this.sourceModule.pathOf(pathInSourceModule);
     let target = this.targetModule.pathOf(pathInTargetModule);
-
+    const copiedFiles: string[] = [];
     const shouldCopy: Record<string, boolean> = {}; // Filter function called more than once for same pair. Store result not to calculate again.
 
     // If source is file and target is an existing directory copy into it with same file name.
@@ -226,7 +227,7 @@ export default class Intermodular {
         : target;
 
     if (source === target) {
-      return;
+      return [];
     }
 
     // For logging purposes, create a filter function wrapper around original filter function.
@@ -235,12 +236,13 @@ export default class Intermodular {
       const relativeSource = relative(this.sourceModule.root, src); // Even source is a directory, this is the individual real destinantion file.
       const relativeDestination = relative(this.targetModule.root, dest); // Even source is a directory, this is the individual real destinantion file.
       const id = `${relativeSource}→${relativeDestination}`;
+      const srcIsDirectory = lstatSync(src).isDirectory();
 
       if (Object.prototype.hasOwnProperty.call(shouldCopy, id)) {
         return shouldCopy[id];
       }
 
-      if (!lstatSync(src).isDirectory()) {
+      if (!srcIsDirectory) {
         notModifyReason = getNotModifyReasonTemplateKey(this.targetModule, relativeDestination, { overwrite, ifEqual, ifNotEqual });
 
         this._logTemplate(notModifyReason || "fileOp", {
@@ -253,9 +255,15 @@ export default class Intermodular {
 
       // Return original filter functions result if it exists.
       shouldCopy[id] = notModifyReason === undefined && (filter ? filter(src, dest) : true);
+
+      if (shouldCopy[id] && !srcIsDirectory) {
+        copiedFiles.push(relative(this.targetModule.root, dest));
+      }
+
       return shouldCopy[id];
     };
 
     copySync(source, target, { overwrite, errorOnExist, dereference, preserveTimestamps, filter: filterFunction });
+    return copiedFiles;
   }
 }
