@@ -1,5 +1,6 @@
 import { remove } from "fs-extra";
 import { join } from "path";
+import get from "lodash.get";
 import Intermodular from "../src/intermodular";
 
 const sourceRoot = join(__dirname, "supplements/source-module");
@@ -163,6 +164,16 @@ describe("DataFile", () => {
       dataFile.saveSync();
       const reReadDataFile = tm.getDataFileSync("data-file.json");
       expect(Object.keys(reReadDataFile.data)).toEqual(["ids", "manager", "name", "product"]);
+    });
+  });
+
+  describe("orderKeysOf", () => {
+    it("should order keys of given path in the data.", () => {
+      dataFile.assign("subKey", { a: 1, c: 3, b: 2 });
+      dataFile.orderKeysOf("subKey", ["c", "a", "b"]);
+      dataFile.saveSync();
+      const reReadDataFile = tm.getDataFileSync("data-file.json");
+      expect(Object.keys(get(reReadDataFile.data, "subKey"))).toEqual(["c", "a", "b"]);
     });
   });
 });

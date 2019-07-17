@@ -276,24 +276,51 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
    * This method allows reordering of the keys. `keys` are placed at the beginning in given order whereas remaining keys
    * of the object comes in their order of position.
    *
-   * @param keys are ordered keys to appear ath beginning of file when saved.
+   * @param keys are ordered keys to appear at the beginning of file when saved.
    * @example
    * const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
    * packageJson.orderKeys(["name", "version", "description", "keywords", "scripts"]); // Other keys come after.
    */
   public orderKeys(keys: (keyof T)[] = Object.keys(this.data).sort()): this {
-    const orderedKeysSet = new Set(keys.filter(key => this.has(key as string))); // Filter key which does not exists in this.data.
-    Object.keys(this.data).forEach(key => orderedKeysSet.add(key)); // Add missing keys from `thid.data` to ordered key set's end.
+    this.data = this._orderKeys(this.data, keys);
+    return this;
+  }
+
+  /**
+   * When keys/values added which are previously does not exist, they are added to the end of the file during file write.
+   * This method allows reordering of the keys in given path. `keys` are placed at the beginning in given order whereas remaining keys
+   * of the object comes in their order of position.
+   *
+   * @param path is data path of the property to order keys of.
+   * @param keys are ordered keys to appear at the beginning of given path when saved.
+   * @example
+   * const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
+   * packageJson.orderKeysOf("scripts", ["build", "lint"]); // Other keys come after.
+   */
+  public orderKeysOf(path: string | string[], keys: string[]): this {
+    set(this.data, path, this._orderKeys(this.get(path), keys));
+    return this;
+  }
+
+  /**
+   * Sort keys in given order. Missing keys in `keys` added to the end. If no keys are provided, sorts alphabetically.
+   *
+   * @param object is object to order keys of.
+   * @param keys are ordered keys to appear at the beginning of object.
+   * @return object with sorted keys.
+   */
+  private _orderKeys<K extends Record<string, any>>(object: K, keys: (keyof K)[] = Object.keys(object).sort()): K {
+    const orderedKeysSet = new Set(keys.filter(key => has(object, key))); // Filter key which does not exists in object.
+    Object.keys(object).forEach(key => orderedKeysSet.add(key)); // Add missing keys from `thid.data` to ordered key set's end.
     const orderedKeys = Array.from(orderedKeysSet.values());
 
-    if (!isEqual(orderedKeys, Object.keys(this.data))) {
-      // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
-      const newData: T = {} as T;
-      orderedKeys.forEach(key => (newData[key] = this.data[key]));
-      this.data = newData;
-      this._skipModificationCheckOnSave = true;
+    if (isEqual(orderedKeys, Object.keys(object))) {
+      return object;
     }
 
-    return this;
+    const newData: K = {} as K; // eslint-disable-line @typescript-eslint/no-object-literal-type-assertion
+    orderedKeys.forEach(key => (newData[key] = object[key]));
+    this._skipModificationCheckOnSave = true;
+    return newData;
   }
 }
