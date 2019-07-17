@@ -142,6 +142,14 @@ describe("DataFile", () => {
       dataFile.assign(["manager"], { id: 2 });
       expect(dataFile.get("manager.id")).toBe(2);
     });
+
+    it("should not set existing values with ifNotExists parameter.", () => {
+      dataFile.assign({ rootObject: { id: 1 } });
+      expect(dataFile.get("rootObject.id")).toBe(1);
+      dataFile.assign({ rootObject: { id: 2 } }, { ifNotExists: true });
+      expect(dataFile.get("rootObject.id")).toBe(1);
+      dataFile.delete("rootObject");
+    });
   });
 
   describe("orderKeys", () => {

@@ -242,7 +242,7 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
   ): this {
     const [path, data, conditions] = (Array.isArray(pathOrData) || typeof pathOrData === "string" || pathOrData === undefined
       ? [pathOrData, dataOrConditions, conditionsOrVoid || {}]
-      : ["", pathOrData, conditionsOrVoid || {}]) as [string | string[] | undefined, Record<string, any>, ModifyCondition];
+      : ["", pathOrData, dataOrConditions || {}]) as [string | string[] | undefined, Record<string, any>, ModifyCondition];
 
     if (path && !has(this.data, path)) {
       set(this.data, path, {});
