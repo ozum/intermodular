@@ -657,12 +657,12 @@ export default class Module {
   }
 
   /**
-   * Installs `packageName` node module using specified package manager.
+   * Installs `packageName` node module using specified package manager. If no `packageName` is provided installs all dependencies i.e `npm install`.
    *
    * @param packageName is the name of the package to install.
    * @param type is the dependency type of the package. `dev`, `peer`, `optional`.
    */
-  public install(packageName: string, { type = DependencyType.Dependencies }: { type?: DependencyType } = {} as any): void {
+  public install(packageName?: string, { type = DependencyType.Dependencies }: { type?: DependencyType } = {} as any): void {
     const types: Record<DependencyType, string> = {
       dependencies: "",
       devDependencies: "dev",
@@ -670,14 +670,14 @@ export default class Module {
       optionalDependencies: "optional",
     };
 
-    let args;
+    let args: string[];
 
     if (this._packageManager === "npm") {
       const typeFlag = types[type] ? [`--save-${types[type]}`] : [];
-      args = ["install", packageName, ...typeFlag];
+      args = packageName ? ["install", packageName, ...typeFlag] : ["install"];
     } else {
       const typeFlag = types[type] ? [`--${types[type]}`] : [];
-      args = ["add", packageName, ...typeFlag];
+      args = packageName ? ["add", packageName, ...typeFlag] : ["install"];
     }
     execa.sync(this._packageManager, args, { cwd: this.root });
   }
