@@ -23,15 +23,15 @@ afterAll(async () => {
 
 describe("Module", () => {
   it("should throw if root is missing", () => {
-    expect(() => new Module(undefined as any, "" as any, false, "npm")).toThrow("root is required.");
+    expect(() => new Module(undefined as any, { log: () => 1 } as any, false, "npm")).toThrow("root is required.");
   });
 
   it("should throw if package is missing", () => {
-    expect(() => new Module(__dirname, "" as any, false, "npm")).toThrow("Given path is not a module.");
+    expect(() => new Module(__dirname, { log: () => 1 } as any, false, "npm")).toThrow("Given path is not a module.");
   });
 
   it("should return empty config if file cannot be found", () => {
-    const localModule = new Module(sourceRoot, "" as any, false, "npm", "xyz");
+    const localModule = new Module(sourceRoot, { log: () => 1 } as any, false, "npm", "xyz");
     expect(localModule.config).toEqual({});
   });
 
@@ -65,12 +65,12 @@ describe("Module", () => {
   });
 
   it("should have safe name", () => {
-    const localModule = new Module(join(__dirname, "supplements/module-with-username"), "" as any, false, "npm", "xyz");
+    const localModule = new Module(join(__dirname, "supplements/module-with-username"), { log: () => 1 } as any, false, "npm", "xyz");
     expect(localModule.safeName).toBe("user-module-with-username");
   });
 
   it("should have name without user", () => {
-    const localModule = new Module(join(__dirname, "supplements/module-with-username"), "" as any, false, "npm", "xyz");
+    const localModule = new Module(join(__dirname, "supplements/module-with-username"), { log: () => 1 } as any, false, "npm", "xyz");
     expect(localModule.nameWithoutUser).toBe("module-with-username");
   });
 
@@ -323,55 +323,57 @@ describe("Module", () => {
 
   describe("install/uninstall", () => {
     it("should install module with npm.", async () => {
-      const localModule = new Module(installTestModuleRoot, "" as any, false, "npm", "xyz");
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "npm", "xyz");
       localModule.install(join(__dirname, "supplements/example-module-1.0.0.tgz"));
       expect(localModule.existsSync("node_modules/example-module")).toBe(true);
     });
 
     it("should uninstall module with npm.", () => {
-      const localModule = new Module(installTestModuleRoot, "" as any, false, "npm", "xyz");
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "npm", "xyz");
       localModule.uninstall("example-module");
       expect(localModule.existsSync("node_modules/example-module")).toBe(false);
     });
 
     it("should install module with yarn.", () => {
-      const localModule = new Module(installTestModuleRoot, "" as any, false, "yarn", "xyz");
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "yarn", "xyz");
       localModule.install(join(__dirname, "supplements/example-module-1.0.0.tgz"));
       expect(localModule.existsSync("node_modules/example-module")).toBe(true);
     });
 
     it("should uninstall module with yarn.", () => {
-      const localModule = new Module(installTestModuleRoot, "" as any, false, "yarn", "xyz");
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "yarn", "xyz");
       localModule.uninstall("example-module");
       expect(localModule.existsSync("node_modules/example-module")).toBe(false);
     });
 
     it("should install dev module with npm.", async () => {
-      const localModule = new Module(installTestModuleRoot, "" as any, false, "npm", "xyz");
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "npm", "xyz");
       localModule.install(join(__dirname, "supplements/example-module-1.0.0.tgz"), { type: DependencyType.DevDependencies });
       expect(localModule.existsSync("node_modules/example-module")).toBe(true);
     });
 
     it("should uninstall dev module with npm.", () => {
-      const localModule = new Module(installTestModuleRoot, "" as any, false, "npm", "xyz");
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "npm", "xyz");
       localModule.uninstall("example-module");
       expect(localModule.existsSync("node_modules/example-module")).toBe(false);
     });
 
     it("should install dev module with yarn.", () => {
-      const localModule = new Module(installTestModuleRoot, "" as any, false, "yarn", "xyz");
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "yarn", "xyz");
       localModule.install(join(__dirname, "supplements/example-module-1.0.0.tgz"), { type: DependencyType.DevDependencies });
       expect(localModule.existsSync("node_modules/example-module")).toBe(true);
     });
 
     it("should uninstall dev module with yarn.", () => {
-      const localModule = new Module(installTestModuleRoot, "" as any, false, "yarn", "xyz");
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "yarn", "xyz");
       localModule.uninstall("example-module");
       expect(localModule.existsSync("node_modules/example-module")).toBe(false);
     });
 
     it("should throw if unsupported package manager found", () => {
-      expect(() => new Module(installTestModuleRoot, "" as any, false, "abc" as any, "xyz")).toThrow("Unknown package manager");
+      expect(() => new Module(installTestModuleRoot, { log: () => 1 } as any, false, "abc" as any, "xyz")).toThrow(
+        "Unknown package manager"
+      );
     });
   });
 

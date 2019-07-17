@@ -656,13 +656,59 @@ export default class Module {
     return results;
   }
 
+  // /**
+  //  * Installs `packageName` node module using specified package manager. If no `packageName` is provided installs all dependencies i.e `npm install`.
+  //  *
+  //  * @param packageName is the name of the package to install.
+  //  * @param type is the dependency type of the package. `dev`, `peer`, `optional`.
+  //  */
+  // public install(packageName?: string, { type = DependencyType.Dependencies }: { type?: DependencyType } = {} as any): void {
+  //   const types: Record<DependencyType, string> = {
+  //     dependencies: "",
+  //     devDependencies: "dev",
+  //     peerDependencies: "peer",
+  //     optionalDependencies: "optional",
+  //   };
+
+  //   let args: string[];
+
+  //   if (this._packageManager === "npm") {
+  //     const typeFlag = types[type] ? [`--save-${types[type]}`] : [];
+  //     args = packageName ? ["install", packageName, ...typeFlag] : ["install"];
+  //   } else {
+  //     const typeFlag = types[type] ? [`--${types[type]}`] : [];
+  //     args = packageName ? ["add", packageName, ...typeFlag] : ["install"];
+  //   }
+
+  //   execa.sync(this._packageManager, args, { cwd: this.root, stdio: "inherit" });
+  // }
+
+  // /**
+  //  * Uninstalls `packageName` node module using specified package manager.
+  //  *
+  //  * @param packageName is the name of the package to uninstall.
+  //  * @param type is the dependency type of the package. `dev`, `peer`, `optional`.
+  //  */
+  // public uninstall(packageName: string): void {
+  //   if (this._packageManager === "npm") {
+  //     execa.sync("npm", ["uninstall", packageName], { cwd: this.root, stdio: "inherit" });
+  //   } else if (this._packageManager === "yarn") {
+  //     execa.sync("yarn", ["remove", packageName], { cwd: this.root, stdio: "inherit" });
+  //   }
+
+  //   this._logTemplate("uninstallModule", { modules: "k" });
+  // }
+
   /**
    * Installs `packageName` node module using specified package manager. If no `packageName` is provided installs all dependencies i.e `npm install`.
    *
-   * @param packageName is the name of the package to install.
+   * @param packageNames are name or array of names of the package(s) to install.
    * @param type is the dependency type of the package. `dev`, `peer`, `optional`.
    */
-  public install(packageName?: string, { type = DependencyType.Dependencies }: { type?: DependencyType } = {} as any): void {
+  public install(
+    packageNames: string | string[] = [],
+    { type = DependencyType.Dependencies }: { type?: DependencyType } = {} as any
+  ): void {
     const types: Record<DependencyType, string> = {
       dependencies: "",
       devDependencies: "dev",
@@ -671,28 +717,36 @@ export default class Module {
     };
 
     let args: string[];
+    const packagesArray = arrify(packageNames);
+    const packagesString = packagesArray.length > 0 ? packagesArray.join(", ") : "All modules";
 
     if (this._packageManager === "npm") {
       const typeFlag = types[type] ? [`--save-${types[type]}`] : [];
-      args = packageName ? ["install", packageName, ...typeFlag] : ["install"];
+      args = packagesArray.length > 0 ? ["install", ...packagesArray, ...typeFlag] : ["install"];
     } else {
       const typeFlag = types[type] ? [`--${types[type]}`] : [];
-      args = packageName ? ["add", packageName, ...typeFlag] : ["install"];
+      args = packagesArray.length > 0 ? ["add", ...packagesArray, ...typeFlag] : ["install"];
     }
+
+    this._logTemplate("installModule", { modules: packagesString });
     execa.sync(this._packageManager, args, { cwd: this.root, stdio: "inherit" });
   }
 
   /**
    * Uninstalls `packageName` node module using specified package manager.
    *
-   * @param packageName is the name of the package to uninstall.
+   * @param packageNames are name or array of names of the package(s) to uninstall.
    * @param type is the dependency type of the package. `dev`, `peer`, `optional`.
    */
-  public uninstall(packageName: string): void {
+  public uninstall(packageNames: string | string[]): void {
+    const packagesArray = arrify(packageNames);
+
     if (this._packageManager === "npm") {
-      execa.sync("npm", ["uninstall", packageName], { cwd: this.root, stdio: "inherit" });
+      execa.sync("npm", ["uninstall", ...packagesArray], { cwd: this.root, stdio: "inherit" });
     } else if (this._packageManager === "yarn") {
-      execa.sync("yarn", ["remove", packageName], { cwd: this.root, stdio: "inherit" });
+      execa.sync("yarn", ["remove", ...packagesArray], { cwd: this.root, stdio: "inherit" });
     }
+
+    this._logTemplate("uninstallModule", { modules: packagesArray.join(", ") });
   }
 }

@@ -53,6 +53,9 @@ const TEMPLATES = {
   dataFileIfExistsFalse: [LogLevel.Debug, `ifExists:    ${red("✗")} {{ emi key }} does not exists.`],
   dataFileIfNotExistsTrue: [LogLevel.Debug, `ifNotExists: ${green("✓")} {{ emi key }} does not exists.`],
   dataFileIfNotExistsFalse: [LogLevel.Debug, `ifNotExists: ${red("✗")} {{ emi key }} exists.`],
+
+  installModule: [LogLevel.Info, `Installing modules: {{ modules }}`],
+  uninstallModule: [LogLevel.Info, `Uninstalling modules: {{ modules }}`],
 };
 
 /**
