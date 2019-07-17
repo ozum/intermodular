@@ -181,8 +181,9 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
    */
   public set(path: string | string[], value: any, conditions?: ModifyCondition): this {
     const oldValue = get(this.data, path);
+    const stringPath = Array.isArray(path) ? path.join(".") : path;
     if (isEqual(oldValue, value)) {
-      this._logTemplate("dataFileUpdated", { op: "set", key: path, file: this._shortPath });
+      this._logTemplate("dataFileUpdated", { op: "set", key: stringPath, file: this._shortPath });
       this._logTemplate("dataFileUpdatedWithValue", { old: oldValue, new: value });
     } else if (this._shouldModify(path, "set", conditions)) {
       set(this.data as Record<string, any>, path, value);
