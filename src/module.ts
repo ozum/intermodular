@@ -679,7 +679,7 @@ export default class Module {
       const typeFlag = types[type] ? [`--${types[type]}`] : [];
       args = packageName ? ["add", packageName, ...typeFlag] : ["install"];
     }
-    execa.sync(this._packageManager, args, { cwd: this.root });
+    execa.sync(this._packageManager, args, { cwd: this.root, stdio: "inherit" });
   }
 
   /**
@@ -690,9 +690,9 @@ export default class Module {
    */
   public uninstall(packageName: string): void {
     if (this._packageManager === "npm") {
-      execa.sync("npm", ["uninstall", packageName], { cwd: this.root });
+      execa.sync("npm", ["uninstall", packageName], { cwd: this.root, stdio: "inherit" });
     } else if (this._packageManager === "yarn") {
-      execa.sync("yarn", ["remove", packageName], { cwd: this.root });
+      execa.sync("yarn", ["remove", packageName], { cwd: this.root, stdio: "inherit" });
     }
   }
 }
