@@ -728,7 +728,7 @@ export default class Module {
   public uninstall(packageNames?: string | string[]): void {
     const packagesArray = arrify(packageNames || []);
 
-    if (packagesArray.length === 0) {
+    if (!packageNames || packagesArray.length === 0) {
       return;
     }
 
