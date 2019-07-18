@@ -272,9 +272,9 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
    * @param exclude is string or array of strings, of which keys starting with is excluded.
    * @returns modified keys
    * @example
-   * dataFile.modifiedKeys({ include: "scripts", exclude: ["scripts.validate", "scripts.docs"] });
+   * dataFile.getModifiedKeys({ include: "scripts", exclude: ["scripts.validate", "scripts.docs"] });
    */
-  public modifiedKeys({ include, exclude }: { include?: string | string[]; exclude?: string | string[] } = {}): {
+  public getModifiedKeys({ include, exclude }: { include?: string | string[]; exclude?: string | string[] } = {}): {
     set: string[];
     deleted: string[];
   } {

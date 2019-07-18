@@ -169,7 +169,7 @@ describe("DataFile", () => {
     it("should return modified keys", () => {
       dataFile.assign("manager", { id: 0, name: "Mike" });
       dataFile.delete("name");
-      expect(dataFile.modifiedKeys()).toEqual({
+      expect(dataFile.getModifiedKeys()).toEqual({
         set: ["manager.id", "manager.name"],
         deleted: ["name"],
       });
@@ -178,7 +178,7 @@ describe("DataFile", () => {
     it("should return modified keys filtered as requested", () => {
       dataFile.assign("manager", { id: 0, name: "Mike" });
       dataFile.delete("name");
-      expect(dataFile.modifiedKeys({ include: "manager", exclude: "manager.na" })).toEqual({
+      expect(dataFile.getModifiedKeys({ include: "manager", exclude: "manager.na" })).toEqual({
         set: ["manager.id"],
         deleted: [],
       });
