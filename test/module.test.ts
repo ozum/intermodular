@@ -334,6 +334,12 @@ describe("Module", () => {
       expect(localModule.existsSync("node_modules/example-module")).toBe(true);
     });
 
+    it("should does nothing if no package is given to uninstall.", () => {
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "npm", "xyz");
+      localModule.uninstall();
+      expect(1).toBe(1);
+    });
+
     it("should uninstall module with npm.", () => {
       const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "npm", "xyz");
       localModule.uninstall("example-module");

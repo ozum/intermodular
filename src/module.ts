@@ -690,15 +690,12 @@ export default class Module {
   }
 
   /**
-   * Installs `packageName` node module using specified package manager. If no `packageName` is provided installs all dependencies i.e `npm install`.
+   * Installs `packageName` node module using specified package manager. If no `packageName` is undefined, installs all dependencies i.e `npm install`.
    *
    * @param packageNames are name or array of names of the package(s) to install.
    * @param type is the dependency type of the package. `dev`, `peer`, `optional`.
    */
-  public install(
-    packageNames: string | string[] = [],
-    { type = DependencyType.Dependencies }: { type?: DependencyType } = {} as any
-  ): void {
+  public install(packageNames?: string | string[], { type = DependencyType.Dependencies }: { type?: DependencyType } = {} as any): void {
     const types: Record<DependencyType, string> = {
       dependencies: "",
       devDependencies: "dev",
@@ -707,15 +704,15 @@ export default class Module {
     };
 
     let args: string[];
-    const packagesArray = arrify(packageNames);
-    const packagesString = packagesArray.length > 0 ? packagesArray.join(", ") : "All modules";
+    const packagesArray = arrify(packageNames || []);
+    const packagesString = packageNames === undefined ? "All modules" : packagesArray.join(", ");
 
     if (this._packageManager === "npm") {
       const typeFlag = types[type] ? [`--save-${types[type]}`] : [];
-      args = packagesArray.length > 0 ? ["install", ...packagesArray, ...typeFlag] : ["install"];
+      args = packageNames === undefined ? ["install"] : ["install", ...packagesArray, ...typeFlag];
     } else {
       const typeFlag = types[type] ? [`--${types[type]}`] : [];
-      args = packagesArray.length > 0 ? ["add", ...packagesArray, ...typeFlag] : ["install"];
+      args = packageNames === undefined ? ["install"] : ["add", ...packagesArray, ...typeFlag];
     }
 
     this._logTemplate("installModule", { modules: packagesString });
@@ -728,8 +725,12 @@ export default class Module {
    * @param packageNames are name or array of names of the package(s) to uninstall.
    * @param type is the dependency type of the package. `dev`, `peer`, `optional`.
    */
-  public uninstall(packageNames: string | string[]): void {
-    const packagesArray = arrify(packageNames);
+  public uninstall(packageNames?: string | string[]): void {
+    const packagesArray = arrify(packageNames || []);
+
+    if (packagesArray.length === 0) {
+      return;
+    }
 
     if (this._packageManager === "npm") {
       execa.sync("npm", ["uninstall", ...packagesArray], { cwd: this.root, stdio: "inherit" });
