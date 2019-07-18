@@ -2,31 +2,39 @@ import { remove } from "fs-extra";
 import { join } from "path";
 import get from "lodash.get";
 import Intermodular from "../src/intermodular";
+import DataFile from "../src/data-file";
+import { LogLevel } from "../src/types";
 
 const sourceRoot = join(__dirname, "supplements/source-module");
 const targetRoot = join(__dirname, "supplements/target-module");
-const im = new Intermodular({ sourceRoot, targetRoot });
+const im = new Intermodular({ sourceRoot, targetRoot, logLevel: LogLevel.Debug });
 const tm = im.targetModule;
-im.copySync("config-files/data.json", "data-file.json");
-const dataFile = tm.getDataFileSync("data-file.json");
+
+let dataFile: DataFile; // = tm.getDataFileSync("data-file.json");
+// const originalData = cloneDeep(dataFile);
 
 afterAll(async () => {
   await remove(join(targetRoot, "data-file.json"));
 });
 
+beforeEach(() => {
+  im.copySync("config-files/data.json", "data-file.json", { overwrite: true });
+  dataFile = tm.getDataFileSync("data-file.json", { forceRead: true });
+});
+
 describe("DataFile", () => {
   it("should infer format from filename if file would be created.", () => {
-    const localDataFile = tm.getDataFileSync("none.yaml");
+    const localDataFile = tm.getDataFileSync("none.yaml", { forceRead: true });
     expect(localDataFile.format).toBe("yaml");
   });
 
   it("should use default format if file format cannot be inferred.", () => {
-    const localDataFile = tm.getDataFileSync("none");
+    const localDataFile = tm.getDataFileSync("none", { forceRead: true });
     expect(localDataFile.format).toBe("json");
   });
 
   it("should use optional format if file format cannot be inferred.", () => {
-    const localDataFile = tm.getDataFileSync("none", { defaultFormat: "yaml" });
+    const localDataFile = tm.getDataFileSync("none", { defaultFormat: "yaml", forceRead: true });
     expect(localDataFile.format).toBe("yaml");
   });
 
@@ -53,36 +61,46 @@ describe("DataFile", () => {
 
   describe("has", () => {
     it("should check whether given path exists.", () => {
-      expect(dataFile.has("surname")).toBe(true);
+      expect(dataFile.has("name")).toBe(true);
       expect(dataFile.has("xyz")).toBe(false);
     });
   });
 
   describe("get", () => {
     it("should get value at given path.", () => {
-      expect(dataFile.get("surname")).toBe("Doe");
+      expect(dataFile.get("name")).toBe("data json");
     });
   });
 
   describe("set", () => {
     it("should not set value if it is equal to old value.", () => {
-      dataFile.set("surname", "Doe");
-      expect(dataFile.get("surname")).toBe("Doe");
+      dataFile.set("name", "data json");
+      expect(dataFile.get("name")).toBe("data json");
     });
 
     it("should not set value if equality condition is not met.", () => {
-      dataFile.set("surname", "Other", { ifEqual: "XYZ" });
-      expect(dataFile.get("surname")).toBe("Doe");
+      dataFile.set("name", "Other", { ifEqual: "XYZ" });
+      expect(dataFile.get("name")).toBe("data json");
+    });
+
+    it("should not set value if multiple condition is not met.", () => {
+      dataFile.set("name", "Other", { ifEqual: "XYZ", ifNotExists: true });
+      expect(dataFile.get("name")).toBe("data json");
     });
 
     it("should not set value if not equality condition is not met.", () => {
-      dataFile.set("surname", "Other", { ifNotEqual: "Doe" });
-      expect(dataFile.get("surname")).toBe("Doe");
+      dataFile.set("name", "Other", { ifNotEqual: "data json" });
+      expect(dataFile.get("name")).toBe("data json");
+    });
+
+    it("should set value if equality condition is met.", () => {
+      dataFile.set("name", "Other", { ifEqual: "data json" });
+      expect(dataFile.get("name")).toBe("Other");
     });
 
     it("should not set value if not exists condition is not met.", () => {
-      dataFile.set("surname", "Other", { ifNotExists: true });
-      expect(dataFile.get("surname")).toBe("Doe");
+      dataFile.set("name", "Other", { ifNotExists: true });
+      expect(dataFile.get("name")).toBe("data json");
     });
 
     it("should not set value if exists condition is not met.", () => {
@@ -93,12 +111,12 @@ describe("DataFile", () => {
 
   describe("delete", () => {
     it("should not delete value if conditions are not met.", () => {
-      dataFile.delete("surname", { ifEqual: "XYZ" });
-      expect(dataFile.has("surname")).toBe(true);
+      dataFile.delete("name", { ifEqual: "XYZ" });
+      expect(dataFile.has("name")).toBe(true);
     });
     it("should delete value.", () => {
-      dataFile.delete("surname");
-      expect(dataFile.has("surname")).toBe(false);
+      dataFile.delete(["name"]);
+      expect(dataFile.has("name")).toBe(false);
     });
   });
 
@@ -108,7 +126,6 @@ describe("DataFile", () => {
       expect(dataFile.get("product")).toEqual({ name: "pen", color: "blue" });
       dataFile.assign("product", { color: "red", size: 3 });
       expect(dataFile.get("product")).toEqual({ name: "pen", color: "red", size: 3 });
-      expect(dataFile.modifiedKeys).toEqual({ set: ["surname", "product.name", "product.color", "product.size"], deleted: ["surname"] });
     });
 
     it("should not assign to array.", () => {
@@ -121,20 +138,16 @@ describe("DataFile", () => {
     it("should change whole object if path is undefined.", () => {
       dataFile.assign(undefined, { manager: { id: 0, name: "Mike" } });
       expect(dataFile.data).toEqual({
-        ids: [1, 2, 3],
-        manager: { id: 0, name: "Mike" },
         name: "data json",
-        product: { color: "red", name: "pen", size: 3 },
+        manager: { id: 0, name: "Mike" },
       });
     });
 
     it("should change whole object if no path is given.", () => {
       dataFile.assign({ manager: { id: 1, name: "George" } });
       expect(dataFile.data).toEqual({
-        ids: [1, 2, 3],
-        manager: { id: 1, name: "George" },
         name: "data json",
-        product: { color: "red", name: "pen", size: 3 },
+        manager: { id: 1, name: "George" },
       });
     });
 
@@ -152,26 +165,49 @@ describe("DataFile", () => {
     });
   });
 
+  describe("modifiedKeys", () => {
+    it("should return modified keys", () => {
+      dataFile.assign("manager", { id: 0, name: "Mike" });
+      dataFile.delete("name");
+      expect(dataFile.modifiedKeys()).toEqual({
+        set: ["manager.id", "manager.name"],
+        deleted: ["name"],
+      });
+    });
+
+    it("should return modified keys filtered as requested", () => {
+      dataFile.assign("manager", { id: 0, name: "Mike" });
+      dataFile.delete("name");
+      expect(dataFile.modifiedKeys({ include: "manager", exclude: "manager.na" })).toEqual({
+        set: ["manager.id"],
+        deleted: [],
+      });
+    });
+  });
+
   describe("orderKeys", () => {
     it("should order keys of the data.", () => {
+      dataFile.assign({ product: 1, manager: { id: 0, name: "Mike" } });
       dataFile.orderKeys(["name", "manager"]);
       dataFile.saveSync();
-      const reReadDataFile = tm.getDataFileSync("data-file.json");
-      expect(Object.keys(reReadDataFile.data)).toEqual(["name", "manager", "product", "ids"]);
+      const reReadDataFile = tm.getDataFileSync("data-file.json", { forceRead: true });
+      expect(Object.keys(reReadDataFile.data)).toEqual(["name", "manager", "product"]);
     });
 
     it("should order keys alphabetically if no order is given.", () => {
+      dataFile.assign({ product: 1, manager: { id: 0, name: "Mike" } });
       dataFile.orderKeys();
       dataFile.saveSync();
-      const reReadDataFile = tm.getDataFileSync("data-file.json");
-      expect(Object.keys(reReadDataFile.data)).toEqual(["ids", "manager", "name", "product"]);
+      const reReadDataFile = tm.getDataFileSync("data-file.json", { forceRead: true });
+      expect(Object.keys(reReadDataFile.data)).toEqual(["manager", "name", "product"]);
     });
 
     it("should not order keys if order is equal to old order.", () => {
-      dataFile.orderKeys();
+      dataFile.assign({ product: 1, manager: { id: 0, name: "Mike" } });
+      dataFile.orderKeys(["name", "product", "manager"]);
       dataFile.saveSync();
-      const reReadDataFile = tm.getDataFileSync("data-file.json");
-      expect(Object.keys(reReadDataFile.data)).toEqual(["ids", "manager", "name", "product"]);
+      const reReadDataFile = tm.getDataFileSync("data-file.json", { forceRead: true });
+      expect(Object.keys(reReadDataFile.data)).toEqual(["name", "product", "manager"]);
     });
   });
 

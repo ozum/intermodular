@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-non-null-assertion, prefer-destructuring */
 import set from "lodash.set";
 import get from "lodash.get";
 import pickBy from "lodash.pickby";
@@ -45,6 +45,7 @@ export default class Module {
   private readonly _overwrite: boolean;
   private readonly _packageManager: "npm" | "yarn" = "npm";
   private readonly _configName?: string;
+  private readonly _dataFiles: Map<string, DataFile> = new Map();
 
   /**
    * Absolute path of the module's root directory, where `package.json` is located.
@@ -125,23 +126,35 @@ export default class Module {
    * @param options are default options to apply.
    * @returns 3 parameters for execa.sync()
    */
+
   private _applyCommandDefaults<T extends SyncOptions | ConcurrentlyOptions>(
     command: ExecaCommandSync,
-    options: T
+    defaultOptions: T
   ): [string, string[], T?] {
-    const clonedOptions = cloneDeep(options); // To not modify supplied deep objects, clone.
-
-    if (!get(clonedOptions, "env.PATH")) {
-      const binPath = join(this.root, "node_modules/.bin");
-      set(clonedOptions, "env.PATH", `${binPath}:${process.env.PATH}`);
-    }
+    const exec = Array.isArray(command) ? command[0] : command;
+    let options;
+    let args: string[] = [];
 
     if (Array.isArray(command)) {
-      return command[1] && !Array.isArray(command[1])
-        ? [command[0], [], Object.assign({}, clonedOptions, command[1])]
-        : [command[0], command[1], Object.assign({}, clonedOptions, command[2])];
+      if (command[1] && command[2]) {
+        // execa(file, arguments, options). array.length is not used, because elements may present but be undefined. (Sparse array)
+        args = command[1] as string[];
+        options = command[2];
+      } else if (command[1]) {
+        // execa(file, arguments or options). array.length is not used, because elements may present but be undefined. (Sparse array)
+        args = Array.isArray(command[1]) ? command[1] : [];
+        options = !Array.isArray(command[1]) ? command[1] : [];
+      }
     }
-    return [command, [], clonedOptions];
+
+    options = { ...cloneDeep(defaultOptions), ...options }; // To not modify supplied deep objects, clone.
+
+    if (!get(options, "env.PATH")) {
+      const binPath = join(this.root, "node_modules/.bin");
+      set(options, "env.PATH", `${binPath}:${process.env.PATH}`);
+    }
+
+    return [exec, args, options];
   }
 
   /**
@@ -365,20 +378,19 @@ export default class Module {
     }: { format?: FileFormat; overwrite?: boolean; prettier?: boolean; ifEqual?: string | object; ifNotEqual?: string | object } = {} as any
   ): string | undefined {
     let templateKey = getNotModifyReasonTemplateKey(this, pathInModule, { overwrite, ifEqual, ifNotEqual });
+    const allowedToModify = !templateKey;
 
     if (!templateKey) {
       const path = this.pathOf(pathInModule);
-      const prettierConfig = usePrettier ? this.getPrettierConfigSync(pathInModule) || {} : undefined;
+      const prettierConfig = usePrettier ? this.getPrettierConfigSync(pathInModule, { force: true }) : null;
       const serialized = serialize(data, format);
-      const content = prettierConfig && prettierConfig.parser ? prettier.format(serialized, prettierConfig) : serialized;
-
-      outputFileSync(path, content, "utf8");
+      outputFileSync(path, prettierConfig && prettierConfig.parser ? prettier.format(serialized, prettierConfig) : serialized, "utf8");
       templateKey = "fileOp";
     }
 
     this._logTemplate(templateKey, { file: pathInModule, op: "written" });
 
-    return templateKey ? undefined : pathInModule;
+    return allowedToModify ? pathInModule : undefined;
   }
 
   /**
@@ -394,6 +406,7 @@ export default class Module {
     { ifEqual, ifNotEqual }: { ifEqual?: string | object; ifNotEqual?: string | object } = {}
   ): string | undefined {
     let templateKey = getNotModifyReasonTemplateKey(this, pathInModule, { overwrite: true, ifEqual, ifNotEqual });
+    const allowedToModify = !templateKey;
 
     if (!templateKey) {
       removeSync(this.pathOf(pathInModule));
@@ -402,7 +415,7 @@ export default class Module {
 
     this._logTemplate(templateKey, { file: pathInModule, op: "deleted" });
 
-    return templateKey ? undefined : pathInModule;
+    return allowedToModify ? pathInModule : undefined;
   }
 
   /**
@@ -444,18 +457,27 @@ export default class Module {
   }
 
   /**
-   * Gets [[DataFile]] for `pathInModule` file. [[DataFile]] provide useful utilities to work with data files.
+   * Gets [[DataFile]] for `pathInModule` file. [[DataFile]] provide useful utilities to work with data files. Also caches instance and returns
+   * same instance for same file path for concecutive calls. Optionally it could be forced to re-read file.
    *
    * @param pathInModule is file path relative to module root.
    * @param defaultFormat is default file format to be used during file creation if file is not found and format cannot be inferred from file extension.
    * @returns [[DataFile]] instance for `pathInModule`.
    */
-  public getDataFileSync(pathInModule: string, { defaultFormat = "json" }: { defaultFormat: FileFormat } = {} as any): DataFile {
+  public getDataFileSync(
+    pathInModule: string,
+    { defaultFormat = "json", forceRead }: { defaultFormat?: FileFormat; forceRead?: boolean } = {} as any
+  ): DataFile {
+    if (!forceRead && this._dataFiles.has(pathInModule)) {
+      return this._dataFiles.get(pathInModule) as DataFile;
+    }
     const absolutePath = this.pathOf(pathInModule);
     const extension = extname(this.pathOf(pathInModule)).slice(1) as FileFormat;
     const format = extension || defaultFormat;
-    const prettierConfig = this.getPrettierConfigSync(extension ? absolutePath : `${absolutePath}.${format}`) || {};
-    return new DataFile(absolutePath, pathInModule, this._logger, prettierConfig, format);
+    const prettierConfig = this.getPrettierConfigSync(extension ? absolutePath : `${absolutePath}.${format}`, { force: true });
+    const dataFile = new DataFile(absolutePath, pathInModule, this._logger, prettierConfig, format);
+    this._dataFiles.set(pathInModule, dataFile);
+    return dataFile;
   }
 
   /**
@@ -480,11 +502,22 @@ export default class Module {
    * Also adds necessary parser to configuration if not exists.
    *
    * @param pathInModule is file path relative to module root.
+   * @param force If true, returns an empty configuration if no config is found.
    * @returns prettier configuration for given file.
    */
-  public getPrettierConfigSync(pathInModule: string = this.root): prettier.Options | null {
+  public getPrettierConfigSync(pathInModule: string, { force }: { force: true }): prettier.Options;
+  public getPrettierConfigSync(pathInModule: string, { force }: { force: false }): prettier.Options | null;
+  public getPrettierConfigSync(pathInModule?: string): prettier.Options | null;
+  public getPrettierConfigSync(pathInModule: string = this.root, { force }: { force?: boolean } = {}): prettier.Options | null {
     const path = this.pathOf(pathInModule);
-    const prettierConfig = prettier.resolveConfig.sync(path);
+    let prettierConfig = prettier.resolveConfig.sync(path);
+
+    /* istanbul ignore next */
+    if (!prettierConfig && force) {
+      prettierConfig = {};
+    }
+
+    /* istanbul ignore else */
     if (prettierConfig && !prettierConfig.parser) {
       prettierConfig.parser = prettier.getFileInfo.sync(path).inferredParser as typeof prettierConfig.parser;
     }
@@ -656,49 +689,6 @@ export default class Module {
     return results;
   }
 
-  // /**
-  //  * Installs `packageName` node module using specified package manager. If no `packageName` is provided installs all dependencies i.e `npm install`.
-  //  *
-  //  * @param packageName is the name of the package to install.
-  //  * @param type is the dependency type of the package. `dev`, `peer`, `optional`.
-  //  */
-  // public install(packageName?: string, { type = DependencyType.Dependencies }: { type?: DependencyType } = {} as any): void {
-  //   const types: Record<DependencyType, string> = {
-  //     dependencies: "",
-  //     devDependencies: "dev",
-  //     peerDependencies: "peer",
-  //     optionalDependencies: "optional",
-  //   };
-
-  //   let args: string[];
-
-  //   if (this._packageManager === "npm") {
-  //     const typeFlag = types[type] ? [`--save-${types[type]}`] : [];
-  //     args = packageName ? ["install", packageName, ...typeFlag] : ["install"];
-  //   } else {
-  //     const typeFlag = types[type] ? [`--${types[type]}`] : [];
-  //     args = packageName ? ["add", packageName, ...typeFlag] : ["install"];
-  //   }
-
-  //   execa.sync(this._packageManager, args, { cwd: this.root, stdio: "inherit" });
-  // }
-
-  // /**
-  //  * Uninstalls `packageName` node module using specified package manager.
-  //  *
-  //  * @param packageName is the name of the package to uninstall.
-  //  * @param type is the dependency type of the package. `dev`, `peer`, `optional`.
-  //  */
-  // public uninstall(packageName: string): void {
-  //   if (this._packageManager === "npm") {
-  //     execa.sync("npm", ["uninstall", packageName], { cwd: this.root, stdio: "inherit" });
-  //   } else if (this._packageManager === "yarn") {
-  //     execa.sync("yarn", ["remove", packageName], { cwd: this.root, stdio: "inherit" });
-  //   }
-
-  //   this._logTemplate("uninstallModule", { modules: "k" });
-  // }
-
   /**
    * Installs `packageName` node module using specified package manager. If no `packageName` is provided installs all dependencies i.e `npm install`.
    *
@@ -743,7 +733,7 @@ export default class Module {
 
     if (this._packageManager === "npm") {
       execa.sync("npm", ["uninstall", ...packagesArray], { cwd: this.root, stdio: "inherit" });
-    } else if (this._packageManager === "yarn") {
+    } else {
       execa.sync("yarn", ["remove", ...packagesArray], { cwd: this.root, stdio: "inherit" });
     }
 

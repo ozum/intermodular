@@ -51,6 +51,7 @@ interface ExtendedCopyOptionsSync extends CopyOptionsSync {
 export default class Intermodular {
   private readonly _logger: Logger;
   private readonly _overwrite: boolean;
+  private readonly _parentModule?: string = parentModule();
 
   /**
    * [[Module]] instance of node module which is used as source for modification operations such as copy, update.
@@ -66,13 +67,13 @@ export default class Intermodular {
    * Root directory of the parent module, which installs your module.
    * This is the directory which contains `package.json` file of the parent module.
    */
-  public readonly myRoot: string = pkgDir.sync(dirname(parentModule() || "")) || "";
+  public readonly myRoot?: string = this._parentModule && pkgDir.sync(dirname(this._parentModule));
 
   /**
    * Root directory of your module which requires this module.
    * This is the directory which contains `package.json` file of your module.
    */
-  public readonly parentModuleRoot: string = findTopPackageDir(this.myRoot) || "";
+  public readonly parentModuleRoot?: string = this.myRoot && findTopPackageDir(this.myRoot);
 
   /**
    * Creates an instance.
@@ -96,16 +97,18 @@ export default class Intermodular {
     overwrite?: boolean;
     packageManager?: "npm" | "yarn";
   } = {}) {
+    const resolvedSourceRoot = sourceRoot ? resolve(sourceRoot) : this.myRoot;
+    const resolvedTargetRoot = targetRoot ? resolve(targetRoot) : this.parentModuleRoot;
+
+    /* istanbul ignore if */
+    if (!resolvedSourceRoot || !resolvedTargetRoot) {
+      throw new Error("Cannot determine source and target roots.");
+    }
+
     this._logger = createLogger(logLevel);
     this._overwrite = overwrite;
-    this.sourceModule = new Module(sourceRoot ? resolve(sourceRoot) : this.myRoot, this._logger, this._overwrite, packageManager);
-    this.targetModule = new Module(
-      targetRoot ? resolve(targetRoot) : this.parentModuleRoot,
-      this._logger,
-      this._overwrite,
-      packageManager,
-      this.sourceModule.nameWithoutUser
-    );
+    this.sourceModule = new Module(resolvedSourceRoot, this._logger, this._overwrite, packageManager);
+    this.targetModule = new Module(resolvedTargetRoot, this._logger, this._overwrite, packageManager, this.sourceModule.nameWithoutUser);
     this._logTemplate("construction", { source: this.sourceModule.name, target: this.targetModule.name });
   }
 

@@ -328,6 +328,12 @@ describe("Module", () => {
       expect(localModule.existsSync("node_modules/example-module")).toBe(true);
     });
 
+    it("should install all module with npm.", async () => {
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "npm", "xyz");
+      localModule.install();
+      expect(localModule.existsSync("node_modules/example-module")).toBe(true);
+    });
+
     it("should uninstall module with npm.", () => {
       const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "npm", "xyz");
       localModule.uninstall("example-module");
@@ -337,6 +343,12 @@ describe("Module", () => {
     it("should install module with yarn.", () => {
       const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "yarn", "xyz");
       localModule.install(join(__dirname, "supplements/example-module-1.0.0.tgz"));
+      expect(localModule.existsSync("node_modules/example-module")).toBe(true);
+    });
+
+    it("should install all modules with yarn.", () => {
+      const localModule = new Module(installTestModuleRoot, { log: () => 1 } as any, false, "yarn", "xyz");
+      localModule.install();
       expect(localModule.existsSync("node_modules/example-module")).toBe(true);
     });
 
@@ -370,7 +382,7 @@ describe("Module", () => {
       expect(localModule.existsSync("node_modules/example-module")).toBe(false);
     });
 
-    it("should throw if unsupported package manager found", () => {
+    it("should throw if unsupported package manager found.", () => {
       expect(() => new Module(installTestModuleRoot, { log: () => 1 } as any, false, "abc" as any, "xyz")).toThrow(
         "Unknown package manager"
       );
@@ -378,25 +390,33 @@ describe("Module", () => {
   });
 
   describe("executeSync", () => {
-    it("execute command", () => {
+    it("execute command.", () => {
       tm.executeSync("echo");
+    });
+
+    it("execute command with env set.", () => {
+      tm.executeSync("echo", { env: { PATH: process.env.PATH } });
+    });
+
+    it("execute command with arguments and options.", () => {
+      tm.executeSync("echo", [""], { env: { PATH: process.env.PATH } });
     });
   });
 
   describe("executeAllSync", () => {
     const localModule = new Intermodular({ targetRoot: join(__dirname, "..") }).targetModule;
 
-    it("should execute serially", () => {
+    it("should execute serially.", () => {
       const result = localModule.executeAllSync("echo", ["echo", [""]]);
       expect(result.results.length).toBe(2);
     });
 
-    it("should accet options without args", () => {
+    it("should accet options without args.", () => {
       const result = localModule.executeAllSync(["echo", { stdio: "inherit" }]);
       expect(result.results.length).toBe(1);
     });
 
-    it("should throw on error during serial", () => {
+    it("should throw on error during serial.", () => {
       expect(() => localModule.executeAllSync("should-not-found")).toThrow("Command failed");
     });
   });
@@ -404,18 +424,18 @@ describe("Module", () => {
   describe("executeAllWithOptionsSync", () => {
     const localModule = new Intermodular({ targetRoot: join(__dirname, "..") }).targetModule;
 
-    it("should not throw on error during serial optionally", () => {
+    it("should not throw on error during serial optionally.", () => {
       const result = localModule.executeAllWithOptionsSync({ throwOnError: false, stopOnError: false }, "should-not-found", "echo");
       expect(result.status).toBeGreaterThan(0);
       expect(result.results.length).toBe(2);
     });
 
-    it("should not throw on error during parallel optionally", () => {
+    it("should not throw on error during parallel optionally.", () => {
       const result = localModule.executeAllWithOptionsSync({ throwOnError: false, stdio: "ignore" }, { a: "should-not-found", b: "echo" });
       expect(result.status).toBeGreaterThan(0);
     });
 
-    it("should throw on error during parallel when throwOnError is true", () => {
+    it("should throw on error during parallel when throwOnError is true.", () => {
       expect(() =>
         localModule.executeAllWithOptionsSync(
           { stopOnError: false, throwOnError: true, stdio: "ignore" },
@@ -424,7 +444,7 @@ describe("Module", () => {
       ).toThrow("Command failed");
     });
 
-    it("should continue during parallel when throwOnError is false and stopOnError is false", () => {
+    it("should continue during parallel when throwOnError is false and stopOnError is false.", () => {
       const result = localModule.executeAllWithOptionsSync(
         { throwOnError: false, stopOnError: false, stdio: "ignore" },
         { a: "should-not-found", b: "echo" }
@@ -432,7 +452,7 @@ describe("Module", () => {
       expect(result.status).toBeGreaterThan(0);
     });
 
-    it("should not stop on error during serial optionally", () => {
+    it("should not stop on error during serial optionally.", () => {
       const result = localModule.executeAllWithOptionsSync(
         { throwOnError: false, stopOnError: true, stdio: "ignore" },
         "should-not-found",
@@ -441,7 +461,7 @@ describe("Module", () => {
       expect(result.results.length).toBe(1);
     });
 
-    it("should log stdout", () => {
+    it("should log stdout.", () => {
       const result = localModule.executeAllWithOptionsSync({ stdio: undefined }, { a: "echo", b: "echo" });
       expect(result.results.length).toBe(1);
     });

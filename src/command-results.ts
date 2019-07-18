@@ -26,6 +26,7 @@ export default class CommandResults {
   public add(execaReturns: ExecaSyncReturnValue | ExecaSyncError): void {
     if (execaReturns.exitCode !== 0 || execaReturns.failed || execaReturns instanceof Error) {
       this._exitCode = execaReturns.exitCode;
+      /* istanbul ignore else */
       if (execaReturns instanceof Error) {
         this._error = execaReturns;
       }

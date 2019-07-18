@@ -10,7 +10,7 @@ import isEqual from "lodash.isequal";
 import prettier from "prettier";
 
 import { FileFormat } from "./types";
-import { parseString, serialize, logTemplate, ucFirst } from "./util";
+import { parseString, serialize, logTemplate, ucFirst, getFilteredArray } from "./util";
 import TEMPLATES from "./messages";
 
 /**
@@ -266,10 +266,21 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
   }
 
   /**
-   * Deleted and modified keys (paths) in data file.
+   * Returns deleted and modified keys (paths) in data file. Keys may be filtered by required condition.
+   *
+   * @param include is string or array of strings, of which keys starting with is included.
+   * @param exclude is string or array of strings, of which keys starting with is excluded.
+   * @returns modified keys
+   * @example
+   * dataFile.modifiedKeys({ include: "scripts", exclude: ["scripts.validate", "scripts.docs"] });
    */
-  public get modifiedKeys(): { set: string[]; deleted: string[] } {
-    return { set: Array.from(this._modifiedKeys.set), deleted: Array.from(this._modifiedKeys.deleted) };
+  public modifiedKeys({ include, exclude }: { include?: string | string[]; exclude?: string | string[] } = {}): {
+    set: string[];
+    deleted: string[];
+  } {
+    const setFiltered = getFilteredArray(Array.from(this._modifiedKeys.set), { include, exclude });
+    const deletedFiltered = getFilteredArray(Array.from(this._modifiedKeys.deleted), { include, exclude });
+    return { set: setFiltered, deleted: deletedFiltered };
   }
 
   /**
@@ -282,7 +293,7 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
    * const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
    * packageJson.orderKeys(["name", "version", "description", "keywords", "scripts"]); // Other keys come after.
    */
-  public orderKeys(keys: (keyof T)[] = Object.keys(this.data).sort()): this {
+  public orderKeys(keys?: (keyof T)[]): this {
     this.data = this._orderKeys(this.data, keys);
     return this;
   }

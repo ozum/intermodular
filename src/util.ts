@@ -177,17 +177,33 @@ export function getNotModifyReasonTemplateKey(
   }
 
   return undefined;
-
-  // if (exists && ifEqual && !module.isFileEqual(pathInModule, ifEqual)) {
-  //   console.log(ifEqual, module.isFileEqual(pathInModule, ifEqual));
-  //   templateKey = "fileNotOpIsEqual";
-  // } else if (exists && ifNotEqual && module.isFileEqual(pathInModule, ifNotEqual)) {
-  //   templateKey = "fileNotOpIsNotEqual";
-  // } else if (exists && !overwrite) {
-  //   templateKey = "fileNotOpExists";
-  // } else {
-  //   return undefined;
-  // }
-  // console.log(templateKey);
-  // return templateKey;
 }
+
+/**
+ * Filters an array based on starting strings of its elements and returns filtered array as a new array.
+ * @param array is array to be filtered.
+ * @param include is string or array of strings, of which elements starting with is included.
+ * @param exclude is string or array of strings, of which elements starting with is excluded.
+ * @returns filtered array.
+ */
+export function getFilteredArray(
+  array: string[],
+  { include = [], exclude = [] }: { include?: string | string[]; exclude?: string | string[] }
+): string[] {
+  const includeArray = arrify(include);
+  const excludeArray = arrify(exclude);
+  let result = array;
+
+  if (includeArray.length > 0) {
+    result = result.filter(key => includeArray.some(included => key.startsWith(included)));
+  }
+  if (excludeArray.length > 0) {
+    result = result.filter(key => !excludeArray.some(excluded => key.startsWith(excluded)));
+  }
+  return result;
+}
+
+// export function formatIfAvailable(content: string, prettierConfig: prettier.Options | null): string {
+//   const config = prettierConfig || (force ? {} : undefined);
+//   return config ? prettier.format(content, config) : content;
+// }

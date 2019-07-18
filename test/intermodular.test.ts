@@ -17,6 +17,11 @@ afterAll(async () => {
 });
 
 describe("Intermodular", () => {
+  it("should create instance.", () => {
+    const localIm = new Intermodular();
+    expect(localIm instanceof Intermodular).toBe(true);
+  });
+
   it("should detect its own root.", () => {
     expect(im.myRoot).toBe(join(__dirname, ".."));
   });
@@ -59,7 +64,7 @@ describe("Intermodular", () => {
     expect(Intermodular.resolveModuleRoot("prettier")).toBe(join(__dirname, "../node_modules/prettier"));
   });
 
-  it("should copy with different name", () => {
+  it("should copy with different name.", () => {
     im.copySync("config-files/data.json", "different-name.json");
   });
 
