@@ -1,15 +1,28 @@
 {
   "name": "intermodular",
   "label": "Intermodular",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Easy file operations between node.js modules and auto logging to help building zero-config boilerplates, postinstall and other scripts.",
-  "keywords": ["zero configuration", "zero-config", "postinstall", "boilerplate", "scripts", "parent module", "auto log"],
+  "keywords": [
+    "zero configuration",
+    "zero-config",
+    "postinstall",
+    "boilerplate",
+    "scripts",
+    "parent module",
+    "auto log"
+  ],
   "engines": {
     "node": ">=10.8.0 "
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["/bin", "/lib/**/!(*.spec|*.test)*.*", "/dist/**/!(*.spec|*.test)*.*", "/@types"],
+  "files": [
+    "/bin",
+    "/lib/**/!(*.spec|*.test)*.*",
+    "/dist/**/!(*.spec|*.test)*.*",
+    "/@types"
+  ],
   "homepage": "https://intermodular.ozum.net",
   "bugs": "https://github.com/ozum/intermodular/issues",
   "repository": {
