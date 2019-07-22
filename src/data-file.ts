@@ -310,7 +310,10 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
    * packageJson.orderKeysOf("scripts", ["build", "lint"]); // Other keys come after.
    */
   public orderKeysOf(path: string | string[], keys?: string[]): this {
-    set(this.data, path, this._orderKeys(this.get(path), keys));
+    if (this.has(path)) {
+      set(this.data, path, this._orderKeys(this.get(path), keys));
+    }
+
     return this;
   }
 
