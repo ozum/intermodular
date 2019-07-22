@@ -219,5 +219,10 @@ describe("DataFile", () => {
       const reReadDataFile = tm.getDataFileSync("data-file.json");
       expect(Object.keys(get(reReadDataFile.data, "subKey"))).toEqual(["c", "a", "b"]);
     });
+
+    it("should not throw if path cannot be found.", () => {
+      dataFile.orderKeysOf("non-existing", ["a"]);
+      expect(1).toBe(1);
+    });
   });
 });
