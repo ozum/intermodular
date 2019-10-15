@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary, @typescript-eslint/no-explicit-any */
 import parentModule from "parent-module";
+import JSON5 from "json5";
 import pkgDir from "pkg-dir";
 import { Logger } from "winston";
 import { dirname, relative, resolve, basename } from "path";
@@ -192,7 +193,7 @@ export default class Intermodular {
   }
 
   /**
-   * Parses and returns `variable` environment variable. If possible, parses and returns it as a JavaScript object.
+   * Parses and returns `variable` environment variable. If possible, parses (JSON5) and returns it as a JavaScript object.
    * Otherwise returns `defaultValue`.
    *
    * @param variable is Name of the environment variable
@@ -203,7 +204,7 @@ export default class Intermodular {
     if (this.isEnvSet(variable)) {
       const result = process.env[variable] as string;
       try {
-        return JSON.parse(result);
+        return JSON5.parse(result);
       } catch (err) {
         return result;
       }

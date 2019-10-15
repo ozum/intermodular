@@ -76,7 +76,7 @@ export function createLogger(logLevel: LogLevel): Logger {
 }
 
 /**
- * Parses given string and returns format and object. If no format given, tries to parse first as json, then yaml.
+ * Parses given string and returns format and object. If no format given, tries to parse first as json using JSON5, then yaml.
  *
  * @private
  * @ignore
@@ -88,7 +88,7 @@ export function parseString(content: string): { format: FileFormat; data: Record
   const errors: Error[] = [];
 
   try {
-    return { format: "json", data: JSON.parse(content) };
+    return { format: "json", data: JSON5.parse(content) };
   } catch (e) {
     errors.push(e);
   }
