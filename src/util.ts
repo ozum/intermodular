@@ -23,7 +23,7 @@ const knownExtensions = new Set(["json", "yaml"]);
  * @param startDir is directory to start search from.
  * @returns top most `package.json`s directory.
  */
-export function findTopPackageDir(startDir: string, level: number = 0): string | undefined {
+export function findTopPackageDir(startDir: string, level = 0): string | undefined {
   const currentPkgDir = pkgDir.sync(join(startDir, level === 0 ? "." : ".."));
   return currentPkgDir ? findTopPackageDir(currentPkgDir, level + 1) || currentPkgDir : undefined;
 }
