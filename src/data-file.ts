@@ -43,7 +43,7 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
   private readonly _path: string;
   private readonly _shortPath: string;
   private readonly _prettierConfig: prettier.Options;
-  private _skipModificationCheckOnSave: boolean = false;
+  private _skipModificationCheckOnSave = false;
   private _modifiedKeys: { set: Set<string>; deleted: Set<string> } = { set: new Set(), deleted: new Set() };
 
   /**
@@ -333,7 +333,7 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
       return object;
     }
 
-    const newData: K = {} as K; // eslint-disable-line @typescript-eslint/no-object-literal-type-assertion
+    const newData: K = {} as K;
     orderedKeys.forEach(key => (newData[key] = object[key]));
     this._skipModificationCheckOnSave = true;
     return newData;
