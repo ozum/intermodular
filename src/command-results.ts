@@ -5,7 +5,7 @@ import { ExecaSyncReturnValue, ExecaSyncError } from "execa";
  */
 export default class CommandResults {
   private _error?: Error;
-  private _exitCode: number = 0;
+  private _exitCode = 0;
 
   /**
    * Results of the executed commands. May be used to access `status` and `error`.
@@ -15,7 +15,7 @@ export default class CommandResults {
   /**
    * Whether to exit from command.
    */
-  public exit: boolean = true;
+  public exit = true;
 
   /**
    * Add `result` to the command results.

@@ -98,7 +98,7 @@ export default class Intermodular {
     packageManager?: "npm" | "yarn";
   } = {}) {
     const resolvedSourceRoot = sourceRoot ? resolve(sourceRoot) : this.myRoot;
-    const resolvedTargetRoot = targetRoot ? resolve(targetRoot) : this.parentModuleRoot;
+    const resolvedTargetRoot = this.resolveTargetRoot(targetRoot); // targetRoot ? resolve(targetRoot) : this.parentModuleRoot;
 
     /* istanbul ignore if */
     if (!resolvedSourceRoot || !resolvedTargetRoot) {
@@ -110,6 +110,31 @@ export default class Intermodular {
     this.sourceModule = new Module(resolvedSourceRoot, this._logger, this._overwrite, packageManager);
     this.targetModule = new Module(resolvedTargetRoot, this._logger, this._overwrite, packageManager, this.sourceModule.nameWithoutUser);
     this._logTemplate("construction", { source: this.sourceModule.name, target: this.targetModule.name });
+  }
+
+  /**
+   * Returns parent module root. If parent module root cannot be find (i.e. using with npx) or my root is equal to parent module root
+   * returns closest package.json dir to cwd().
+   *
+   * @ignore
+   * @param targetRoot is absolute path of target root, which is used as target for copying files etc.
+   * @returns resolved target root.
+   */
+  private resolveTargetRoot(targetRoot?: string): string {
+    if (targetRoot) {
+      return resolve(targetRoot);
+    }
+
+    /* istanbul ignore next */
+    const resolvedTargetRoot =
+      this.parentModuleRoot === undefined || this.parentModuleRoot === this.myRoot ? pkgDir.sync() : this.parentModuleRoot;
+
+    /* istanbul ignore next */
+    if (resolvedTargetRoot === undefined) {
+      throw new Error("Cannot find target root.");
+    }
+
+    return resolvedTargetRoot;
   }
 
   /**

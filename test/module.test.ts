@@ -432,7 +432,7 @@ describe("Module", () => {
 
     it("should not throw on error during serial optionally.", () => {
       const result = localModule.executeAllWithOptionsSync({ throwOnError: false, stopOnError: false }, "should-not-found", "echo");
-      expect(result.status).toBeGreaterThan(0);
+      expect(result.status).toBeUndefined();
       expect(result.results.length).toBe(2);
     });
 

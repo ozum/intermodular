@@ -3,6 +3,7 @@ import set from "lodash.set";
 import get from "lodash.get";
 import pickBy from "lodash.pickby";
 import cloneDeep from "lodash.clonedeep";
+import JSON5 from "json5";
 import { readFileSync, outputFileSync, removeSync, existsSync, renameSync, realpathSync } from "fs-extra";
 import { join, normalize, relative, sep, extname, dirname } from "path";
 import cosmiconfig from "cosmiconfig";
@@ -63,7 +64,8 @@ export default class Module {
   public readonly tsConfig?: JSONObject;
 
   /**
-   * Config of the module. Configuration system uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig).
+   * Config of the module. Configuration system uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) with
+   * [JSON5](https://json5.org) [support](https://github.com/davidtheclark/cosmiconfig#loaders).
    * Config name is determined using `configName` constructor parameter. For target module this is the name of source module.
    *
    * For example your module (source module) is named `my-boilerplate` and `my-project` uses by installing `my-boilerplate`,
@@ -233,7 +235,11 @@ export default class Module {
    * Reloads configuration. This may be useful if you create or update your configuration file.
    */
   public reloadConfig(): void {
-    this.config = this._configName ? (cosmiconfig(this._configName).searchSync(this.root) || { config: {} }).config : {};
+    const jsonLoader = (filePath: string, content: string): Record<string, any> | null => JSON5.parse(content);
+    const loaders = {
+      ".json": { sync: jsonLoader, async: jsonLoader },
+    };
+    this.config = this._configName ? (cosmiconfig(this._configName, { loaders }).searchSync(this.root) || { config: {} }).config : {};
   }
 
   /**
