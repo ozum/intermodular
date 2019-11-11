@@ -39,7 +39,7 @@ describe("Module", () => {
     const localModule = new Module(targetRoot, { log: () => 1 } as any, false, "npm", "boilerplate");
     expect(localModule.config).toEqual({});
     localModule.writeSync(".boilerplaterc.json", { reloaded: true });
-    localModule.reloadConfig();
+    localModule.reload();
     expect(localModule.config).toEqual({ reloaded: true });
     localModule.removeSync(".boilerplaterc.json");
   });

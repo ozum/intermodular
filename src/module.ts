@@ -56,12 +56,12 @@ export default class Module {
   /**
    * JavaScript object created from the module's `package.json`.
    */
-  public readonly package: JSONObject;
+  public package: JSONObject = {};
 
   /**
    * JavaScript object created from the module's `tsconfig.json` if exists.
    */
-  public readonly tsConfig?: JSONObject;
+  public tsConfig?: JSONObject;
 
   /**
    * Config of the module. Configuration system uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) with
@@ -86,18 +86,11 @@ export default class Module {
     }
 
     this.root = normalize(root);
-    this.package = readJSONSync(`${root}/package.json`);
-
-    if (!this.package) {
-      throw new Error(`Cannot find ${root}/package.json. Given path is not a module.`);
-    }
-
-    this.tsConfig = readJSONSync(`${root}/tsconfig.json`, { surviveNonExist: true });
     this._logger = logger;
     this._overwrite = overwrite;
     this._packageManager = packageManager;
     this._configName = configName;
-    this.reloadConfig();
+    this.reload();
   }
 
   /**
@@ -234,12 +227,20 @@ export default class Module {
   /**
    * Reloads configuration. This may be useful if you create or update your configuration file.
    */
-  public reloadConfig(): void {
+  public reload(): void {
     const jsonLoader = (filePath: string, content: string): Record<string, any> | null => JSON5.parse(content);
     const loaders = {
       ".json": { sync: jsonLoader, async: jsonLoader },
     };
     this.config = this._configName ? (cosmiconfig(this._configName, { loaders }).searchSync(this.root) || { config: {} }).config : {};
+
+    this.package = readJSONSync(`${this.root}/package.json`);
+
+    if (!this.package) {
+      throw new Error(`Cannot find ${this.root}/package.json. Given path is not a module.`);
+    }
+
+    this.tsConfig = readJSONSync(`${this.root}/tsconfig.json`, { surviveNonExist: true });
   }
 
   /**
