@@ -6,7 +6,7 @@ import cloneDeep from "lodash.clonedeep";
 import JSON5 from "json5";
 import { readFileSync, outputFileSync, removeSync, existsSync, renameSync, realpathSync } from "fs-extra";
 import { join, normalize, relative, sep, extname, dirname } from "path";
-import cosmiconfig from "cosmiconfig";
+import { cosmiconfigSync } from "cosmiconfig";
 import prettier from "prettier";
 import isEqual from "lodash.isequal";
 import { Logger } from "winston";
@@ -71,7 +71,7 @@ export default class Module {
    * For example your module (source module) is named `my-boilerplate` and `my-project` uses by installing `my-boilerplate`,
    * then `my-project/.my-boilerplate.rc.json` (or any cosmiconfig supported file name) configuration file located in root of `my-project` is used.
    */
-  public config: cosmiconfig.Config = {};
+  public config = {};
 
   /**
    * @ignore
@@ -229,10 +229,8 @@ export default class Module {
    */
   public reload(): void {
     const jsonLoader = (filePath: string, content: string): Record<string, any> | null => JSON5.parse(content);
-    const loaders = {
-      ".json": { sync: jsonLoader, async: jsonLoader },
-    };
-    this.config = this._configName ? (cosmiconfig(this._configName, { loaders }).searchSync(this.root) || { config: {} }).config : {};
+    const loaders = { ".json": jsonLoader };
+    this.config = this._configName ? (cosmiconfigSync(this._configName, { loaders }).search(this.root) || { config: {} }).config : {};
 
     this.package = readJSONSync(`${this.root}/package.json`);
 
