@@ -125,6 +125,7 @@ Easy file operations between node.js modules and auto logging to help building z
     - [`Optional` detached](#optional-detached)
     - [`Optional` encoding](#optional-encoding)
     - [`Optional` env](#optional-env)
+    - [`Optional` execPath](#optional-execpath)
     - [`Optional` extendEnv](#optional-extendenv)
     - [`Optional` gid](#optional-gid)
     - [`Optional` input](#optional-input)
@@ -133,6 +134,7 @@ Easy file operations between node.js modules and auto logging to help building z
     - [`Optional` maxBuffer](#optional-maxbuffer)
     - [`Optional` preferLocal](#optional-preferlocal)
     - [`Optional` reject](#optional-reject)
+    - [`Optional` serialization](#optional-serialization)
     - [`Optional` shell](#optional-shell)
     - [`Optional` stderr](#optional-stderr)
     - [`Optional` stdin](#optional-stdin)
@@ -143,6 +145,7 @@ Easy file operations between node.js modules and auto logging to help building z
     - [`Optional` throwOnError](#optional-throwonerror)
     - [`Optional` timeout](#optional-timeout)
     - [`Optional` uid](#optional-uid)
+    - [`Optional` windowsHide](#optional-windowshide)
     - [`Optional` windowsVerbatimArguments](#optional-windowsverbatimarguments)
 - [Interface: ExtendedCopyOptionsSync](#interface-extendedcopyoptionssync)
   - [Hierarchy](#hierarchy-5)
@@ -202,7 +205,7 @@ if (intermodular.targetModule.isTypeScript) {
 
 Ƭ **Command**: _string | [string, string[]]_
 
-_Defined in [types/index.ts:60](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L60)_
+_Defined in [src/types/index.ts:60](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L60)_
 
 Type for providing CLI command. It may either
 
@@ -222,7 +225,7 @@ const binWithArgs = ["tsc", ["--strict", "--target", "ESNext"]];
 
 Ƭ **ExecaCommandSync**: _[Command](#command) | [string, string[], SyncOptions] | [string, string[], SyncOptions‹null›] | [string, SyncOptions] | [string, SyncOptions‹null›]_
 
-_Defined in [types/index.ts:44](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L44)_
+_Defined in [src/types/index.ts:44](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L44)_
 
 Type for providing CLI command to pass to execa. It may either
 
@@ -245,7 +248,7 @@ const binWithAll = ["tsc", ["--strict", "--target", "ESNext"], { encoding: "utf-
 
 Ƭ **FileFormat**: _"json" | "yaml"_
 
-_Defined in [types/index.ts:89](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L89)_
+_Defined in [src/types/index.ts:89](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L89)_
 
 Supported file formats for parsing and data files.
 
@@ -255,7 +258,7 @@ Supported file formats for parsing and data files.
 
 Ƭ **JSONData**: _Primitive | JSONObject | JSONArray_
 
-_Defined in [types/index.ts:26](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L26)_
+_Defined in [src/types/index.ts:26](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L26)_
 
 Data type which represents JSON Data.
 
@@ -265,7 +268,7 @@ Data type which represents JSON Data.
 
 Ƭ **ParallelCommands**: _Record‹string, [Command](#command) | null | undefined›_
 
-_Defined in [types/index.ts:70](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L70)_
+_Defined in [src/types/index.ts:70](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L70)_
 
 Array of CLI commands to execute concurrently in parallel.
 
@@ -275,7 +278,7 @@ Array of CLI commands to execute concurrently in parallel.
 
 Ƭ **SerialCommands**: _string | [string, string[]] | [string, string[], SyncOptions‹string›] | [string, string[], SyncOptions‹null›] | [string, SyncOptions‹string›] | [string, SyncOptions‹null›] | object[]_
 
-_Defined in [types/index.ts:65](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L65)_
+_Defined in [src/types/index.ts:65](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L65)_
 
 Array of CLI commands to execute serially.
 
@@ -285,7 +288,7 @@ Array of CLI commands to execute serially.
 
 ▸ **getFilteredArray**(`array`: string[], `__namedParameters`: object): _string[]_
 
-_Defined in [util.ts:189](https://github.com/ozum/intermodular/blob/c818b41/src/util.ts#L189)_
+_Defined in [src/util.ts:189](https://github.com/ozum/intermodular/blob/df9e4fe/src/util.ts#L189)_
 
 Filters an array based on starting strings of its elements and returns filtered array as a new array.
 
@@ -324,7 +327,7 @@ Class to access status and error objects of executed CLI commands.
 
 • **exit**: _boolean_ = true
 
-_Defined in [command-results.ts:18](https://github.com/ozum/intermodular/blob/c818b41/src/command-results.ts#L18)_
+_Defined in [src/command-results.ts:18](https://github.com/ozum/intermodular/blob/df9e4fe/src/command-results.ts#L18)_
 
 Whether to exit from command.
 
@@ -334,7 +337,7 @@ Whether to exit from command.
 
 • **results**: _ExecaSyncReturnValue[]_ = []
 
-_Defined in [command-results.ts:13](https://github.com/ozum/intermodular/blob/c818b41/src/command-results.ts#L13)_
+_Defined in [src/command-results.ts:13](https://github.com/ozum/intermodular/blob/df9e4fe/src/command-results.ts#L13)_
 
 Results of the executed commands. May be used to access `status` and `error`.
 
@@ -344,7 +347,7 @@ Results of the executed commands. May be used to access `status` and `error`.
 
 • **get status**(): _number | null_
 
-_Defined in [command-results.ts:42](https://github.com/ozum/intermodular/blob/c818b41/src/command-results.ts#L42)_
+_Defined in [src/command-results.ts:42](https://github.com/ozum/intermodular/blob/df9e4fe/src/command-results.ts#L42)_
 
 Overall status of the commands. If multiple commands are executed, contains first non-zero exit status code.
 If all commands are completed without error, this is `0`.
@@ -357,7 +360,7 @@ If all commands are completed without error, this is `0`.
 
 ▸ **add**(`execaReturns`: ExecaSyncReturnValue | ExecaSyncError): _void_
 
-_Defined in [command-results.ts:26](https://github.com/ozum/intermodular/blob/c818b41/src/command-results.ts#L26)_
+_Defined in [src/command-results.ts:26](https://github.com/ozum/intermodular/blob/df9e4fe/src/command-results.ts#L26)_
 
 Add `result` to the command results.
 
@@ -389,7 +392,7 @@ Makes easier to work with data files by providing data level attributes and meth
 
 • **data**: _T_
 
-_Defined in [data-file.ts:57](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L57)_
+_Defined in [src/data-file.ts:57](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L57)_
 
 Data contained in file as a JavaScript object. This data is serialized and written to disk when [saveSync](#savesync) method is executed.
 
@@ -399,7 +402,7 @@ Data contained in file as a JavaScript object. This data is serialized and writt
 
 • **format**: _[FileFormat](#fileformat)_
 
-_Defined in [data-file.ts:52](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L52)_
+_Defined in [src/data-file.ts:52](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L52)_
 
 Data format of the file
 
@@ -409,7 +412,7 @@ Data format of the file
 
 ▸ **assign**(`data`: Record‹string, any›, `conditions?`: [ModifyCondition](#interfacesmodifyconditionmd)): _this_
 
-_Defined in [data-file.ts:225](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L225)_
+_Defined in [src/data-file.ts:225](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L225)_
 
 Merges all keys and values of `data` shallowly into root of file data.
 Different to object assign, keys may be merged conditionally such as `ifExists` or `ifNotExists`.
@@ -432,7 +435,7 @@ packageJson.assign({ name: "some-module", version: "1.0.0" }, { ifNotExists: tru
 
 ▸ **assign**(`path`: string | string[] | undefined, `data`: Record‹string, any›, `conditions?`: [ModifyCondition](#interfacesmodifyconditionmd)): _this_
 
-_Defined in [data-file.ts:237](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L237)_
+_Defined in [src/data-file.ts:237](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L237)_
 
 Merges all keys and values of `data` shallowly into `path` of file data. If a portion of path doesn't exist, it's created.
 Different to object assign, keys may be merged conditionally such as `ifExists` or `ifNotExists`.
@@ -460,7 +463,7 @@ packageJson.assign("scripts", { build: "tsc", test: "jest" }, { ifNotExists: tru
 
 ▸ **delete**(`path`: string | string[], `conditions?`: [ModifyCondition](#interfacesmodifyconditionmd)): _this_
 
-_Defined in [data-file.ts:207](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L207)_
+_Defined in [src/data-file.ts:207](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L207)_
 
 Deletes the property at `path` of file data.
 
@@ -486,7 +489,7 @@ packageJson.delete("script.build").delete(["scripts", "test"]);
 
 ▸ **get**(`path`: string | string[], `defaultValue?`: any): _any_
 
-_Defined in [data-file.ts:165](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L165)_
+_Defined in [src/data-file.ts:165](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L165)_
 
 Gets the value at `path` of file data. If the resolved value is undefined, the `defaultValue` is returned in its place.
 
@@ -515,7 +518,7 @@ data stored in given object path or default value.
 
 ▸ **getModifiedKeys**(`__namedParameters`: object): _object_
 
-_Defined in [data-file.ts:277](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L277)_
+_Defined in [src/data-file.ts:277](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L277)_
 
 Returns deleted and modified keys (paths) in data file. Keys may be filtered by required condition.
 
@@ -548,7 +551,7 @@ modified keys
 
 ▸ **has**(`path`: string | string[]): _boolean_
 
-_Defined in [data-file.ts:150](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L150)_
+_Defined in [src/data-file.ts:150](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L150)_
 
 Returns whether given `path` exists in file data.
 
@@ -576,7 +579,7 @@ whether path exists.
 
 ▸ **orderKeys**(`keys?`: keyof T[]): _this_
 
-_Defined in [data-file.ts:296](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L296)_
+_Defined in [src/data-file.ts:296](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L296)_
 
 When keys/values added which are previously does not exist, they are added to the end of the file during file write.
 This method allows reordering of the keys. `keys` are placed at the beginning in given order whereas remaining keys
@@ -603,7 +606,7 @@ packageJson.orderKeys(["name", "version", "description", "keywords", "scripts"])
 
 ▸ **orderKeysOf**(`path`: string | string[], `keys?`: string[]): _this_
 
-_Defined in [data-file.ts:312](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L312)_
+_Defined in [src/data-file.ts:312](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L312)_
 
 When keys/values added which are previously does not exist, they are added to the end of the file during file write.
 This method allows reordering of the keys in given path. `keys` are placed at the beginning in given order whereas remaining keys
@@ -631,7 +634,7 @@ packageJson.orderKeysOf("scripts", ["build", "lint"]); // Other keys come after.
 
 ▸ **saveSync**(`__namedParameters`: object): _this_
 
-_Defined in [data-file.ts:126](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L126)_
+_Defined in [src/data-file.ts:126](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L126)_
 
 Saves file if it is modified. Use `force` options to save unmodified files.
 
@@ -651,7 +654,7 @@ Saves file if it is modified. Use `force` options to save unmodified files.
 
 ▸ **set**(`path`: string | string[], `value`: any, `conditions?`: [ModifyCondition](#interfacesmodifyconditionmd)): _this_
 
-_Defined in [data-file.ts:182](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L182)_
+_Defined in [src/data-file.ts:182](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L182)_
 
 Sets the value at `path` of file data. If a portion of path doesn't exist, it's created.
 Arrays are created for missing index properties while objects are created for all other missing properties.
@@ -717,7 +720,7 @@ packageJson.saveSync();
 
 \+ **new Intermodular**(`__namedParameters`: object): _[Intermodular](#classesintermodularmd)_
 
-_Defined in [intermodular.ts:77](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L77)_
+_Defined in [src/intermodular.ts:77](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L77)_
 
 Creates an instance.
 
@@ -741,7 +744,7 @@ Creates an instance.
 
 • **myRoot**? : _undefined | string_ = this.\_parentModule && pkgDir.sync(dirname(this.\_parentModule))
 
-_Defined in [intermodular.ts:71](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L71)_
+_Defined in [src/intermodular.ts:71](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L71)_
 
 Root directory of the parent module, which installs your module.
 This is the directory which contains `package.json` file of the parent module.
@@ -752,7 +755,7 @@ This is the directory which contains `package.json` file of the parent module.
 
 • **parentModuleRoot**? : _undefined | string_ = this.myRoot && findTopPackageDir(this.myRoot)
 
-_Defined in [intermodular.ts:77](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L77)_
+_Defined in [src/intermodular.ts:77](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L77)_
 
 Root directory of your module which requires this module.
 This is the directory which contains `package.json` file of your module.
@@ -763,7 +766,7 @@ This is the directory which contains `package.json` file of your module.
 
 • **sourceModule**: _[Module](#classesmodulemd)_
 
-_Defined in [intermodular.ts:60](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L60)_
+_Defined in [src/intermodular.ts:60](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L60)_
 
 [Module](#classesmodulemd) instance of node module which is used as source for modification operations such as copy, update.
 
@@ -773,7 +776,7 @@ _Defined in [intermodular.ts:60](https://github.com/ozum/intermodular/blob/c818b
 
 • **targetModule**: _[Module](#classesmodulemd)_
 
-_Defined in [intermodular.ts:65](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L65)_
+_Defined in [src/intermodular.ts:65](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L65)_
 
 [Module](#classesmodulemd) instance of node module which is used as target for modification operations such as copy, update.
 
@@ -783,7 +786,7 @@ _Defined in [intermodular.ts:65](https://github.com/ozum/intermodular/blob/c818b
 
 ▸ **copySync**(`pathInSourceModule`: string, `pathInTargetModule`: string, `__namedParameters`: object): _string[]_
 
-_Defined in [intermodular.ts:234](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L234)_
+_Defined in [src/intermodular.ts:234](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L234)_
 
 Copies a file or directory from `pathInSourceModule` relative to source module root to `pathInTargetModule`relative to
 target module root. The directory can have contents. Like cp -r.
@@ -828,7 +831,7 @@ array of file paths copied to target. File paths are relative to target module r
 
 ▸ **log**(`message`: string, `level`: [LogLevel](#enumsloglevelmd)): _void_
 
-_Defined in [intermodular.ts:154](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L154)_
+_Defined in [src/intermodular.ts:154](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L154)_
 
 Logs `message` with `level`.
 
@@ -847,7 +850,7 @@ Logs `message` with `level`.
 
 ▸ **logIfDefined**(`message`: string | undefined, `level`: [LogLevel](#enumsloglevelmd)): _void_
 
-_Defined in [intermodular.ts:164](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L164)_
+_Defined in [src/intermodular.ts:164](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L164)_
 
 Logs `message` with `level` if it is defined.
 
@@ -866,7 +869,7 @@ Logs `message` with `level` if it is defined.
 
 ▸ **isEnvSet**(`variable`: string): _boolean_
 
-_Defined in [intermodular.ts:189](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L189)_
+_Defined in [src/intermodular.ts:189](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L189)_
 
 Returns whether `variable` is set in environment variables and not empty.
 
@@ -884,9 +887,9 @@ whether given environment variable is set and not empty.
 
 ### `Static` parseEnv
 
-▸ **parseEnv**<**T**>(`variable`: string, `defaultValue?`: [T](undefined)): _string | number | Record‹string, any› | T | undefined_
+▸ **parseEnv**<**T**>(`variable`: string, `defaultValue?`: T): _string | number | Record‹string, any› | T | undefined_
 
-_Defined in [intermodular.ts:203](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L203)_
+_Defined in [src/intermodular.ts:203](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L203)_
 
 Parses and returns `variable` environment variable. If possible, parses (JSON5) and returns it as a JavaScript object.
 Otherwise returns `defaultValue`.
@@ -897,10 +900,10 @@ Otherwise returns `defaultValue`.
 
 **Parameters:**
 
-| Name            | Type           | Description                                                       |
-| --------------- | -------------- | ----------------------------------------------------------------- |
-| `variable`      | string         | is Name of the environment variable                               |
-| `defaultValue?` | [T](undefined) | is value to return if no environment variable is set or is empty. |
+| Name            | Type   | Description                                                       |
+| --------------- | ------ | ----------------------------------------------------------------- |
+| `variable`      | string | is Name of the environment variable                               |
+| `defaultValue?` | T      | is value to return if no environment variable is set or is empty. |
 
 **Returns:** _string | number | Record‹string, any› | T | undefined_
 
@@ -912,7 +915,7 @@ environment variable (if possible as an object) or default value.
 
 ▸ **resolveModuleRoot**(`name`: string): _string | undefined_
 
-_Defined in [intermodular.ts:178](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L178)_
+_Defined in [src/intermodular.ts:178](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L178)_
 
 Returns path of the root of module with given `name`.
 
@@ -946,9 +949,9 @@ Easy file operations in node.js modules and auto logging to help building zero-c
 
 ### config
 
-• **config**: _Config_
+• **config**: _object_
 
-_Defined in [module.ts:74](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L74)_
+_Defined in [src/module.ts:74](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L74)_
 
 Config of the module. Configuration system uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) with
 [JSON5](https://json5.org) [support](https://github.com/davidtheclark/cosmiconfig#loaders).
@@ -957,13 +960,15 @@ Config name is determined using `configName` constructor parameter. For target m
 For example your module (source module) is named `my-boilerplate` and `my-project` uses by installing `my-boilerplate`,
 then `my-project/.my-boilerplate.rc.json` (or any cosmiconfig supported file name) configuration file located in root of `my-project` is used.
 
+#### Type declaration:
+
 ---
 
 ### package
 
 • **package**: _JSONObject_
 
-_Defined in [module.ts:59](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L59)_
+_Defined in [src/module.ts:59](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L59)_
 
 JavaScript object created from the module's `package.json`.
 
@@ -973,7 +978,7 @@ JavaScript object created from the module's `package.json`.
 
 • **root**: _string_
 
-_Defined in [module.ts:54](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L54)_
+_Defined in [src/module.ts:54](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L54)_
 
 Absolute path of the module's root directory, where `package.json` is located.
 
@@ -983,7 +988,7 @@ Absolute path of the module's root directory, where `package.json` is located.
 
 • **tsConfig**? : _JSONObject_
 
-_Defined in [module.ts:64](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L64)_
+_Defined in [src/module.ts:64](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L64)_
 
 JavaScript object created from the module's `tsconfig.json` if exists.
 
@@ -993,7 +998,7 @@ JavaScript object created from the module's `tsconfig.json` if exists.
 
 • **get isCompiled**(): _boolean_
 
-_Defined in [module.ts:216](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L216)_
+_Defined in [src/module.ts:216](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L216)_
 
 Whether project is a compiled project via TypeScript or Babel.
 **Note that, currently this method simply checks whether module is a TypeScript project or `babel-cli`, `babel-preset-env` is a dependency in `package.json`.**
@@ -1006,7 +1011,7 @@ Whether project is a compiled project via TypeScript or Babel.
 
 • **get isTypeScript**(): _boolean_
 
-_Defined in [module.ts:223](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L223)_
+_Defined in [src/module.ts:223](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L223)_
 
 Whether module is a TypeScript project.
 
@@ -1018,7 +1023,7 @@ Whether module is a TypeScript project.
 
 • **get name**(): _string_
 
-_Defined in [module.ts:185](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L185)_
+_Defined in [src/module.ts:185](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L185)_
 
 Name of the module as defined in `package.json`.
 
@@ -1030,7 +1035,7 @@ Name of the module as defined in `package.json`.
 
 • **get nameWithoutUser**(): _string_
 
-_Defined in [module.ts:196](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L196)_
+_Defined in [src/module.ts:196](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L196)_
 
 Name of the module without user name.
 
@@ -1049,7 +1054,7 @@ const safeName = module.nameWithoutUser(); // typescript
 
 • **get safeName**(): _string_
 
-_Defined in [module.ts:208](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L208)_
+_Defined in [src/module.ts:208](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L208)_
 
 Safe project name, generated by deleting "@" signs from module name and replacing "/" characters with `-`.
 Useful for npm packages whose names contain user name such as `@microsoft/typescript`.
@@ -1069,7 +1074,7 @@ const safeName = module.safeName(); // microsoft-typescript
 
 ▸ **bin**(`bin`: string): _string_
 
-_Defined in [module.ts:542](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L542)_
+_Defined in [src/module.ts:540](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L540)_
 
 Searches path of the `executable` located in `node_modules/.bin` relative to current working directory (`cwd`).
 
@@ -1095,7 +1100,7 @@ path relative to cwd().
 
 ▸ **executeAllSync**(...`commands`: [SerialCommands](#serialcommands)): _[CommandResults](#classescommandresultsmd)_
 
-_Defined in [module.ts:661](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L661)_
+_Defined in [src/module.ts:659](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L659)_
 
 Executes multiple commands serially using [Execa](https://www.npmjs.com/package/execa) or parallel using [concurrently](https://www.npmjs.com/package/concurrently).
 By default commands are executed serially. If commands are provided in an object they are executed concurrently. (keys are names, values are commands).
@@ -1141,7 +1146,7 @@ const result = module.executeAllSync(
 
 ▸ **executeAllWithOptionsSync**(`options`: [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd), ...`commands`: [SerialCommands](#serialcommands)): _[CommandResults](#classescommandresultsmd)_
 
-_Defined in [module.ts:672](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L672)_
+_Defined in [src/module.ts:670](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L670)_
 
 Executes multiple commands with given options. See [executeAllSync](#executeallsync) fro details.
 
@@ -1162,7 +1167,7 @@ Executes multiple commands with given options. See [executeAllSync](#executealls
 
 ▸ **executeSync**(`bin`: string, `args?`: string[], `options?`: SyncOptions): _ExecaSyncReturnValue_
 
-_Defined in [module.ts:620](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L620)_
+_Defined in [src/module.ts:618](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L618)_
 
 Executes given command using `spawn.sync` with given arguments and options.
 
@@ -1187,7 +1192,7 @@ module.executeSync("ls", ["-al"]); // Run `ls -al`.
 
 ▸ **executeSync**(`bin`: string, `args?`: string[], `options?`: SyncOptions‹null›): _ExecaSyncReturnValue‹Buffer›_
 
-_Defined in [module.ts:621](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L621)_
+_Defined in [src/module.ts:619](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L619)_
 
 **Parameters:**
 
@@ -1201,7 +1206,7 @@ _Defined in [module.ts:621](https://github.com/ozum/intermodular/blob/c818b41/sr
 
 ▸ **executeSync**(`bin`: string, `options?`: SyncOptions): _ExecaSyncReturnValue_
 
-_Defined in [module.ts:622](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L622)_
+_Defined in [src/module.ts:620](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L620)_
 
 **Parameters:**
 
@@ -1214,7 +1219,7 @@ _Defined in [module.ts:622](https://github.com/ozum/intermodular/blob/c818b41/sr
 
 ▸ **executeSync**(`bin`: string, `options?`: SyncOptions‹null›): _ExecaSyncReturnValue‹Buffer›_
 
-_Defined in [module.ts:623](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L623)_
+_Defined in [src/module.ts:621](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L621)_
 
 **Parameters:**
 
@@ -1231,7 +1236,7 @@ _Defined in [module.ts:623](https://github.com/ozum/intermodular/blob/c818b41/sr
 
 ▸ **existsSync**(`pathInModule`: string): _boolean_
 
-_Defined in [module.ts:443](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L443)_
+_Defined in [src/module.ts:441](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L441)_
 
 Checks whether given path exists.
 
@@ -1251,7 +1256,7 @@ whether given path exists.
 
 ▸ **getDataFileSync**(`pathInModule`: string, `__namedParameters`: object): _[DataFile](#classesdatafilemd)_
 
-_Defined in [module.ts:474](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L474)_
+_Defined in [src/module.ts:472](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L472)_
 
 Gets [DataFile](#classesdatafilemd) for `pathInModule` file. [DataFile](#classesdatafilemd) provide useful utilities to work with data files. Also caches instance and returns
 same instance for same file path for concecutive calls. Optionally it could be forced to re-read file.
@@ -1279,7 +1284,7 @@ is file path relative to module root.
 
 ▸ **getDependencyVersion**(`moduleName`: string, `dependencyTypes`: [DependencyType](#enumsdependencytypemd)[]): _string | undefined_
 
-_Defined in [module.ts:253](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L253)_
+_Defined in [src/module.ts:251](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L251)_
 
 Fetches a dependent module's version.
 
@@ -1306,7 +1311,7 @@ version of the `moduleName`.
 
 ▸ **getPrettierConfigSync**(`pathInModule`: string, `__namedParameters`: object): _Options_
 
-_Defined in [module.ts:515](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L515)_
+_Defined in [src/module.ts:513](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L513)_
 
 Fetches prettier configuration for `pathInModule` file. Prettier uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig)
 which may be cascaded. If no file path is given returns configuration located in module root.
@@ -1331,7 +1336,7 @@ prettier configuration for given file.
 
 ▸ **getPrettierConfigSync**(`pathInModule`: string, `__namedParameters`: object): _Options | null_
 
-_Defined in [module.ts:516](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L516)_
+_Defined in [src/module.ts:514](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L514)_
 
 **Parameters:**
 
@@ -1347,7 +1352,7 @@ _Defined in [module.ts:516](https://github.com/ozum/intermodular/blob/c818b41/sr
 
 ▸ **getPrettierConfigSync**(`pathInModule?`: undefined | string): _Options | null_
 
-_Defined in [module.ts:517](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L517)_
+_Defined in [src/module.ts:515](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L515)_
 
 **Parameters:**
 
@@ -1363,7 +1368,7 @@ _Defined in [module.ts:517](https://github.com/ozum/intermodular/blob/c818b41/sr
 
 ▸ **hasAnyDependency**(`moduleNames`: string | string[], `dependencyTypes`: [DependencyType](#enumsdependencytypemd)[]): _boolean_
 
-_Defined in [module.ts:282](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L282)_
+_Defined in [src/module.ts:280](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L280)_
 
 Checks whether `moduleName` module exists in given [dependency types](#enumsdependencytypemd) of `package.json`.
 
@@ -1390,7 +1395,7 @@ whether `moduleName` exists in one of the dependency types.
 
 ▸ **ifAnyDependency**<**T**, **F**>(`moduleNames`: string | string[]): _boolean_
 
-_Defined in [module.ts:302](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L302)_
+_Defined in [src/module.ts:300](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L300)_
 
 Checks single or multiple module's existence in any of the `package.json` dependencies.
 
@@ -1412,7 +1417,7 @@ Checks single or multiple module's existence in any of the `package.json` depend
 
 ▸ **ifAnyDependency**<**T**, **F**>(`moduleNames`: string | string[], `t`: T): _T | false_
 
-_Defined in [module.ts:303](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L303)_
+_Defined in [src/module.ts:301](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L301)_
 
 **Type parameters:**
 
@@ -1431,7 +1436,7 @@ _Defined in [module.ts:303](https://github.com/ozum/intermodular/blob/c818b41/sr
 
 ▸ **ifAnyDependency**<**T**, **F**>(`moduleNames`: string | string[], `t`: T, `f`: F): _T | F_
 
-_Defined in [module.ts:304](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L304)_
+_Defined in [src/module.ts:302](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L302)_
 
 **Type parameters:**
 
@@ -1455,7 +1460,7 @@ _Defined in [module.ts:304](https://github.com/ozum/intermodular/blob/c818b41/sr
 
 ▸ **install**(`packageNames?`: string | string[], `__namedParameters`: object): _void_
 
-_Defined in [module.ts:705](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L705)_
+_Defined in [src/module.ts:703](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L703)_
 
 Installs `packageName` node module using specified package manager. If no `packageName` is undefined, installs all dependencies i.e `npm install`.
 
@@ -1479,7 +1484,7 @@ are name or array of names of the package(s) to install.
 
 ▸ **isEqual**(`pathInModule`: string, `data`: string | Record‹string, any›): _boolean_
 
-_Defined in [module.ts:501](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L501)_
+_Defined in [src/module.ts:499](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L499)_
 
 Checks whether content of `pathInModule` file is equal to `data` by making string comparison (for strings)
 or deep comparison (for objects).
@@ -1508,7 +1513,7 @@ whether `pathInModule` file content is equal to `data`.
 
 ▸ **parseSync**(`pathInModule`: string): _Record‹string, any›_
 
-_Defined in [module.ts:349](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L349)_
+_Defined in [src/module.ts:347](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L347)_
 
 Reads, parses and returns content of file from `pathInTargetModule` path relative to module's root.
 
@@ -1528,7 +1533,7 @@ parsed file content as a JavaScript object.
 
 ▸ **parseWithFormatSync**(`pathInModule`: string): _object_
 
-_Defined in [module.ts:360](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L360)_
+_Defined in [src/module.ts:358](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L358)_
 
 Reads and parses content of file from `pathInTargetModule` path relative to module's root
 and retunrs format and parsed object.
@@ -1553,7 +1558,7 @@ file format and data.
 
 ▸ **pathOf**(...`parts`: string[]): _string_
 
-_Defined in [module.ts:329](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L329)_
+_Defined in [src/module.ts:327](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L327)_
 
 Returns absolute path of given path parts relative to module root.
 
@@ -1580,7 +1585,7 @@ absolute path to given destination.
 
 ▸ **readSync**(`pathInModule`: string): _string_
 
-_Defined in [module.ts:339](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L339)_
+_Defined in [src/module.ts:337](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L337)_
 
 Reads content of file from `pathInModule` path relative to module's root.
 
@@ -1600,7 +1605,7 @@ file contents.
 
 ▸ **reload**(): _void_
 
-_Defined in [module.ts:230](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L230)_
+_Defined in [src/module.ts:230](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L230)_
 
 Reloads configuration. This may be useful if you create or update your configuration file.
 
@@ -1612,7 +1617,7 @@ Reloads configuration. This may be useful if you create or update your configura
 
 ▸ **removeEmptyDirsSync**(`pathInModule`: string): _void_
 
-_Defined in [module.ts:433](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L433)_
+_Defined in [src/module.ts:431](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L431)_
 
 Removes empty directories recursively for given path relative to module root.
 
@@ -1630,7 +1635,7 @@ Removes empty directories recursively for given path relative to module root.
 
 ▸ **removeSync**(`pathInModule`: string, `__namedParameters`: object): _string | undefined_
 
-_Defined in [module.ts:411](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L411)_
+_Defined in [src/module.ts:409](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L409)_
 
 Removes file `pathInTargetModule` path relative to module's root.
 
@@ -1657,7 +1662,7 @@ file path relative to module root if file is removed.
 
 ▸ **renameSync**(`oldPathInModule`: string, `newPathInModule`: string, `__namedParameters`: object): _boolean_
 
-_Defined in [module.ts:455](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L455)_
+_Defined in [src/module.ts:453](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L453)_
 
 Renames given path.
 
@@ -1687,7 +1692,7 @@ whether file is renamed.
 
 ▸ **resolveBin**(`modName`: string, `__namedParameters`: object): _string_
 
-_Defined in [module.ts:568](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L568)_
+_Defined in [src/module.ts:566](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L566)_
 
 Finds and returns path of given command, trying to following steps:
 
@@ -1732,7 +1737,7 @@ path to binary.
 
 ▸ **uninstall**(`packageNames?`: string | string[]): _void_
 
-_Defined in [module.ts:735](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L735)_
+_Defined in [src/module.ts:733](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L733)_
 
 Uninstalls `packageName` node module using specified package manager.
 
@@ -1750,7 +1755,7 @@ Uninstalls `packageName` node module using specified package manager.
 
 ▸ **writeSync**(`pathInModule`: string, `data`: string | Record‹string, any›, `__namedParameters`: object): _string | undefined_
 
-_Defined in [module.ts:376](https://github.com/ozum/intermodular/blob/c818b41/src/module.ts#L376)_
+_Defined in [src/module.ts:374](https://github.com/ozum/intermodular/blob/df9e4fe/src/module.ts#L374)_
 
 Serializes, formats and writes `data` to file `pathInTargetModule` path relative to module's root.
 
@@ -1792,7 +1797,7 @@ Dependency types for Node.js modules.
 
 • **Dependencies**: = "dependencies"
 
-_Defined in [types/index.ts:110](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L110)_
+_Defined in [src/types/index.ts:110](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L110)_
 
 Production dependencies
 
@@ -1802,7 +1807,7 @@ Production dependencies
 
 • **DevDependencies**: = "devDependencies"
 
-_Defined in [types/index.ts:114](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L114)_
+_Defined in [src/types/index.ts:114](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L114)_
 
 Dependencies for development only.
 
@@ -1812,7 +1817,7 @@ Dependencies for development only.
 
 • **OptionalDependencies**: = "optionalDependencies"
 
-_Defined in [types/index.ts:123](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L123)_
+_Defined in [src/types/index.ts:123](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L123)_
 
 Dependencies which can be used, but not stop installation if not found or failed to install.
 
@@ -1822,7 +1827,7 @@ Dependencies which can be used, but not stop installation if not found or failed
 
 • **PeerDependencies**: = "peerDependencies"
 
-_Defined in [types/index.ts:118](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L118)_
+_Defined in [src/types/index.ts:118](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L118)_
 
 Dependencies which are not installed by default.
 
@@ -1838,7 +1843,7 @@ Levels to be used when logging.
 
 • **Debug**: = "debug"
 
-_Defined in [types/index.ts:99](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L99)_
+_Defined in [src/types/index.ts:99](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L99)_
 
 ---
 
@@ -1846,7 +1851,7 @@ _Defined in [types/index.ts:99](https://github.com/ozum/intermodular/blob/c818b4
 
 • **Error**: = "error"
 
-_Defined in [types/index.ts:95](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L95)_
+_Defined in [src/types/index.ts:95](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L95)_
 
 ---
 
@@ -1854,7 +1859,7 @@ _Defined in [types/index.ts:95](https://github.com/ozum/intermodular/blob/c818b4
 
 • **Info**: = "info"
 
-_Defined in [types/index.ts:97](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L97)_
+_Defined in [src/types/index.ts:97](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L97)_
 
 ---
 
@@ -1862,7 +1867,7 @@ _Defined in [types/index.ts:97](https://github.com/ozum/intermodular/blob/c818b4
 
 • **Silly**: = "silly"
 
-_Defined in [types/index.ts:100](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L100)_
+_Defined in [src/types/index.ts:100](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L100)_
 
 ---
 
@@ -1870,7 +1875,7 @@ _Defined in [types/index.ts:100](https://github.com/ozum/intermodular/blob/c818b
 
 • **Verbose**: = "verbose"
 
-_Defined in [types/index.ts:98](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L98)_
+_Defined in [src/types/index.ts:98](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L98)_
 
 ---
 
@@ -1878,7 +1883,7 @@ _Defined in [types/index.ts:98](https://github.com/ozum/intermodular/blob/c818b4
 
 • **Warn**: = "warn"
 
-_Defined in [types/index.ts:96](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L96)_
+_Defined in [src/types/index.ts:96](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L96)_
 
 # Interfaces
 
@@ -1902,9 +1907,9 @@ _Defined in [types/index.ts:96](https://github.com/ozum/intermodular/blob/c818b4
 
 • **all**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[all](#optional-all)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:83
+Defined in node_modules/execa/index.d.ts:96
 
 Add an `.all` property on the promise and the resolved value. The property contains the output of the process with `stdout` and `stderr` interleaved.
 
@@ -1916,9 +1921,9 @@ Add an `.all` property on the promise and the resolved value. The property conta
 
 • **argv0**? : _undefined | string_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[argv0](#optional-argv0)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:116
+Defined in node_modules/execa/index.d.ts:129
 
 Explicitly set the value of `argv[0]` sent to the child process. This will be set to `command` or `file` if not specified.
 
@@ -1928,9 +1933,9 @@ Explicitly set the value of `argv[0]` sent to the child process. This will be se
 
 • **buffer**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[buffer](#optional-buffer)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:48
+Defined in node_modules/execa/index.d.ts:61
 
 Buffer the output from the spawned process. When set to `false`, you must read the output of `stdout` and `stderr` (or `all` if the `all` option is `true`). Otherwise the returned promise will not be resolved/rejected.
 
@@ -1944,9 +1949,9 @@ If the spawned process fails, `error.stdout`, `error.stderr`, and `error.all` wi
 
 • **cleanup**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[cleanup](#optional-cleanup)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:23
+Defined in node_modules/execa/index.d.ts:23
 
 Kill the spawned process when the parent process exits unless either:
 
@@ -1961,9 +1966,9 @@ Kill the spawned process when the parent process exits unless either:
 
 • **cwd**? : _undefined | string_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[cwd](#optional-cwd)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:104
+Defined in node_modules/execa/index.d.ts:117
 
 Current working directory of the child process.
 
@@ -1975,9 +1980,9 @@ Current working directory of the child process.
 
 • **detached**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[detached](#optional-detached)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:130
+Defined in node_modules/execa/index.d.ts:156
 
 Prepare child to run independently of its parent process. Specific behavior [depends on the platform](https://nodejs.org/api/child_process.html#child_process_options_detached).
 
@@ -1987,11 +1992,11 @@ Prepare child to run independently of its parent process. Specific behavior [dep
 
 ### `Optional` encoding
 
-• **encoding**? : _[EncodingType](undefined)_
+• **encoding**? : _EncodingType_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[encoding](#optional-encoding)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:159
+Defined in node_modules/execa/index.d.ts:185
 
 Specify the character encoding used to decode the `stdout` and `stderr` output. If set to `null`, then `stdout` and `stderr` will be a `Buffer` instead of a string.
 
@@ -2003,9 +2008,9 @@ Specify the character encoding used to decode the `stdout` and `stderr` output. 
 
 • **env**? : _NodeJS.ProcessEnv_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[env](#optional-env)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:111
+Defined in node_modules/execa/index.d.ts:124
 
 Environment key-value pairs. Extends automatically from `process.env`. Set `extendEnv` to `false` if you don't want this.
 
@@ -2013,13 +2018,33 @@ Environment key-value pairs. Extends automatically from `process.env`. Set `exte
 
 ---
 
+### `Optional` execPath
+
+• **execPath**? : _undefined | string_
+
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[execPath](#optional-execpath)_
+
+Defined in node_modules/execa/index.d.ts:52
+
+Path to the Node.js executable to use in child processes.
+
+This can be either an absolute path or a path relative to the `cwd` option.
+
+Requires `preferLocal` to be `true`.
+
+For example, this can be used together with [`get-node`](https://github.com/ehmicky/get-node) to run a specific Node.js version in a child process.
+
+**`default`** process.execPath
+
+---
+
 ### `Optional` extendEnv
 
 • **extendEnv**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[extendEnv](#optional-extendenv)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:97
+Defined in node_modules/execa/index.d.ts:110
 
 Set to `false` if you don't want to extend the environment variables when providing the `env` property.
 
@@ -2031,9 +2056,9 @@ Set to `false` if you don't want to extend the environment variables when provid
 
 • **gid**? : _undefined | number_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[gid](#optional-gid)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:140
+Defined in node_modules/execa/index.d.ts:166
 
 Sets the group identity of the process.
 
@@ -2043,9 +2068,9 @@ Sets the group identity of the process.
 
 • **input**? : _string | Buffer_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[input](#optional-input)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:201
+Defined in node_modules/execa/index.d.ts:234
 
 Write some input to the `stdin` of your binary.
 
@@ -2055,9 +2080,9 @@ Write some input to the `stdin` of your binary.
 
 • **killSignal**? : _string | number_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[killSignal](#optional-killsignal)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:180
+Defined in node_modules/execa/index.d.ts:206
 
 Signal value to be used when the spawned process will be killed.
 
@@ -2069,9 +2094,9 @@ Signal value to be used when the spawned process will be killed.
 
 • **localDir**? : _undefined | string_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[localDir](#optional-localdir)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:39
+Defined in node_modules/execa/index.d.ts:39
 
 Preferred path to find locally installed binaries in (use with `preferLocal`).
 
@@ -2083,9 +2108,9 @@ Preferred path to find locally installed binaries in (use with `preferLocal`).
 
 • **maxBuffer**? : _undefined | number_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[maxBuffer](#optional-maxbuffer)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:173
+Defined in node_modules/execa/index.d.ts:199
 
 Largest amount of data in bytes allowed on `stdout` or `stderr`. Default: 100 MB.
 
@@ -2097,9 +2122,9 @@ Largest amount of data in bytes allowed on `stdout` or `stderr`. Default: 100 MB
 
 • **preferLocal**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[preferLocal](#optional-preferlocal)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:32
+Defined in node_modules/execa/index.d.ts:32
 
 Prefer locally installed binaries when looking for a binary to execute.
 
@@ -2113,9 +2138,9 @@ If you `$ npm install foo`, you can then `execa('foo')`.
 
 • **reject**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[reject](#optional-reject)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:76
+Defined in node_modules/execa/index.d.ts:89
 
 Setting this to `false` resolves the promise with the error instead of rejecting it.
 
@@ -2123,13 +2148,34 @@ Setting this to `false` resolves the promise with the error instead of rejecting
 
 ---
 
+### `Optional` serialization
+
+• **serialization**? : _"json" | "advanced"_
+
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[serialization](#optional-serialization)_
+
+Defined in node_modules/execa/index.d.ts:149
+
+Specify the kind of serialization used for sending messages between processes when using the `stdio: 'ipc'` option or `execa.node()`:
+
+- `json`: Uses `JSON.stringify()` and `JSON.parse()`.
+- `advanced`: Uses [`v8.serialize()`](https://nodejs.org/api/v8.html#v8_v8_serialize_value)
+
+Requires Node.js `13.2.0` or later.
+
+[More info.](https://nodejs.org/api/child_process.html#child_process_advanced_serialization)
+
+**`default`** 'json'
+
+---
+
 ### `Optional` shell
 
 • **shell**? : _boolean | string_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[shell](#optional-shell)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:152
+Defined in node_modules/execa/index.d.ts:178
 
 If `true`, runs `command` inside of a shell. Uses `/bin/sh` on UNIX and `cmd.exe` on Windows. A different shell can be specified as a string. The shell should understand the `-c` switch on UNIX or `/d /s /c` on Windows.
 
@@ -2147,9 +2193,9 @@ We recommend against using this option since it is:
 
 • **stderr**? : _StdioOption_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[stderr](#optional-stderr)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:69
+Defined in node_modules/execa/index.d.ts:82
 
 Same options as [`stdio`](https://nodejs.org/dist/latest-v6.x/docs/api/child_process.html#child_process_options_stdio).
 
@@ -2161,9 +2207,9 @@ Same options as [`stdio`](https://nodejs.org/dist/latest-v6.x/docs/api/child_pro
 
 • **stdin**? : _StdioOption_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[stdin](#optional-stdin)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:55
+Defined in node_modules/execa/index.d.ts:68
 
 Same options as [`stdio`](https://nodejs.org/dist/latest-v6.x/docs/api/child_process.html#child_process_options_stdio).
 
@@ -2175,9 +2221,9 @@ Same options as [`stdio`](https://nodejs.org/dist/latest-v6.x/docs/api/child_pro
 
 • **stdio**? : _"pipe" | "ignore" | "inherit" | keyof StdioOption[]_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[stdio](#optional-stdio)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:123
+Defined in node_modules/execa/index.d.ts:136
 
 Child's [stdio](https://nodejs.org/api/child_process.html#child_process_options_stdio) configuration.
 
@@ -2189,9 +2235,9 @@ Child's [stdio](https://nodejs.org/api/child_process.html#child_process_options_
 
 • **stdout**? : _StdioOption_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[stdout](#optional-stdout)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:62
+Defined in node_modules/execa/index.d.ts:75
 
 Same options as [`stdio`](https://nodejs.org/dist/latest-v6.x/docs/api/child_process.html#child_process_options_stdio).
 
@@ -2203,7 +2249,7 @@ Same options as [`stdio`](https://nodejs.org/dist/latest-v6.x/docs/api/child_pro
 
 • **stopOnError**? : _undefined | false | true_
 
-_Defined in [types/index.ts:76](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L76)_
+_Defined in [src/types/index.ts:76](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L76)_
 
 Whether to stop executing further commands if an error occurs.
 
@@ -2213,9 +2259,9 @@ Whether to stop executing further commands if an error occurs.
 
 • **stripFinalNewline**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[stripFinalNewline](#optional-stripfinalnewline)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:90
+Defined in node_modules/execa/index.d.ts:103
 
 Strip the final [newline character](https://en.wikipedia.org/wiki/Newline) from the output.
 
@@ -2227,7 +2273,7 @@ Strip the final [newline character](https://en.wikipedia.org/wiki/Newline) from 
 
 • **throwOnError**? : _undefined | false | true_
 
-_Defined in [types/index.ts:80](https://github.com/ozum/intermodular/blob/c818b41/src/types/index.ts#L80)_
+_Defined in [src/types/index.ts:80](https://github.com/ozum/intermodular/blob/df9e4fe/src/types/index.ts#L80)_
 
 Whether to throw if an error occurs.
 
@@ -2237,9 +2283,9 @@ Whether to throw if an error occurs.
 
 • **timeout**? : _undefined | number_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[timeout](#optional-timeout)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:166
+Defined in node_modules/execa/index.d.ts:192
 
 If `timeout` is greater than `0`, the parent will send the signal identified by the `killSignal` property (the default is `SIGTERM`) if the child runs longer than `timeout` milliseconds.
 
@@ -2251,11 +2297,25 @@ If `timeout` is greater than `0`, the parent will send the signal identified by 
 
 • **uid**? : _undefined | number_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[uid](#optional-uid)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:135
+Defined in node_modules/execa/index.d.ts:161
 
 Sets the user identity of the process.
+
+---
+
+### `Optional` windowsHide
+
+• **windowsHide**? : _undefined | false | true_
+
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[windowsHide](#optional-windowshide)_
+
+Defined in node_modules/execa/index.d.ts:220
+
+On Windows, do not create a new console window. Please note this also prevents `CTRL-C` [from working](https://github.com/nodejs/node/issues/29837) on Windows.
+
+**`default`** true
 
 ---
 
@@ -2263,9 +2323,9 @@ Sets the user identity of the process.
 
 • **windowsVerbatimArguments**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExecuteAllSyncOptions](#interfacesexecuteallsyncoptionsmd).[windowsVerbatimArguments](#optional-windowsverbatimarguments)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/execa/index.d.ts:187
+Defined in node_modules/execa/index.d.ts:213
 
 If `true`, no quoting or escaping of arguments is done on Windows. Ignored on other platforms. This is set to `true` automatically when the `shell` option is `true`.
 
@@ -2289,9 +2349,9 @@ Options for file copy operation.
 
 • **dereference**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExtendedCopyOptionsSync](#interfacesextendedcopyoptionssyncmd).[dereference](#optional-dereference)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/index.d.ts:273
+Defined in node_modules/@types/fs-extra/index.d.ts:278
 
 ---
 
@@ -2299,9 +2359,9 @@ Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/ind
 
 • **errorOnExist**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExtendedCopyOptionsSync](#interfacesextendedcopyoptionssyncmd).[errorOnExist](#optional-erroronexist)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/index.d.ts:276
+Defined in node_modules/@types/fs-extra/index.d.ts:281
 
 ---
 
@@ -2309,11 +2369,11 @@ Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/ind
 
 • **filter**? : _CopyFilterSync_
 
-_Inherited from void_
+_Inherited from [ExtendedCopyOptionsSync](#interfacesextendedcopyoptionssyncmd).[filter](#optional-filter)_
 
 _Overrides void_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/index.d.ts:282
+Defined in node_modules/@types/fs-extra/index.d.ts:287
 
 ---
 
@@ -2321,7 +2381,7 @@ Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/ind
 
 • **ifEqual**? : _string | Record‹string, any›_
 
-_Defined in [intermodular.ts:19](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L19)_
+_Defined in [src/intermodular.ts:19](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L19)_
 
 allows modification if only value stored at `path` equals/deeply equals to it's value.
 
@@ -2331,7 +2391,7 @@ allows modification if only value stored at `path` equals/deeply equals to it's 
 
 • **ifNotEqual**? : _string | Record‹string, any›_
 
-_Defined in [intermodular.ts:21](https://github.com/ozum/intermodular/blob/c818b41/src/intermodular.ts#L21)_
+_Defined in [src/intermodular.ts:21](https://github.com/ozum/intermodular/blob/df9e4fe/src/intermodular.ts#L21)_
 
 allows modification if only value stored at `path` not equals/deeply equals to it's value.
 
@@ -2341,9 +2401,9 @@ allows modification if only value stored at `path` not equals/deeply equals to i
 
 • **overwrite**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExtendedCopyOptionsSync](#interfacesextendedcopyoptionssyncmd).[overwrite](#optional-overwrite)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/index.d.ts:274
+Defined in node_modules/@types/fs-extra/index.d.ts:279
 
 ---
 
@@ -2351,9 +2411,9 @@ Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/ind
 
 • **preserveTimestamps**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExtendedCopyOptionsSync](#interfacesextendedcopyoptionssyncmd).[preserveTimestamps](#optional-preservetimestamps)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/index.d.ts:275
+Defined in node_modules/@types/fs-extra/index.d.ts:280
 
 ---
 
@@ -2361,9 +2421,9 @@ Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/ind
 
 • **recursive**? : _undefined | false | true_
 
-_Inherited from void_
+_Inherited from [ExtendedCopyOptionsSync](#interfacesextendedcopyoptionssyncmd).[recursive](#optional-recursive)_
 
-Defined in /Users/ozum/Development/intermodular/node_modules/@types/fs-extra/index.d.ts:278
+Defined in node_modules/@types/fs-extra/index.d.ts:283
 
 <a name="interfacesmodifyconditionmd"></a>
 
@@ -2381,7 +2441,7 @@ Conditions which should be met to apply a modification to a key/value.
 
 • **ifEqual**? : _any_
 
-_Defined in [data-file.ts:31](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L31)_
+_Defined in [src/data-file.ts:31](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L31)_
 
 Allows modification if only value stored at `path` equals/deeply equals to it's value.
 
@@ -2391,7 +2451,7 @@ Allows modification if only value stored at `path` equals/deeply equals to it's 
 
 • **ifExists**? : _undefined | false | true_
 
-_Defined in [data-file.ts:27](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L27)_
+_Defined in [src/data-file.ts:27](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L27)_
 
 Allows modification if only `path` does not exists.
 
@@ -2401,7 +2461,7 @@ Allows modification if only `path` does not exists.
 
 • **ifNotEqual**? : _any_
 
-_Defined in [data-file.ts:35](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L35)_
+_Defined in [src/data-file.ts:35](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L35)_
 
 Allows modification if only value stored at `path` equals/deeply equals to it's value.
 
@@ -2411,6 +2471,6 @@ Allows modification if only value stored at `path` equals/deeply equals to it's 
 
 • **ifNotExists**? : _undefined | false | true_
 
-_Defined in [data-file.ts:23](https://github.com/ozum/intermodular/blob/c818b41/src/data-file.ts#L23)_
+_Defined in [src/data-file.ts:23](https://github.com/ozum/intermodular/blob/df9e4fe/src/data-file.ts#L23)_
 
 Allows modification if only `path` exists.
