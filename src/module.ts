@@ -71,7 +71,7 @@ export default class Module {
    * For example your module (source module) is named `my-boilerplate` and `my-project` uses by installing `my-boilerplate`,
    * then `my-project/.my-boilerplate.rc.json` (or any cosmiconfig supported file name) configuration file located in root of `my-project` is used.
    */
-  public config = {};
+  public config: Record<string, any> = {};
 
   /**
    * @ignore
