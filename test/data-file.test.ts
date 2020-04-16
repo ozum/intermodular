@@ -163,6 +163,11 @@ describe("DataFile", () => {
       expect(dataFile.get("rootObject.id")).toBe(1);
       dataFile.delete("rootObject");
     });
+
+    it("should set value if value is a string.", () => {
+      dataFile.assign(["someString"], "abcd");
+      expect(dataFile.get(["someString"])).toBe("abcd");
+    });
   });
 
   describe("modifiedKeys", () => {

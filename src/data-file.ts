@@ -234,10 +234,10 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
    * const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
    * packageJson.assign("scripts", { build: "tsc", test: "jest", }, { ifNotExists: true });
    */
-  public assign(path: string | string[] | undefined, data: Record<string, any>, conditions?: ModifyCondition): this;
+  public assign(path: string | string[] | undefined, data: string | Record<string, any>, conditions?: ModifyCondition): this;
   public assign(
     pathOrData: string | string[] | undefined | Record<string, any>,
-    dataOrConditions?: Record<string, any> | ModifyCondition,
+    dataOrConditions?: string | Record<string, any> | ModifyCondition,
     conditionsOrVoid?: ModifyCondition
   ): this {
     const [path, data, conditions] = (Array.isArray(pathOrData) || typeof pathOrData === "string" || pathOrData === undefined
@@ -258,9 +258,13 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
     // eslint-disable-next-line no-nested-ternary
     const arrayRootPath = path ? (Array.isArray(path) ? path : path.split(".")) : [];
 
-    Object.keys(data).forEach(key => {
-      this.set([...arrayRootPath, key], data[key], conditions);
-    });
+    if (typeof data === "object") {
+      Object.keys(data).forEach((key) => {
+        this.set([...arrayRootPath, key], data[key], conditions);
+      });
+    } else {
+      this.set(arrayRootPath, data, conditions);
+    }
 
     return this;
   }
@@ -325,8 +329,8 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
    * @return object with sorted keys.
    */
   private _orderKeys<K extends Record<string, any>>(object: K, keys: (keyof K)[] = Object.keys(object).sort()): K {
-    const orderedKeysSet = new Set(keys.filter(key => has(object, key))); // Filter key which does not exists in object.
-    Object.keys(object).forEach(key => orderedKeysSet.add(key)); // Add missing keys from `thid.data` to ordered key set's end.
+    const orderedKeysSet = new Set(keys.filter((key) => has(object, key))); // Filter key which does not exists in object.
+    Object.keys(object).forEach((key) => orderedKeysSet.add(key)); // Add missing keys from `thid.data` to ordered key set's end.
     const orderedKeys = Array.from(orderedKeysSet.values());
 
     if (isEqual(orderedKeys, Object.keys(object))) {
@@ -334,7 +338,7 @@ export default class DataFile<T extends Record<string, any> = Record<string, any
     }
 
     const newData: K = {} as K;
-    orderedKeys.forEach(key => (newData[key] = object[key]));
+    orderedKeys.forEach((key) => (newData[key] = object[key]));
     this._skipModificationCheckOnSave = true;
     return newData;
   }
