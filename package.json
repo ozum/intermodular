@@ -55,7 +55,6 @@
     "validate": "npm-run-all -p lint test"
   },
   "dependencies": {
-    "@types/cosmiconfig": "^6.0.0",
     "@types/fs-extra": "^8.1.0",
     "chalk": "^4.0.0",
     "concurrently": "^5.1.0",
