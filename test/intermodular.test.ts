@@ -1,113 +1,98 @@
-import { remove, existsSync } from "fs-extra";
+import tmp from "tmp-promise";
+import { DataFile } from "edit-config";
+import { copy, ensureDir } from "fs-extra";
 import { join } from "path";
-import { compare } from "dir-compare";
-import Intermodular from "../src/intermodular";
-import { LogLevel } from "../src/types";
+import Intermodular from "../src/index";
 
-const sourceRoot = join(__dirname, "supplements/source-module");
-const targetRoot = join(__dirname, "supplements/target-module");
+let intermodular: Intermodular;
+let selfIntermodular: Intermodular;
+let dir: tmp.DirectoryResult;
 
-const im = new Intermodular({ sourceRoot, targetRoot, logLevel: LogLevel.Debug });
+function getFilename(extension = "") {
+  const number = Math.floor(Math.random() * Math.floor(1000));
+  return join("temp", `${number}${extension ? "." : ""}${extension}`);
+}
 
-afterAll(async () => {
-  await remove(join(targetRoot, "config-files"));
-  await remove(join(targetRoot, "config-files-target"));
-  await remove(join(targetRoot, "existing-dir/some-file.js"));
-  await remove(join(targetRoot, "different-name.json"));
+beforeAll(async () => {
+  dir = await tmp.dir({ unsafeCleanup: true });
+  await copy(join(__dirname, "test-helper"), dir.path);
+  await ensureDir(join(dir.path, "source-module/src/empty-dir"));
+  intermodular = await Intermodular.new({ sourceRoot: join(dir.path, "source-module"), targetRoot: join(dir.path, "target-module") });
+  selfIntermodular = await Intermodular.new();
 });
 
-describe("Intermodular", () => {
-  it("should create instance.", () => {
-    const localIm = new Intermodular();
-    expect(localIm instanceof Intermodular).toBe(true);
+afterAll(async () => {
+  await dir.cleanup();
+});
+
+describe("intermodular", () => {
+  it("should create with default values", async () => {
+    expect(selfIntermodular.sourceModule.name).toBe("intermodular");
+    expect(selfIntermodular.targetModule.name).toBe("intermodular");
   });
 
-  it("should detect its own root.", () => {
-    expect(im.myRoot).toBe(join(__dirname, ".."));
+  it("should have conifg if configuration is present.", async () => {
+    expect(intermodular.config.data).toEqual({ x: 1 });
   });
 
-  it("should detect its parent module root.", () => {
-    expect(im.parentModuleRoot).toBe(join(__dirname, ".."));
+  it("should not have conifg if configuration is not present.", async () => {
+    expect(selfIntermodular.config.data).toEqual({});
   });
 
-  it("should use itself as a default source module.", () => {
-    const imLocal = new Intermodular({ targetRoot: join(__dirname, "supplements/target-module") });
-    expect(imLocal.sourceModule.name).toBe("intermodular");
+  describe("isEnvSet", () => {
+    it("should return true if env is set.", async () => {
+      expect(Intermodular.isEnvSet("NODE_ENV")).toBe(true);
+    });
+
+    it("should return false if env is not set.", async () => {
+      expect(Intermodular.isEnvSet("xyz")).toBe(false);
+    });
   });
 
-  it("should return set status of false for empty environment variables.", () => {
-    process.env.intermodularTest = "";
-    expect(Intermodular.isEnvSet("intermodularTest")).toBe(false);
-  });
-  it("should return set status of false for 'undefined' string environment variables.", () => {
-    process.env.intermodularTest = "undefined";
-    expect(Intermodular.isEnvSet("intermodularTest")).toBe(false);
-  });
-  it("should return set status of true for non-empty environment variables.", () => {
-    process.env.intermodularTest = "set";
-    expect(Intermodular.isEnvSet("intermodularTest")).toBe(true);
-  });
-  it("should parse environment variable as an object.", () => {
-    process.env.intermodularTest = '{ "passed": "ok" }';
-    expect(Intermodular.parseEnv("intermodularTest")).toEqual({ passed: "ok" });
-  });
-  it("should parse environment variable as a string.", () => {
-    process.env.intermodularTest = "passed";
-    expect(Intermodular.parseEnv("intermodularTest")).toBe("passed");
-  });
-  it("should return default environment if it is not set.", () => {
-    process.env.intermodularTest = "";
-    expect(Intermodular.parseEnv("intermodularTest", "default")).toBe("default");
-  });
-  it("should resolve module root.", () => {
-    process.env.intermodularTest = "passed";
-    expect(Intermodular.resolveModuleRoot("prettier")).toBe(join(__dirname, "../node_modules/prettier"));
+  describe("parseEnv", () => {
+    it("should return environment variable.", async () => {
+      process.env.EXAMPLE_STRING = "a";
+      expect(Intermodular.parseEnv("EXAMPLE_STRING")).toBe("a");
+    });
+
+    it("should return parsed environment variable, if value looks like JSON.", async () => {
+      process.env.EXAMPLE_DATA = JSON.stringify({ name: "John" });
+      expect(Intermodular.parseEnv("EXAMPLE_DATA")).toEqual({ name: "John" });
+    });
+
+    it("should return default value if environment variable is not set.", async () => {
+      expect(Intermodular.parseEnv("XYZ", "a")).toBe("a");
+    });
   });
 
-  it("should copy with different name.", () => {
-    im.copySync("config-files/data.json", "different-name.json");
-  });
+  describe("copy", () => {
+    it("should copy directory.", async () => {
+      expect(await intermodular.targetModule.exists("src")).toBe(false);
+      await intermodular.copy("src");
+      expect(await intermodular.targetModule.exists("src")).toBe(true);
+    });
 
-  it("should copy directories.", async () => {
-    im.copySync("config-files", "config-files-target");
-    const comparison = await compare(
-      join(__dirname, "supplements/source-module/config-files"),
-      join(__dirname, "supplements/target-module/config-files-target")
-    );
-    expect(comparison.differences).toBe(0);
-  });
-  it("should copy directories to same path in target module.", async () => {
-    im.copySync("config-files");
-    const comparison = await compare(
-      join(__dirname, "supplements/source-module/config-files"),
-      join(__dirname, "supplements/target-module/config-files")
-    );
-    expect(comparison.differences).toBe(0);
-  });
-  it("should copy file into target directory.", () => {
-    im.copySync("config-files/some-file.js", "existing-dir");
-    const exists = existsSync(join(targetRoot, "existing-dir/some-file.js"));
-    expect(exists).toBe(true);
-  });
-  it("should skip copy if source and target are same.", () => {
-    const localIm = new Intermodular({ sourceRoot: targetRoot, targetRoot, logLevel: LogLevel.Debug });
-    expect(() => localIm.copySync("data.json", "data.json")).not.toThrow();
-  });
-  it("should execute filter function during copy.", () => {
-    im.copySync("config-files/other-file.js", "existing-dir", { filter: () => false });
-    const exists = existsSync(join(targetRoot, "existing-dir/other-file.js"));
-    expect(exists).toBe(false);
-  });
-  it("should log", async () => {
-    im.log("Log test");
-    expect(true).toBe(true);
-  });
-  it("should log if defined", async () => {
-    im.logIfDefined("a");
-    expect(true).toBe(true);
-  });
-  it("should not log if undefined", async () => {
-    im.logIfDefined(undefined);
-    expect(true).toBe(true);
+    it("should not copy if filter is false.", async () => {
+      expect(await intermodular.targetModule.exists("copy-source")).toBe(false);
+      await intermodular.targetModule.createDirectory("copy-source/");
+      await intermodular.copy("copy-source", "copy-source", {
+        filter: (sourcePath, targetPath, isSourceDirectory, isTargetDirectory, sourceContent) =>
+          isSourceDirectory || (sourceContent instanceof DataFile && sourceContent.data.x === 1),
+      });
+      expect(await intermodular.targetModule.exists(join("copy-source/a"))).toBe(false);
+      expect(await intermodular.targetModule.exists(join("copy-source/b"))).toBe(true);
+    });
+
+    it("should return if source and target are same.", async () => {
+      expect(await selfIntermodular.copy("src")).toBeUndefined();
+    });
+
+    it("should copy file into directory", async () => {
+      const fileName = getFilename();
+      await intermodular.targetModule.createDirectory(fileName);
+      expect(await intermodular.targetModule.exists(join(fileName, "a"))).toBe(false);
+      await intermodular.copy("copy-source/a", fileName);
+      expect(await intermodular.targetModule.exists(join(fileName, "a"))).toBe(true);
+    });
   });
 });

@@ -7,7 +7,7 @@ actionText: Get Started →
 actionLink: /nav.01.guide/
 features:
   - title: File Operations
-    details: Easy file operations between your boilerplate node.js module and target module.
+    details: Easy file operations between your boilerplate module and target module.
   - title: PostInstall
     details: Ideal for postinstall scripts.
   - title: No Need to Eject
@@ -15,21 +15,52 @@ features:
 footer: MIT Licensed | Copyright © 2019-present Özüm Eldoğan
 ---
 
-### Create a `postinstall` script
+## Example: `postinstall` Script
 
-Copy config files from your module to target module, introspect and update configurations, install additional modules...
+Assuming you create a boilerplate called `my-boiler` for your all TypeScript projects and will be using it form a project called `my-project`.
+
+Below is parts for an example `postinstall` script for your own boilerplate (`my-boilerplate/src/index.ts`). You can copy files from your boilerplate, read, edit and delete config files conditinally, install `node` modules and more.
+
+### Create Instance
 
 ```ts
+import Intermodular from "intermodular";
+
+const intermodular = await Intermodular.new();
 const targetModule = intermodular.targetModule;
-const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
-
-// Copy all config files from `.../your-module/common-config/` to `.../target-module/` (root).
-intermodular.copySync("common-config", ".");
-targetModule.install("lodash");
-targetModule.executeSync("rm", ["-rf", "dist"]);
-packageJson.set("description", `My awesome ${targetModule.name}`, { ifNotExists: true });
-
-if (intermodular.targetModule.isTypeScript) {
-  intermodular.copySync("config/tsconfig.json", ".");
-}
 ```
+
+### Copy, Edit & Save Config Files
+
+Copy all config files from your boilerplate to your `my-project` TypeScript project.
+
+```ts
+ // Copy all files from `my-boilerplate/config/` to `my-project/`
+await intermodular.copy("config", ".");
+
+// Update project's `package.json`.
+targetModule.package.set("description", `My awesome project of ${targetModule.name}`);
+
+// Get some deep data from cosmiconfig compatible config file from `my-project/.my-boilerplaterc` or any cosmiconfig compatible way automatically.
+const buildFlags = intermodular.config.get("build.flags");
+targetModule.package.set("scripts.build": `tsc ${buildFlags}`);
+
+// Read and update target eslint configuration.
+const eslintConfig = await targetModule.read("eslint", { cosmiconfig: true });
+eslintConfig.set("rules.lines-between-class-members", ["warn", "always", { exceptAfterSingleLine: true }]);
+
+await targetModule.saveAll();
+```
+
+### Install Modules & Execute Commands
+
+Install modules into `my-project`.
+
+```ts
+await targetModule.install("lodash");
+await targetModule.execute("tsc", ["-b"]);
+```
+
+### Use from `my-project`
+
+`$ npm install -D my-boilerplate`

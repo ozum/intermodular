@@ -1,31 +1,58 @@
 # Usage
 
-```ts
-import Intermodular, { FileFormat, LogLevel, DependencyType } from "intermodular";
+## Import
 
-// Default Source: Your module, Target: Module installed your module as a dependency.
-const intermodular = new Intermodular();
+**JavaScript**
+
+```ts
+import Intermodular from "intermodular";
+```
+
+**TypeScript**
+
+```ts
+import Intermodular, { PackageManager, DependencyType, PredicateFileOperation, CopyFilterFunction, CopyOptions } from "intermodular";
+```
+
+## Usage
+
+Your boilerplate module is source module and target module is module installed your boilerplate as a dependency.
+
+```ts
+const intermodular = await Intermodular.new();
+
 const targetModule = intermodular.targetModule;
-const config = intermodular.targetModule.config;
+const config = intermodular.config;
 ```
 
-## Copy Files
+## Copy, Edit & Save Config Files
 
-Copy files from your boilerplate module to module that uses your boilerplate.
+Copy all config files from your boilerplate to your `my-project` TypeScript project.
 
 ```ts
-// Copy all files from your module's `common-config` to target module's root.
-intermodular.copySync("common-config", ".");
+ // Copy all files from `my-boilerplate/config/` to `my-project/`
+await intermodular.copy("config", ".");
 
-if (targetModule.isTypeScript) {
-  intermodular.copySync("config/tsconfig.json", ".");
-}
+// Update project's `package.json`.
+targetModule.package.set("description", `My awesome project of ${targetModule.name}`);
+
+// Get some deep data from cosmiconfig compatible config file from `my-project/.my-boilerplaterc` or any cosmiconfig compatible way automatically.
+const buildFlags = intermodular.config.get("build.flags");
+targetModule.package.set("scripts.build": `tsc ${buildFlags}`);
+
+// Read and update target eslint configuration.
+const eslintConfig = await targetModule.read("eslint", { cosmiconfig: true });
+eslintConfig.set("rules.lines-between-class-members", ["warn", "always", { exceptAfterSingleLine: true }]);
+
+await targetModule.saveAll();
 ```
 
-## Install Modules
+## Install modules
+
+Install modules into `my-project`.
 
 ```ts
-targetModule.install("lodash");
+await targetModule.install("lodash");
 ```
 
 ## Check Module Dependencies
@@ -38,33 +65,8 @@ targetModule.hasAnyDependency("babel");
 
 ## Execute Command
 
-### Single Command
-
 ```ts
-// Execute shell command.
-targetModule.executeSync("rm", ["-rf", "dist"]);
-```
-
-### Serial and Parallel (Concurrent) Commands
-
-```ts
-// Run: `rm -rf dist`, then `tsc`
-targetModule.executeAllSync(["rm", ["-rf", "dist"]], "tsc");
-
-// Run `rm -rf dist` and `rm -rf build` concurrently, then execute `tsc`
-targetModule.executeAllSync(
-  {
-    "Delete 1": ["rm", ["-rf", "dist"]],
-    "Delete 2": ["rm", ["-rf", "build"]],
-  },
-  "tsc"
-);
-```
-
-## Work with Prettier
-
-```ts
-targetModule.getPrettierConfigSync("src/main.ts");
+await targetModule.execute("tsc", ["-b"]);
 ```
 
 ## Operations on Target Module
@@ -79,26 +81,24 @@ targetModule.pathOf("config/tsconfig.json"); // Absolute path.
 Work with files located in target module's directory.
 
 ```ts
-targetModule.readSync("README.md");
-targetModule.parseSync("package.json");
-targetModule.parseWithFormatSync(".configrc"); // { format: "yaml", data: {...} }
-targetModule.writeSync("README.md", `Hello from ${targetModule.name}`, { overwrite: false });
-targetModule.removeSync(".myconfig", { ifEqual: { name: "xyz", "0.1.1" } });
-targetModule.existSync("README.md");
-targetModule.isEqual(".myconfig", { name: "xyz", "0.1.1" });
+await targetModule.read("README.md");
+await targetModule.write("README.md", `Hello from ${targetModule.name}`, { overwrite: false });
+await targetModule.remove(".myconfig", { if: (data: DataFile) => data.get("version").startsWith("2") });
+await targetModule.exist("README.md");
+await targetModule.isEqual(".myconfig", { name: "xyz", "0.1.1" });
 ```
 
-## Work with Data Files
+## Operations on Data Files
 
 Work with data files located in target module's directory.
 
 ```ts
 // Do some individual data level operations:
-const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
-packageJson.set("keywords", ["some-key"], { ifNotExists: true });
-packageJson.set("description", `My awesome ${moduleName}`, { ifNotExists: true });
-packageJson.assign("scripts", { build: "tsc", test: "jest" }, { ifNotExists: true });
-packageJson.assign({ author: { name: "my-name", email:"mymail@mymail.com" }, { ifNotExists: true });
-packageJson.orderKeys(["name", "version", "description", "keywords", "scripts"]); // Other keys come after.
-packageJson.saveSync();
+targetModule.package.set("keywords", ["some-key"]);
+targetModule.package.set("description", `My awesome ${moduleName}`);
+targetModule.package.merge("scripts", { build: "tsc", test: "jest" });
+targetModule.package.merge({ author: { name: "my-name", email: "mymail@mymail.com" } });
+targetModule.package.sortKeys("scripts", { start: ["build", "lint"], end: ["release"] }); // Sort scripts, but reserve start and end.
+targetModule.package.sortKeys({ start: ["name", "description"], end: ["dependencies", "devDependencies"] }); // Sort root keys, but reserve start and end.
+await targetModule.package.save();
 ```

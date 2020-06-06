@@ -1,183 +1,107 @@
-/* eslint-disable no-nested-ternary, @typescript-eslint/no-explicit-any */
-import parentModule from "parent-module";
-import JSON5 from "json5";
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { DataFile } from "edit-config";
+import { dirname } from "path";
 import pkgDir from "pkg-dir";
-import { Logger } from "winston";
-import { dirname, relative, resolve, basename } from "path";
-import { copySync, CopyOptionsSync, lstatSync, existsSync } from "fs-extra";
-import chalk from "chalk";
+import JSON5 from "json5";
+import parentModule from "parent-module";
+import { copy, CopyFilterAsync } from "fs-extra";
+import { CopyFilterFunction, Logger, LogLevel, CopyOptions } from "./util/types";
 import Module from "./module";
-import { createLogger, logTemplate, getNotModifyReasonTemplateKey, findTopPackageDir } from "./util";
-import { LogLevel } from "./types";
-import TEMPLATES from "./messages";
+import { getCopyTarget } from "./util/helper";
 
-/**
- * Options for file copy operation.
- */
-interface ExtendedCopyOptionsSync extends CopyOptionsSync {
-  /** allows modification if only value stored at `path` equals/deeply equals to it's value. */
-  ifEqual?: string | Record<string, any>;
-  /** allows modification if only value stored at `path` not equals/deeply equals to it's value. */
-  ifNotEqual?: string | Record<string, any>;
-}
-
-/**
- * Easy file operations between node.js modules and auto logging to help building zero-config boilerplates, postinstall and other scripts.
- *
- * @example
- * import Intermodular from "intermodular";
- *
- * const intermodular = new Intermodular(); // (Defaults) Source: Your module, Target: Module installed your module as a dependency.
- * intermodular.copySync("common-config", "."); // Copy all files from your modules `common-config` to target module's root.
- *
- * if (targetModule.isTypeScript) {
- *   intermodular.copySync("config/tsconfig.json", ".");
- * }
- *
- * const targetModule = intermodular.targetModule;
- * const moduleName = targetModule.name;
- * targetModule.install("lodash"); // Install lodash.
- * targetModule.getDependencyVersion("lodash"); // Get version info from package.json
- * targetModule.executeSync("rm", ["-rf", "some-directory"]); // Execute shell command.
- * targetModule.pathOf("config/tsconfig.json"); // Absolute path.
- *
- * // Do some individual data level operations:
- * const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
- * packageJson.set("keywords", ["some-key"], { ifNotExists: true });
- * packageJson.set("description", `My awesome ${moduleName}`, { ifNotExists: true });
- * packageJson.assign("scripts", { build: "tsc", test: "jest", }, { ifNotExists: true });
- * packageJson.orderKeys(["name", "version", "description", "keywords", "scripts"]); // Other keys come after.
- * packageJson.saveSync();
- */
 export default class Intermodular {
-  private readonly _logger: Logger;
-  private readonly _overwrite: boolean;
-  private readonly _parentModule?: string = parentModule();
-
-  /**
-   * [[Module]] instance of node module which is used as source for modification operations such as copy, update.
-   */
+  /** [[Module]] instance of node module which is used as source for modification operations such as copy, update. */
   public readonly sourceModule: Module;
 
-  /**
-   * [[Module]] instance of node module which is used as target for modification operations such as copy, update.
-   */
+  /** [[Module]] instance of node module which is used as target for modification operations such as copy, update. */
   public readonly targetModule: Module;
 
-  /**
-   * Root directory of the parent module, which installs your module.
-   * This is the directory which contains `package.json` file of the parent module.
-   */
-  public readonly myRoot?: string = this._parentModule && pkgDir.sync(dirname(this._parentModule));
+  /** Configuration for source module in target module as a [DataFile](https://www.npmjs.com/package/edit-config#class-datafile) instance. */
+  public readonly config: DataFile;
+
+  #overwrite: boolean;
+  #logger: Logger;
+
+  private constructor(sourceModule: Module, targetModule: Module, config: DataFile, logger: Logger = { log: () => {} }, overwrite = false) {
+    this.sourceModule = sourceModule;
+    this.targetModule = targetModule;
+    this.#logger = logger;
+    this.#overwrite = overwrite;
+    this.config = config;
+  }
 
   /**
-   * Root directory of your module which requires this module.
-   * This is the directory which contains `package.json` file of your module.
-   */
-  public readonly parentModuleRoot?: string = this.myRoot && findTopPackageDir(this.myRoot);
-
-  /**
-   * Creates an instance.
+   * Takes `intermodular` copy filter function and returns `fs-extra` `copy` compatible filter function.
    *
-   * @param sourceRoot is absolute path of source root, which is used as source for copying files etc.
-   * @param targetRoot is absolute path of target root, which is used as target for copying files etc.
-   * @param logLevel is default log level to show. ("error", "warn", "info", "verbose", "debug" or "silly")
-   * @param overwrite is default overwrite option for operations. Changes all write operation's default behavior. Also wverwrite option can be set for each operation individually.
-   * @param packageManager is package manager to use in modules.
+   * @param filter `intermodular` copy filter function.
+   * @returns `fs-extra` `copy` compatible filter function.
    */
-  public constructor({
+  private getCopyFilter(filter?: CopyFilterFunction): CopyFilterAsync {
+    return async (fullSourcePath: string, fullTargetPath: string) => {
+      let result = true;
+      const relativeSource = this.sourceModule.relativePathOf(fullSourcePath);
+      const relativeTarget = this.targetModule.relativePathOf(fullTargetPath);
+
+      if (filter) {
+        const [isSourceDir, isTargetDir] = await Promise.all([
+          this.sourceModule.isDirectory(relativeSource),
+          this.targetModule.isDirectory(relativeTarget),
+        ]);
+
+        const sourceContent = isSourceDir ? undefined : await this.sourceModule.read(relativeSource);
+        const targetContent = isTargetDir ? undefined : await this.targetModule.read(relativeTarget);
+        result = await filter(fullSourcePath, fullTargetPath, isSourceDir, isTargetDir, sourceContent, targetContent);
+      }
+
+      const logLevel = result ? LogLevel.Info : LogLevel.Warn;
+      this.#logger.log(logLevel, `File ${result ? "" : "not "}copied: '${relativeSource}' → '${relativeTarget}'`);
+      return result;
+    };
+  }
+
+  /**
+   * Copies a file or directory from `pathInSourceModule` relative to source module root to `pathInTargetModule`relative to
+   * target module root. The directory can have contents. Like cp -r.
+   * Note that if src is a directory it will copy everything inside of this directory, not the entire directory itself.
+   *
+   * @param sourcePath is source to copy from.
+   * @param targetPath is destination to copy to. Cannot be a directory.
+   * @param options are options.
+   *
+   * @example
+   * // Copy everything in `/path/to/project/node_modules/module-a/src/config/` to `/path/to/project/`
+   * copySync("src/config", ".");
+   */
+  public async copy(sourcePath: string, targetPath: string = sourcePath, copyOptions: CopyOptions = {}): Promise<void> {
+    const source = this.sourceModule.pathOf(sourcePath);
+    const target = await getCopyTarget(source, this.targetModule.pathOf(targetPath));
+    if (source === target) return;
+    await copy(source, target, { ...copyOptions, filter: this.getCopyFilter(copyOptions.filter) });
+  }
+
+  //
+  // ──────────────────────────────────────────────────────────────────── I ──────────
+  //   :::::: S T A T I C   M E T H O D S : :  :   :    :     :        :          :
+  // ──────────────────────────────────────────────────────────────────────────────
+  //
+
+  /**
+   * Creates and returns [[Intermodula ]]
+   * @param param0
+   */
+  public static async new({
     sourceRoot,
     targetRoot,
-    logLevel = LogLevel.Info,
-    overwrite = false,
-    packageManager = "npm",
-  }: {
-    sourceRoot?: string;
-    targetRoot?: string;
-    logLevel?: LogLevel;
-    overwrite?: boolean;
-    packageManager?: "npm" | "yarn";
-  } = {}) {
-    const resolvedSourceRoot = sourceRoot ? resolve(sourceRoot) : this.myRoot;
-    const resolvedTargetRoot = this.resolveTargetRoot(targetRoot); // targetRoot ? resolve(targetRoot) : this.parentModuleRoot;
+    logger,
+    overwrite,
+  }: { sourceRoot?: string; targetRoot?: string; logger?: Logger; overwrite?: boolean } = {}): Promise<Intermodular> {
+    const [sourceModule, targetModule] = await Promise.all([
+      Module.new({ cwd: sourceRoot || (await this.getDefaultSourceRoot()), logger }),
+      Module.new({ cwd: targetRoot || (await this.getDefaultTargetRoot()), logger }),
+    ]);
 
-    /* istanbul ignore if */
-    if (!resolvedSourceRoot || !resolvedTargetRoot) {
-      throw new Error("Cannot determine source and target roots.");
-    }
-
-    this._logger = createLogger(logLevel);
-    this._overwrite = overwrite;
-    this.sourceModule = new Module(resolvedSourceRoot, this._logger, this._overwrite, packageManager);
-    this.targetModule = new Module(resolvedTargetRoot, this._logger, this._overwrite, packageManager, this.sourceModule.nameWithoutUser);
-    this._logTemplate("construction", { source: this.sourceModule.name, target: this.targetModule.name });
-  }
-
-  /**
-   * Returns parent module root. If parent module root cannot be find (i.e. using with npx) or my root is equal to parent module root
-   * returns closest package.json dir to cwd().
-   *
-   * @ignore
-   * @param targetRoot is absolute path of target root, which is used as target for copying files etc.
-   * @returns resolved target root.
-   */
-  private resolveTargetRoot(targetRoot?: string): string {
-    if (targetRoot) {
-      return resolve(targetRoot);
-    }
-
-    /* istanbul ignore next */
-    const resolvedTargetRoot =
-      this.parentModuleRoot === undefined || this.parentModuleRoot === this.myRoot ? pkgDir.sync() : this.parentModuleRoot;
-
-    /* istanbul ignore next */
-    if (resolvedTargetRoot === undefined) {
-      throw new Error("Cannot find target root.");
-    }
-
-    return resolvedTargetRoot;
-  }
-
-  /**
-   * Logs precompiled template message with `key` using `args`.
-   */
-  private _logTemplate(key: keyof typeof TEMPLATES, args: Record<string, any>): void {
-    this._logger.log(...logTemplate(key, args));
-  }
-
-  /**
-   * Logs `message` with `level`.
-   *
-   * @param message is message text to log.
-   * @param level is log level. ("error", "warn", "info", "verbose", "debug" or "silly")
-   */
-  public log(message: string, level: LogLevel = LogLevel.Info): void {
-    this._logger.log(level, message);
-  }
-
-  /**
-   * Logs `message` with `level` if it is defined.
-   *
-   * @param message is message text to log.
-   * @param level is log level. ("error", "warn", "info", "verbose", "debug" or "silly")
-   */
-  public logIfDefined(message: string | undefined, level: LogLevel = LogLevel.Info): void {
-    if (message !== undefined) {
-      this._logger.log(level, message);
-    }
-  }
-
-  /**
-   * Returns path of the root of module with given `name`.
-   *
-   * @param name of the module to get root path of.
-   * @returns root path of given module.
-   * @example
-   * project.resolveModule("fs-extra"); // /path/to/project/node_modules/fs-extra
-   */
-  public static resolveModuleRoot(name: string): string | undefined {
-    const moduleMainFile = require.resolve(name); // File specified in `package.json` `main` key.
-    return pkgDir.sync(moduleMainFile);
+    const config = await targetModule.readData(sourceModule.nameWithoutUser, { cosmiconfig: true });
+    return new Intermodular(sourceModule, targetModule, config, logger, overwrite);
   }
 
   /**
@@ -193,7 +117,7 @@ export default class Intermodular {
   }
 
   /**
-   * Parses and returns `variable` environment variable. If possible, parses (JSON5) and returns it as a JavaScript object.
+   * Parses and returns `variable` environment variable. If value is JSON object, parses using JSON5 and returns it as a JavaScript object.
    * Otherwise returns `defaultValue`.
    *
    * @param variable is Name of the environment variable
@@ -212,87 +136,21 @@ export default class Intermodular {
     return defaultValue;
   }
 
-  /**
-   * Copies a file or directory from `pathInSourceModule` relative to source module root to `pathInTargetModule`relative to
-   * target module root. The directory can have contents. Like cp -r.
-   * Note that if src is a directory it will copy everything inside of this directory, not the entire directory itself.
-   *
-   * @param pathInSourceModule is source to copy from.
-   * @param pathInTargetModule is destination to copy to. Cannot be a directory.
-   * @param ifEqual allows modification if only value stored at `path` equals/deeply equals to it's value.
-   * @param ifNotEqual allows modification if only value stored at `path` not equals/deeply equals to it's value.
-   * @param overwrite whether to overwrite existing file or directory. Note that the copy operation will silently fail if you set this to false and the destination exists. Use the errorOnExist option to change this behavior.
-   * @param errorOnExist if true, when overwrite is false and the destination exists, throws an error.
-   * @param dereference whether to dereference symlinks.
-   * @param preserveTimestamps whether to set last modification and access times to the ones of the original source files. When false, timestamp behavior is OS-dependent.
-   * @param filter is `(src, dest) => boolean` function to filter copied files. Return true to include, false to exclude.
-   * @returns array of file paths copied to target. File paths are relative to target module root.
-   * @example
-   * // Copy everything in `/path/to/project/node_modules/module-a/src/config/` to `/path/to/project/`
-   * util.copySync("src/config", ".");
-   */
-  public copySync(
-    pathInSourceModule: string,
-    pathInTargetModule: string = pathInSourceModule,
-    {
-      ifEqual,
-      ifNotEqual,
-      overwrite = this._overwrite,
-      errorOnExist = false,
-      dereference = false,
-      preserveTimestamps = false,
-      filter,
-    }: ExtendedCopyOptionsSync = {}
-  ): string[] {
-    const source = this.sourceModule.pathOf(pathInSourceModule);
-    let target = this.targetModule.pathOf(pathInTargetModule);
-    const copiedFiles: string[] = [];
-    const shouldCopy: Record<string, boolean> = {}; // Filter function called more than once for same pair. Store result not to calculate again.
+  // istanbul ignore next
+  /** Returns default source root */
+  private static async getDefaultSourceRoot(): Promise<string> {
+    const parent = parentModule();
+    if (!parent) throw new Error("Cannot find source root.");
+    const root = await pkgDir(dirname(parent));
+    if (!root) throw new Error("Cannot find source root.");
+    return root;
+  }
 
-    // If source is file and target is an existing directory copy into it with same file name.
-    target =
-      !lstatSync(source).isDirectory() && existsSync(target) && lstatSync(target).isDirectory()
-        ? `${target}/${basename(pathInSourceModule)}`
-        : target;
-
-    if (source === target) {
-      return [];
-    }
-
-    // For logging purposes, create a filter function wrapper around original filter function.
-    const filterFunction = (src: string, dest: string): boolean => {
-      let notModifyReason: keyof typeof TEMPLATES | undefined;
-      const relativeSource = relative(this.sourceModule.root, src); // Even source is a directory, this is the individual real destinantion file.
-      const relativeDestination = relative(this.targetModule.root, dest); // Even source is a directory, this is the individual real destinantion file.
-      const id = `${relativeSource}→${relativeDestination}`;
-      const srcIsDirectory = lstatSync(src).isDirectory();
-
-      if (Object.prototype.hasOwnProperty.call(shouldCopy, id)) {
-        return shouldCopy[id];
-      }
-
-      if (!srcIsDirectory) {
-        notModifyReason = getNotModifyReasonTemplateKey(this.targetModule, relativeDestination, { overwrite, ifEqual, ifNotEqual });
-
-        this._logTemplate(notModifyReason || "fileOp", {
-          op: "copied",
-          file: `${relativeSource} ${chalk.white("→")} ${relativeDestination}`,
-        });
-      }
-
-      this._logTemplate("fileCopy", { source: src, target: dest });
-
-      // Return original filter functions result if it exists.
-      shouldCopy[id] = notModifyReason === undefined && (filter ? filter(src, dest) : true);
-
-      if (shouldCopy[id] && !srcIsDirectory) {
-        copiedFiles.push(relative(this.targetModule.root, dest));
-      }
-
-      return shouldCopy[id];
-    };
-
-    copySync(source, target, { overwrite, errorOnExist, dereference, preserveTimestamps, filter: filterFunction });
-    return copiedFiles;
+  // istanbul ignore next
+  /** Returns default target root */
+  private static async getDefaultTargetRoot(): Promise<string> {
+    const root = await pkgDir(process.env.INIT_CWD || process.env.CWD);
+    if (!root) throw new Error(`Cannot find target root.`);
+    return root;
   }
 }

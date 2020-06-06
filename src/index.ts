@@ -1,2 +1,4 @@
-export { default } from "./intermodular";
-export { FileFormat, LogLevel, DependencyType } from "./types";
+import Intermodular from "./intermodular";
+
+export * from "./util/types";
+export default Intermodular;

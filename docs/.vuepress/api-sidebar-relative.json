@@ -1,26 +1,14 @@
 [
   {
     "title": "Classes",
-    "children": [
-      "classes/commandresults",
-      "classes/datafile",
-      "classes/intermodular",
-      "classes/module"
-    ]
+    "children": ["classes/intermodular", "classes/module"]
   },
   {
     "title": "Enums",
-    "children": [
-      "enums/dependencytype",
-      "enums/loglevel"
-    ]
+    "children": ["enums/dependencytype", "enums/packagemanager"]
   },
   {
     "title": "Interfaces",
-    "children": [
-      "interfaces/executeallsyncoptions",
-      "interfaces/extendedcopyoptionssync",
-      "interfaces/modifycondition"
-    ]
+    "children": ["interfaces/copyoptions"]
   }
 ]
