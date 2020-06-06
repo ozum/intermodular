@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/ozum/intermodular/compare/v0.5.9...v0.6.0) (2020-06-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* Sync file operation methods are removed and async methods are added.
+
+### Features
+
+* make methods async ([1a437d5](https://github.com/ozum/intermodular/commit/1a437d5576406f77a090b4906c9421a187bb11d4))
+* reload reloads all config files ([1450ddb](https://github.com/ozum/intermodular/commit/1450ddb80386909ee11e28b54ae1bb4739324e1e))
+
+
+### Bug Fixes
+
+* fix data-file assign with string value ([9589637](https://github.com/ozum/intermodular/commit/95896370d913cb20e55addb29e2ce94afe0e2751))
+* fix module config type declaration ([97c46d7](https://github.com/ozum/intermodular/commit/97c46d7c7edd2581b7d1ff4098268aace37484a4))
+* update packages ([531a0a0](https://github.com/ozum/intermodular/commit/531a0a0a330575aecfe41e2190342143d6594c47))
+* update packages ([c8a75a3](https://github.com/ozum/intermodular/commit/c8a75a30105d4f293798cadaa5f3d7d5b25a2eec))
+* update packages ([e66c913](https://github.com/ozum/intermodular/commit/e66c913fb0556c823e7a5486b49572de91dbd211))
+
 ### [0.5.17](https://github.com/ozum/intermodular/compare/v0.5.9...v0.5.17) (2020-05-05)
 
 
