@@ -54,8 +54,12 @@ describe("Module", () => {
     expect(myModule.pathOf("my-file")).toBe(join(dir.path, "source-module/my-file"));
   });
 
-  it("should return relative path of file.", async () => {
+  it("should return relative path of an absolute path.", async () => {
     expect(myModule.relativePathOf(join(dir.path, "source-module/my-file"))).toBe("my-file");
+  });
+
+  it("should return relative path directly.", async () => {
+    expect(myModule.relativePathOf("my-file")).toBe("my-file");
   });
 
   it("should get yarn as package manager.", async () => {
@@ -82,8 +86,9 @@ describe("Module", () => {
 
   it("should remove all empty dirs recursively", async () => {
     await copy(join(dir.path, "source-module/src"), join(dir.path, "source-module/temp/src"));
-    await myModule.removeEmptyDirs(join(dir.path, "source-module/temp/src"));
     expect(await myModule.exists("temp/src/empty-dir")).toBe(true);
+    await myModule.removeEmptyDirs(join(dir.path, "source-module/temp/src"));
+    expect(await myModule.exists("temp/src/empty-dir")).toBe(false);
   });
 
   it("should save all data files", async () => {

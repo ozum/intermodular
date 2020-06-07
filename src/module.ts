@@ -2,7 +2,7 @@ import deleteEmpty from "delete-empty";
 import { DataFile, Manager, ManagerLoadOptions, WritableFileFormat, Logger, LogLevel } from "edit-config";
 import { outputFile, pathExists, readFile, remove, rename, lstat, ensureDir } from "fs-extra";
 import isEqual from "lodash.isequal";
-import { join, relative } from "path";
+import { join, relative, isAbsolute } from "path";
 import pkgDir from "pkg-dir";
 import execa, { command, Options as ExecaOptions, ExecaReturnValue } from "execa";
 import { arrify, packageManagerFlags, isFromFileToDirectory } from "./util/helper";
@@ -104,34 +104,39 @@ export default class Module {
   }
 
   /**
-   * Returns absolute path of given path parts relative to module root.
+   * Returns absolute path for given relative path to module root. If given path is an absolute path, returns it directly.
    *
-   * @param parts are path or array of path parts relative to module root.
+   * @param parts are path or array of path parts.
    * @returns absolute path to given destination.
    *
    * @example
-   * module.pathOf("images", "photo.jpg"); // /path/to/root/images/photo.jpg
+   * module.pathOf("images", "photo.jpg"); // -> /path/to/root/images/photo.jpg
+   * module.pathOf("/usr", "bin"); // -> /usr/bin
    */
   public pathOf(...parts: string[]): string {
-    return join(this.root, ...parts);
+    const path = join(...parts);
+    return isAbsolute(path) ? path : join(this.root, path);
   }
 
   /**
-   * Returns given  path converted to relative to module's root.
-   * @param parts are path or array of path parts relative to module root.
+   * Returns relative path to module root for given absolute path. If given path is a relative path, returns it directly.
+   *
+   * @param parts are path or array of path parts.
    * @returns path relative to module's root.
    *
    * @example
-   * module.relativePathOf("/path/to/module/src/my-file.js"); // src/my-file.js
+   * module.relativePathOf("/path/to/module/src/my-file.js"); // -> src/my-file.js
+   * module.relativePathOf("src/my-file.js"); // -> src/my-file.js
    */
   public relativePathOf(...parts: string[]): string {
-    return relative(this.root, join(...parts));
+    const path = join(...parts);
+    return isAbsolute(path) ? relative(this.root, path) : path;
   }
 
   /**
    * Asynchronously reads the entire contents of a file using `utf8` encoding.
    *
-   * @param path is the filename relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    * @returns file contents.
    */
   public async readRaw(path: string): Promise<string> {
@@ -141,7 +146,7 @@ export default class Module {
   /**
    * Reads file and creates `DataFile` instance using {@link https://www.npmjs.com/package/edit-config#class-manager Manager}.
    *
-   * @param path is the filename relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    * @param options are options passed to `Manager.load` of `edit-config`. See {@link https://www.npmjs.com/package/edit-config#interface-managerloadoptions here}.
    */
   public async readData(path: string, options?: ManagerLoadOptions): Promise<DataFile> {
@@ -153,7 +158,7 @@ export default class Module {
    * If `options.defaultData` is true, file will be created using `options.defaultData` if it does not exist.
    * @see [[Module.readData]], [[Module.readRaw]]
    *
-   * @param path is the filename relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    * @param options are options passed to `Manager.load` of `edit-config`. See {@link https://www.npmjs.com/package/edit-config#interface-managerloadoptions here}.
    * @returns {@link https://www.npmjs.com/package/edit-config#class-datafile DataFile} instance, file content or `undefined`.
    * @throws if given path is a directory.
@@ -188,7 +193,7 @@ export default class Module {
    * Writes given content to file. If content is an object, it is serialized.
    * If `prettier` configuration and module is available and content is formatted using `prettier`.
    *
-   * @param path is the filename relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    * @param content is the content to write to file.
    * @param defaultFormat is the format to be used in serialization if file does not exist and content is object.
    * @param overwrite is whether to overwrite existing file.
@@ -227,7 +232,7 @@ export default class Module {
    * Removes file or directory relative to module's root. Removes directory even it has files in it.
    * If the path does not exist, silently does nothing.
    *
-   * @param path is file path relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    * @param if is condition function to test whether to remove file or directory.
    * @returns file path relative to module root if file is removed, `undefined` otherwise.
    */
@@ -241,7 +246,7 @@ export default class Module {
   /**
    * Removes empty directories recursively for given path relative to module root.
    *
-   * @param path is file path relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    * @returns array of deleted directories.
    */
   public async removeEmptyDirs(path: string): Promise<string[]> {
@@ -253,17 +258,17 @@ export default class Module {
   /**
    * Checks whether given path exists.
    *
-   * @param pathInModule is file/directory path relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    * @returns whether given path exists.
    */
-  public async exists(pathInModule: string): Promise<boolean> {
-    return pathExists(this.pathOf(pathInModule));
+  public async exists(path: string): Promise<boolean> {
+    return pathExists(this.pathOf(path));
   }
 
   /**
    * Returns whether given path is a directory.
    *
-   * @param path is file path relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    * @returns whether given path is a directory.
    */
   public async isDirectory(path: string): Promise<boolean> {
@@ -279,7 +284,7 @@ export default class Module {
   /**
    * Ensures that the directory exists. If the directory structure does not exist, it is created similar to `mkdir -p`.
    *
-   * @param path is path relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    */
   public async createDirectory(path: string): Promise<void> {
     return ensureDir(this.pathOf(path));
@@ -288,8 +293,8 @@ export default class Module {
   /**
    * Renames given path.
    *
-   * @param oldPath is the source path to rename from relative to module root.
-   * @param newPath is the target path to rename to relative to module root.
+   * @param oldPath is the old path relative to module root or an absolute path.
+   * @param newPath is the new path relative to module root or an absolute path.
    * @param overwrite is whether to allow rename operation if target path already exists. Silently ignores operation if overwrite is not allowed and target path exists.
    * @returns whether file is renamed.
    */
@@ -312,7 +317,7 @@ export default class Module {
    * Checks whether content of `pathInModule` file is equal to `data` by making string comparison (for strings)
    * or deep comparison (for objects).
    *
-   * @param path is file path relative to module root.
+   * @param path is the path relative to module root or an absolute path.
    * @param content is string or JavaScript object to compare to file's content.
    * @returns whether the file is equal to given `content`.
    *
@@ -465,7 +470,7 @@ export default class Module {
   /**
    * Returns package manager type.
    *
-   * @param dir is the directory where `package.json` is located.
+   * @param dir is the absolute path of directory where `package.json` is located.
    * @returns type of package manager.
    */
   private static async getPackageManager(dir: string): Promise<PackageManager | undefined> {
