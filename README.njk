@@ -1,3 +1,5 @@
+See [documentation](https://intermodular.ozum.net) at https://intermodular.ozum.net.
+
 {% include "module-header" %}
 
 # Installation
@@ -8,21 +10,30 @@ npm install intermodular
 
 # Synopsis
 
-See [Homepage](https://intermodular.ozum.net) for full documentation and API.
-
 ```ts
+import Intermodular from "intermodular";
+
+const intermodular = await Intermodular.new();
 const targetModule = intermodular.targetModule;
-const packageJson = targetModule.getDataFileSync("package.json"); // `DataFile` instance
 
-// Copy all config files from `.../your-module/common-config/` to `.../target-module/` (root).
-intermodular.copySync("common-config", ".");
-targetModule.install("lodash");
-targetModule.executeSync("rm", ["-rf", "dist"]);
-packageJson.set("description", `My awesome ${targetModule.name}`, { ifNotExists: true });
+// Copy all files from `my-boilerplate/config/` to `my-project/`
+await intermodular.copy("config", ".");
 
-if (intermodular.targetModule.isTypeScript) {
-  intermodular.copySync("config/tsconfig.json", ".");
-}
+// Update project's `package.json`.
+targetModule.package.set("description", `My awesome project of ${targetModule.name}`);
+
+// Get some deep data from cosmiconfig compatible config file from `my-project/.my-boilerplaterc` or any cosmiconfig compatible way automatically.
+const buildFlags = intermodular.config.get("build.flags");
+targetModule.package.set("scripts.build": `tsc ${buildFlags}`);
+
+// Read and update target eslint configuration.
+const eslintConfig = await targetModule.read("eslint", { cosmiconfig: true });
+eslintConfig.set("rules.lines-between-class-members", ["warn", "always", { exceptAfterSingleLine: true }]);
+
+await targetModule.saveAll();
+
+await targetModule.install("lodash");
+await targetModule.execute("tsc", ["-b"]);
 ```
 
 # API

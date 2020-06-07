@@ -17,9 +17,9 @@ footer: MIT Licensed | Copyright © 2019-present Özüm Eldoğan
 
 ## Example: `postinstall` Script
 
-Assuming you create a boilerplate called `my-boiler` for your all TypeScript projects and will be using it form a project called `my-project`.
+Assuming you create a boilerplate called `my-boiler` for all your TypeScript projects and will be using it form a project called `my-project`.
 
-Below is parts for an example `postinstall` script for your own boilerplate (`my-boilerplate/src/index.ts`). You can copy files from your boilerplate, read, edit and delete config files conditinally, install `node` modules and more.
+Below is example parts of a `postinstall` script for your own boilerplate (`my-boilerplate/src/index.ts`). Your boilerplate can copy files, read, edit and delete config files conditinally, install `node` modules and more in your target project module `my-project`.
 
 ### Create Instance
 
