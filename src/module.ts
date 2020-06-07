@@ -1,12 +1,12 @@
 import deleteEmpty from "delete-empty";
-import { DataFile, Manager, ManagerLoadOptions, WritableFileFormat } from "edit-config";
+import { DataFile, Manager, ManagerLoadOptions, WritableFileFormat, Logger, LogLevel } from "edit-config";
 import { outputFile, pathExists, readFile, remove, rename, lstat, ensureDir } from "fs-extra";
 import isEqual from "lodash.isequal";
 import { join, relative } from "path";
 import pkgDir from "pkg-dir";
 import execa, { command, Options as ExecaOptions, ExecaReturnValue } from "execa";
 import { arrify, packageManagerFlags, isFromFileToDirectory } from "./util/helper";
-import { DependencyType, Logger, LogLevel, PackageManager, PredicateFileOperation } from "./util/types";
+import { DependencyType, PackageManager, PredicateFileOperation } from "./util/types";
 
 const ALL_DEPENDENCIES = [
   DependencyType.Dependencies,

@@ -13,21 +13,6 @@ export const enum DependencyType {
   OptionalDependencies = "optionalDependencies",
 }
 
-/** @ignore */
-export interface Logger {
-  log: (...message: string[]) => void | undefined;
-}
-
-/** @ignore */
-export const enum LogLevel {
-  Error = "error",
-  Warn = "warn",
-  Info = "info",
-  Verbose = "verbose",
-  Debug = "debug",
-  Silly = "silly",
-}
-
 /** Type of callback function to test whether related file operation should be done. */
 export type PredicateFileOperation =
   /**

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { DataFile } from "edit-config";
+import { DataFile, Logger, LogLevel } from "edit-config";
 import { dirname } from "path";
 import pkgDir from "pkg-dir";
 import parentModule from "parent-module";
 import { copy, CopyFilterAsync } from "fs-extra";
-import { CopyFilterFunction, Logger, LogLevel, CopyOptions } from "./util/types";
+import { CopyFilterFunction, CopyOptions } from "./util/types";
 import Module from "./module";
 import { getCopyTarget } from "./util/helper";
 
@@ -27,6 +27,16 @@ export default class Intermodular {
     this.#logger = logger;
     this.#overwrite = overwrite;
     this.config = config;
+  }
+
+  /**
+   * Logs given message with required level using logger provided during object construction.
+   *
+   * @param logLevel is the level to log message.
+   * @param message is the message to log.
+   */
+  public log(logLevel: LogLevel, message: string): void {
+    this.#logger.log(logLevel, message);
   }
 
   /**
@@ -53,7 +63,7 @@ export default class Intermodular {
       }
 
       const logLevel = result ? LogLevel.Info : LogLevel.Warn;
-      this.#logger.log(logLevel, `File ${result ? "" : "not "}copied: '${relativeSource}' → '${relativeTarget}'`);
+      this.log(logLevel, `File ${result ? "" : "not "}copied: '${relativeSource}' → '${relativeTarget}'`);
       return result;
     };
   }
