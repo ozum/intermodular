@@ -2,7 +2,6 @@
 import { DataFile } from "edit-config";
 import { dirname } from "path";
 import pkgDir from "pkg-dir";
-import JSON5 from "json5";
 import parentModule from "parent-module";
 import { copy, CopyFilterAsync } from "fs-extra";
 import { CopyFilterFunction, Logger, LogLevel, CopyOptions } from "./util/types";
@@ -128,7 +127,7 @@ export default class Intermodular {
     if (this.isEnvSet(variable)) {
       const result = process.env[variable] as string;
       try {
-        return JSON5.parse(result);
+        return JSON.parse(result);
       } catch (err) {
         return result;
       }
