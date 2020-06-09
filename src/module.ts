@@ -37,6 +37,7 @@ export default class Module {
 
   private constructor(
     root: string,
+    manager: Manager,
     packageData: DataFile,
     {
       logger = { log: () => {} }, // eslint-disable-line @typescript-eslint/no-empty-function
@@ -48,9 +49,9 @@ export default class Module {
     this.root = root;
     this.#logger = logger;
     this.packageManager = packageManager;
-    this.package = packageData;
     this.#overwrite = overwrite;
-    this.#manager = new Manager({ logger, root });
+    this.#manager = manager;
+    this.package = packageData;
     this.isTypeScript = isTypeScript;
   }
 
@@ -182,7 +183,7 @@ export default class Module {
     }
     if (condition) {
       const result = await condition(await this.read(path));
-      if (!result) this.#logger.log(LogLevel.Warn, `Cannot ${name} file: '${path}'. Condition function returns false.`);
+      if (!result) this.#logger.log(LogLevel.Warn, `File not ${name}: '${path}'. Condition function returns false.`);
       return result;
     }
 
@@ -216,7 +217,7 @@ export default class Module {
       this.#logger.log(LogLevel.Warn, `File not saved: '${path}' already exists.`);
       return undefined;
     }
-    if (!(await this.checkFileModificationCondition(path, "write", condition))) return undefined;
+    if (!(await this.checkFileModificationCondition(path, "written", condition))) return undefined;
 
     if (typeof content === "string") await outputFile(fullPath, content);
     else {
@@ -237,7 +238,7 @@ export default class Module {
    * @returns file path relative to module root if file is removed, `undefined` otherwise.
    */
   public async remove(path: string, { if: condition }: { if?: PredicateFileOperation } = {}): Promise<string | undefined> {
-    if (!(await this.checkFileModificationCondition(path, "remove", condition))) return undefined;
+    if (!(await this.checkFileModificationCondition(path, "removed", condition))) return undefined;
     await remove(this.pathOf(path));
     this.#logger.log(LogLevel.Info, `File or dir removed: '${path}'.`);
     return path;
@@ -446,10 +447,11 @@ export default class Module {
   ): Promise<Module> {
     const root = await this.getRoot(options.cwd);
     const packageManager = options.packageManager || (await this.getPackageManager(root));
-    const packageData = await DataFile.load("package.json", { rootDir: root });
+    const manager = new Manager({ logger: options.logger, root });
+    const packageData = await manager.load("package.json");
     const isTypeScript = (await pathExists(join(root, "tsconfig.json"))) || packageData.get("types") !== undefined;
 
-    return new Module(root, packageData, { ...options, packageManager, isTypeScript });
+    return new Module(root, manager, packageData, { ...options, packageManager, isTypeScript });
   }
 
   /**

@@ -40,38 +40,64 @@ export default class Intermodular {
   }
 
   /**
-   * Takes `intermodular` copy filter function and returns `fs-extra` `copy` compatible filter function.
+   * Creates;
+   * 1. An augmented filter function for given `fs-extra` `copy` filter function.
+   * 2. A log function.
    *
    * @param filter `intermodular` copy filter function.
-   * @returns `fs-extra` `copy` compatible filter function.
+   * @param overwrite is whether overwirte option is passed to `fs-extra` `copy` function.
+   * @returns `fs-extra` `copy` compatible filter function and log function.
    */
-  private getCopyFilter(filter?: CopyFilterFunction): CopyFilterAsync {
-    return async (fullSourcePath: string, fullTargetPath: string) => {
-      let result = true;
+  private getCopyFilterAndLogFunctions(filter?: CopyFilterFunction, overwrite = true): [CopyFilterAsync, (e?: Error) => void] {
+    const copied = new Map();
+    const logs: Array<[LogLevel, string]> = [];
+
+    /** Delete last log message if thereis an error. execute log() for each log message. */
+    const logFunction = (error?: Error): void => {
+      if (error) logs.pop(); // If error thrown during copy last log entry  would be false, because it is prepared before copy action.
+      logs.forEach((log) => this.log(log[0], log[1]));
+    };
+
+    /** filter function to be provided to `fs-extra` `copy`. */
+    const filterFunction = async (fullSourcePath: string, fullTargetPath: string): Promise<boolean> => {
+      const key = `'${fullSourcePath}' → '${fullTargetPath}'`;
+      if (copied.has(key)) return copied.get(key); // Filter called twice see: https://github.com/jprichardson/node-fs-extra/issues/809
+
+      let rejected: string | undefined;
+
       const relativeSource = this.sourceModule.relativePathOf(fullSourcePath);
       const relativeTarget = this.targetModule.relativePathOf(fullTargetPath);
+      const filePair = `'${relativeSource || "."}' → '${relativeTarget || "."}'`;
+
+      const [sourceIsDir, targetIsDir, targetExists] = await Promise.all([
+        this.sourceModule.isDirectory(relativeSource),
+        this.targetModule.isDirectory(relativeTarget),
+        this.targetModule.exists(relativeTarget),
+      ]);
+
+      if (targetExists && !targetIsDir && !overwrite) rejected = "(Exists) ";
 
       if (filter) {
-        const [isSourceDir, isTargetDir] = await Promise.all([
-          this.sourceModule.isDirectory(relativeSource),
-          this.targetModule.isDirectory(relativeTarget),
-        ]);
-
-        const sourceContent = isSourceDir ? undefined : await this.sourceModule.read(relativeSource);
-        const targetContent = isTargetDir ? undefined : await this.targetModule.read(relativeTarget);
-        result = await filter(fullSourcePath, fullTargetPath, isSourceDir, isTargetDir, sourceContent, targetContent);
+        const sourceContent = sourceIsDir ? undefined : await this.sourceModule.read(relativeSource);
+        const targetContent = targetIsDir ? undefined : await this.targetModule.read(relativeTarget);
+        const isOk = await filter(fullSourcePath, fullTargetPath, sourceIsDir, targetIsDir, sourceContent, targetContent);
+        if (!isOk) rejected = "(Filtered) ";
       }
 
-      const logLevel = result ? LogLevel.Info : LogLevel.Warn;
-      this.log(logLevel, `File ${result ? "" : "not "}copied: '${relativeSource}' → '${relativeTarget}'`);
-      return result;
+      const logLevel = rejected ? LogLevel.Warn : LogLevel.Info;
+      if (sourceIsDir && !rejected) logs.push([LogLevel.Info, `Starting to copy files between directories: ${filePair}`]);
+      else logs.push([logLevel, `File ${rejected ? "not " : ""}copied: ${rejected ?? ""}${filePair}`]);
+
+      copied.set(key, !rejected);
+      return !rejected;
     };
+    return [filterFunction, logFunction];
   }
 
   /**
    * Copies a file or directory from `pathInSourceModule` relative to source module root to `pathInTargetModule`relative to
    * target module root. The directory can have contents. Like cp -r.
-   * Note that if src is a directory it will copy everything inside of this directory, not the entire directory itself.
+   * **IMPORTANT:** Note that if source is a directory it will copy everything inside of this directory, not the entire directory itself.
    *
    * @param sourcePath is source to copy from.
    * @param targetPath is destination to copy to. Cannot be a directory.
@@ -84,8 +110,17 @@ export default class Intermodular {
   public async copy(sourcePath: string, targetPath: string = sourcePath, copyOptions: CopyOptions = {}): Promise<void> {
     const source = this.sourceModule.pathOf(sourcePath);
     const target = await getCopyTarget(source, this.targetModule.pathOf(targetPath));
+    const { overwrite } = copyOptions;
     if (source === target) return;
-    await copy(source, target, { ...copyOptions, filter: this.getCopyFilter(copyOptions.filter) });
+    const [filter, log] = this.getCopyFilterAndLogFunctions(copyOptions.filter, overwrite);
+
+    try {
+      await copy(source, target, { overwrite, ...copyOptions, filter });
+      log();
+    } catch (error) {
+      log(error);
+      throw error;
+    }
   }
 
   //
@@ -95,22 +130,43 @@ export default class Intermodular {
   //
 
   /**
-   * Creates and returns [[Intermodula ]]
-   * @param param0
+   * Creates and returns [[Intermodular]] instance.
+   * @param __namedParameters are options
+   * @param source is the source module or source module's root path. By default immediate parent's root dir is used. Immediate parent is the file which calls this method.
+   * @param target is the source module or source module's root path. By default `process.env.INIT_CWD` or `process.env.CWD` is used whichever is first available.
+   * @param logger is Winston compatible logger or `console`.
+   * @param overwrite is whether to overwrite files by default.
+   * @returns [[Intermodular]] instance.
    */
+
   public static async new({
-    sourceRoot,
-    targetRoot,
+    source,
+    target,
     logger,
     overwrite,
-  }: { sourceRoot?: string; targetRoot?: string; logger?: Logger; overwrite?: boolean } = {}): Promise<Intermodular> {
-    const [sourceModule, targetModule] = await Promise.all([
-      Module.new({ cwd: sourceRoot || (await this.getDefaultSourceRoot()), logger }),
-      Module.new({ cwd: targetRoot || (await this.getDefaultTargetRoot()), logger }),
+  }: { source?: string | Module; target?: string | Module; logger?: Logger; overwrite?: boolean } = {}): Promise<Intermodular> {
+    const [resolvedSource, resolvedTarget]: Array<string | Module | undefined> = await Promise.all([
+      (source as any) ?? pkgDir(dirname(parentModule() as string)), // Do not move parentModule() into another method, otherwise it resolves this file, because it's caller would be this method.
+      (target as any) ?? pkgDir(process.env.INIT_CWD || process.cwd()),
     ]);
 
-    const config = await targetModule.readData(sourceModule.nameWithoutUser, { cosmiconfig: true });
+    this.assertSourceAndTarget(resolvedSource, resolvedTarget);
+
+    const [sourceModule, targetModule] = await Promise.all([
+      resolvedSource instanceof Module ? resolvedSource : Module.new({ cwd: resolvedSource, logger }),
+      resolvedTarget instanceof Module ? resolvedTarget : Module.new({ cwd: resolvedTarget, logger }),
+    ]);
+
+    const config = await DataFile.load(sourceModule.nameWithoutUser, { cosmiconfig: true, rootDir: targetModule.root, logger }); // Exclude from saveAll(), user may prefer not to use it.
+
     return new Intermodular(sourceModule, targetModule, config, logger, overwrite);
+  }
+
+  // istanbul ignore next
+  /** Throws if source or target file are undefined. */
+  private static assertSourceAndTarget(source: any, target: any): void {
+    if (!source) throw new Error("Source not provided and cannot be found.");
+    if (!target) throw new Error("Target not provided and cannot be found.");
   }
 
   /**
@@ -143,23 +199,5 @@ export default class Intermodular {
       }
     }
     return defaultValue;
-  }
-
-  // istanbul ignore next
-  /** Returns default source root */
-  private static async getDefaultSourceRoot(): Promise<string> {
-    const parent = parentModule();
-    if (!parent) throw new Error("Cannot find source root.");
-    const root = await pkgDir(dirname(parent));
-    if (!root) throw new Error("Cannot find source root.");
-    return root;
-  }
-
-  // istanbul ignore next
-  /** Returns default target root */
-  private static async getDefaultTargetRoot(): Promise<string> {
-    const root = await pkgDir(process.env.INIT_CWD || process.env.CWD);
-    if (!root) throw new Error(`Cannot find target root.`);
-    return root;
   }
 }

@@ -102,3 +102,26 @@ targetModule.package.sortKeys("scripts", { start: ["build", "lint"], end: ["rele
 targetModule.package.sortKeys({ start: ["name", "description"], end: ["dependencies", "devDependencies"] }); // Sort root keys, but reserve start and end.
 await targetModule.package.save();
 ```
+
+## Example Logger
+
+```ts
+import { createLogger, format, transports } from "winston";
+
+const logger = createLogger({
+  level: "debug",
+  format: format.combine(format.colorize(), format.splat(), format.simple()),
+  transports: [new transports.Console()],
+});
+
+const intermodular = await Intermodular.new({ logger });
+```
+
+## Reuse Modules between Intermodular Instances
+
+If more than one source module would modify same target module, it is possible to use same module between intermodular instances. It may help to reduce disk operation by reducing redundant code execution and utilizing same cache etc.
+
+```ts
+const intermodularA = await Intermodular.new({ source: "path/to/source", target: "path/to/target" });
+const intermodularB = await Intermodular.new({ source: "path/to/other", target: intermodularA.targetModule });
+```

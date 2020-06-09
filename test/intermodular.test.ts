@@ -17,7 +17,7 @@ beforeAll(async () => {
   dir = await tmp.dir({ unsafeCleanup: true });
   await copy(join(__dirname, "test-helper"), dir.path);
   await ensureDir(join(dir.path, "source-module/src/empty-dir"));
-  intermodular = await Intermodular.new({ sourceRoot: join(dir.path, "source-module"), targetRoot: join(dir.path, "target-module") });
+  intermodular = await Intermodular.new({ source: join(dir.path, "source-module"), target: join(dir.path, "target-module") });
   selfIntermodular = await Intermodular.new();
 });
 
@@ -26,9 +26,28 @@ afterAll(async () => {
 });
 
 describe("intermodular", () => {
-  it("should create with default values", async () => {
+  it("should create with default values.", async () => {
     expect(selfIntermodular.sourceModule.name).toBe("intermodular");
     expect(selfIntermodular.targetModule.name).toBe("intermodular");
+  });
+
+  it("should create with default values 2.", async () => {
+    expect(intermodular.sourceModule.name).toBe("source-module");
+    expect(intermodular.targetModule.name).toBe("target-module");
+  });
+
+  it("should create with default values when INIT_CWD environment variable is not defined.", async () => {
+    const initCwd = process.env.INIT_CWD;
+    delete process.env.INIT_CWD;
+    const localIntermodular = await Intermodular.new();
+    expect(localIntermodular.sourceModule.name).toBe("intermodular");
+    expect(localIntermodular.targetModule.name).toBe("intermodular");
+    process.env.INIT_CWD = initCwd;
+  });
+
+  it("should create with source and root moudule's provided.", async () => {
+    const localIntermodular = await Intermodular.new({ source: intermodular.sourceModule, target: intermodular.targetModule });
+    expect(localIntermodular.sourceModule.name).toBe("source-module");
   });
 
   it("should have conifg if configuration is present.", async () => {
@@ -66,7 +85,7 @@ describe("intermodular", () => {
   });
 
   describe("copy", () => {
-    it("should copy directory.", async () => {
+    it("should copy directory into same directory.", async () => {
       expect(await intermodular.targetModule.exists("src")).toBe(false);
       await intermodular.copy("src");
       expect(await intermodular.targetModule.exists("src")).toBe(true);
@@ -87,12 +106,35 @@ describe("intermodular", () => {
       expect(await selfIntermodular.copy("src")).toBeUndefined();
     });
 
-    it("should copy file into directory", async () => {
+    it("should copy file into directory.", async () => {
       const fileName = getFilename();
       await intermodular.targetModule.createDirectory(fileName);
       expect(await intermodular.targetModule.exists(join(fileName, "a"))).toBe(false);
       await intermodular.copy("copy-source/a", fileName);
       expect(await intermodular.targetModule.exists(join(fileName, "a"))).toBe(true);
+    });
+
+    it("should copy to target root.", async () => {
+      expect(await intermodular.targetModule.exists("a")).toBe(false);
+      await intermodular.copy("copy-source", ".");
+      expect(await intermodular.targetModule.exists("a")).toBe(true);
+    });
+
+    it("should copy from source root.", async () => {
+      expect(await intermodular.targetModule.exists("root-copy/package.json")).toBe(false);
+      await intermodular.copy(".", "root-copy");
+      expect(await intermodular.targetModule.exists("root-copy/package.json")).toBe(true);
+    });
+
+    it("should not overwrite if not requested.", async () => {
+      expect(await intermodular.targetModule.package.get("name")).toBe("target-module");
+      await intermodular.copy("package.json", "package.json", { overwrite: false });
+      await intermodular.targetModule.package.reload();
+      expect(await intermodular.targetModule.package.get("name")).toBe("target-module");
+    });
+
+    it("should throw when a directory tried to be copied into a file path.", async () => {
+      await expect(intermodular.copy("src", "package.json")).rejects.toThrow("Cannot overwrite non-directory");
     });
   });
 });
