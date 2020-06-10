@@ -132,8 +132,8 @@ export default class Intermodular {
   /**
    * Creates and returns [[Intermodular]] instance.
    * @param __namedParameters are options
-   * @param source is the source module or source module's root path. By default immediate parent's root dir is used. Immediate parent is the file which calls this method.
-   * @param target is the source module or source module's root path. By default `process.env.INIT_CWD` or `process.env.CWD` is used whichever is first available.
+   * @param source is the source module or a path in source module. By default immediate parent's root dir is used. Immediate parent is the file which calls this method.
+   * @param target is the target module or a path in target module. By default `process.env.INIT_CWD` or `process.env.CWD` is used whichever is first available.
    * @param logger is Winston compatible logger or `console`.
    * @param overwrite is whether to overwrite files by default.
    * @returns [[Intermodular]] instance.
@@ -146,8 +146,8 @@ export default class Intermodular {
     overwrite,
   }: { source?: string | Module; target?: string | Module; logger?: Logger; overwrite?: boolean } = {}): Promise<Intermodular> {
     const [resolvedSource, resolvedTarget]: Array<string | Module | undefined> = await Promise.all([
-      (source as any) ?? pkgDir(dirname(parentModule() as string)), // Do not move parentModule() into another method, otherwise it resolves this file, because it's caller would be this method.
-      (target as any) ?? pkgDir(process.env.INIT_CWD || process.cwd()),
+      source instanceof Module ? (source as any) : pkgDir(source || dirname(parentModule() as string)), // Do not move parentModule() into another method, otherwise it resolves this file, because it's caller would be this method.
+      target instanceof Module ? (target as any) : pkgDir(target || process.env.INIT_CWD || process.cwd()),
     ]);
 
     this.assertSourceAndTarget(resolvedSource, resolvedTarget);
