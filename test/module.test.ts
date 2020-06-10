@@ -2,7 +2,7 @@ import tmp from "tmp-promise";
 import { DataFile } from "edit-config";
 import { copy, ensureDir } from "fs-extra";
 import { join } from "path";
-import Module from "../src/module";
+import { Module } from "../src/index";
 import { DependencyType } from "../src/util/types";
 
 let myModule: Module;
