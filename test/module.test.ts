@@ -34,6 +34,11 @@ describe("Module", () => {
     process.env.INIT_CWD = initCwd;
   });
 
+  it("should create instance when given path is in a sub directory of root.", async () => {
+    const localModule = await Module.new({ cwd: join(__dirname, "../src/index.ts") });
+    expect(localModule.name).toBe("intermodular");
+  });
+
   it("should throw if root cannot be found.", async () => {
     await expect(Module.new({ cwd: join(__dirname, "../..") })).rejects.toThrow("No root path");
   });
