@@ -59,7 +59,7 @@ await targetModule.install("lodash");
 
 ```ts
 targetModule.getDependencyVersion("lodash");
-targetModule.getDependencyVersion("typescript", [DependencyType.DevDependencies]);
+targetModule.getDependencyVersion("typescript", ["devDependencies"]);
 targetModule.hasAnyDependency("babel");
 ```
 

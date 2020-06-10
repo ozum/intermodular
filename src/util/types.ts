@@ -1,17 +1,10 @@
 import { DataFile } from "edit-config";
+
 /** Package manager */
-export enum PackageManager {
-  Npm = "npm",
-  Yarn = "yarn",
-}
+export type PackageManager = "npm" | "yarn";
 
 /** Dependency types for Node.js modules. */
-export enum DependencyType {
-  Dependencies = "dependencies",
-  DevDependencies = "devDependencies",
-  PeerDependencies = "peerDependencies",
-  OptionalDependencies = "optionalDependencies",
-}
+export type DependencyType = "dependencies" | "devDependencies" | "peerDependencies" | "optionalDependencies";
 
 /** Type of callback function to test whether related file operation should be done. */
 export type PredicateFileOperation =

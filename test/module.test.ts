@@ -106,7 +106,7 @@ describe("Module", () => {
     });
 
     it("should allow to select dependency type.", async () => {
-      expect(myModule.getDependencyVersion("lodash.get", [DependencyType.DevDependencies])).toBeUndefined();
+      expect(myModule.getDependencyVersion("lodash.get", ["devDependencies"])).toBeUndefined();
     });
   });
 
@@ -116,7 +116,7 @@ describe("Module", () => {
     });
 
     it("should allow to select dependency type.", async () => {
-      expect(myModule.hasAnyDependency("lodash.get", [DependencyType.DevDependencies])).toBe(false);
+      expect(myModule.hasAnyDependency("lodash.get", ["devDependencies"])).toBe(false);
     });
   });
 
@@ -130,11 +130,11 @@ describe("Module", () => {
     });
 
     it("should return required value if dependency found.", () => {
-      expect(myModule.ifAnyDependency("lodash.get", 1, 2, [DependencyType.Dependencies])).toBe(1);
+      expect(myModule.ifAnyDependency("lodash.get", 1, 2, ["dependencies"])).toBe(1);
     });
 
     it("should return required value if dependency not found.", () => {
-      expect(myModule.ifAnyDependency("lodash.get", 1, 2, [DependencyType.DevDependencies])).toBe(2);
+      expect(myModule.ifAnyDependency("lodash.get", 1, 2, ["devDependencies"])).toBe(2);
     });
   });
 

@@ -12,10 +12,10 @@ export function arrify<T>(input: T | T[]): T[] {
 
 /** @ignore */
 export const packageManagerFlags: Record<DependencyType, Record<PackageManager, string>> = {
-  dependencies: { [PackageManager.Npm]: "", [PackageManager.Yarn]: "" },
-  devDependencies: { [PackageManager.Npm]: "--save-dev", [PackageManager.Yarn]: "--dev" },
-  peerDependencies: { [PackageManager.Npm]: "--save-peer", [PackageManager.Yarn]: "--peer" },
-  optionalDependencies: { [PackageManager.Npm]: "--save-optional", [PackageManager.Yarn]: "--optional" },
+  dependencies: { npm: "", yarn: "" },
+  devDependencies: { npm: "--save-dev", yarn: "--dev" },
+  peerDependencies: { npm: "--save-peer", yarn: "--peer" },
+  optionalDependencies: { npm: "--save-optional", yarn: "--optional" },
 };
 
 /**
