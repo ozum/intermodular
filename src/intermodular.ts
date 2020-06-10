@@ -83,8 +83,8 @@ export default class Intermodular {
         if (!isOk) rejected = "(Filtered) ";
       }
 
-      const logLevel = rejected ? LogLevel.Warn : LogLevel.Info;
-      if (sourceIsDir && !rejected) logs.push([LogLevel.Info, `Starting to copy files between directories: ${filePair}`]);
+      const logLevel = rejected ? "warn" : "info";
+      if (sourceIsDir && !rejected) logs.push(["info", `Starting to copy files between directories: ${filePair}`]);
       else logs.push([logLevel, `File ${rejected ? "not " : ""}copied: ${rejected ?? ""}${filePair}`]);
 
       copied.set(key, !rejected);

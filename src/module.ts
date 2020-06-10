@@ -1,5 +1,5 @@
 import deleteEmpty from "delete-empty";
-import { DataFile, Manager, ManagerLoadOptions, WritableFileFormat, Logger, LogLevel } from "edit-config";
+import { DataFile, Manager, ManagerLoadOptions, WritableFileFormat, Logger } from "edit-config";
 import { outputFile, pathExists, readFile, remove, rename, lstat, ensureDir } from "fs-extra";
 import isEqual from "lodash.isequal";
 import { join, relative, isAbsolute } from "path";
@@ -183,7 +183,7 @@ export default class Module {
     }
     if (condition) {
       const result = await condition(await this.read(path));
-      if (!result) this.#logger.log(LogLevel.Warn, `File not ${name}: '${path}'. Condition function returns false.`);
+      if (!result) this.#logger.log("warn", `File not ${name}: '${path}'. Condition function returns false.`);
       return result;
     }
 
@@ -214,7 +214,7 @@ export default class Module {
     let result: DataFile | string = content as string;
 
     if (!overwrite && (await pathExists(fullPath))) {
-      this.#logger.log(LogLevel.Warn, `File not saved: '${path}' already exists.`);
+      this.#logger.log("warn", `File not saved: '${path}' already exists.`);
       return undefined;
     }
     if (!(await this.checkFileModificationCondition(path, "written", condition))) return undefined;
@@ -225,7 +225,7 @@ export default class Module {
       result.save();
     }
 
-    this.#logger.log(LogLevel.Info, `File saved: '${path}'`);
+    this.#logger.log("info", `File saved: '${path}'`);
     return result;
   }
 
@@ -240,7 +240,7 @@ export default class Module {
   public async remove(path: string, { if: condition }: { if?: PredicateFileOperation } = {}): Promise<string | undefined> {
     if (!(await this.checkFileModificationCondition(path, "removed", condition))) return undefined;
     await remove(this.pathOf(path));
-    this.#logger.log(LogLevel.Info, `File or dir removed: '${path}'.`);
+    this.#logger.log("info", `File or dir removed: '${path}'.`);
     return path;
   }
 
@@ -252,7 +252,7 @@ export default class Module {
    */
   public async removeEmptyDirs(path: string): Promise<string[]> {
     const result = deleteEmpty(join(this.pathOf(path)));
-    this.#logger.log(LogLevel.Info, `All empty directories in '${path}' deleted recursively.`);
+    this.#logger.log("info", `All empty directories in '${path}' deleted recursively.`);
     return result;
   }
 
@@ -306,11 +306,11 @@ export default class Module {
       throw new Error(`File cannot be renamed to existing directory. '${oldPath}' → '${newPath}'`);
 
     if ((await this.exists(newPath)) && !overwrite) {
-      this.#logger.log(LogLevel.Warn, `Path not renamed: '${oldPath}' → '${newPath}'. Target path exists.`);
+      this.#logger.log("warn", `Path not renamed: '${oldPath}' → '${newPath}'. Target path exists.`);
       return false;
     }
     await rename(oldFullPath, newFullPath);
-    this.#logger.log(LogLevel.Info, `Path renamed: '${oldPath}' → '${newPath}'.`);
+    this.#logger.log("info", `Path renamed: '${oldPath}' → '${newPath}'.`);
     return true;
   }
 
@@ -403,12 +403,12 @@ export default class Module {
   public async install(packageNames: string | string[] = [], { type = DependencyType.Dependencies } = {}): Promise<void> {
     const packages = arrify(packageNames);
 
-    if (packages.length === 0) return this.#logger.log(LogLevel.Warn, "No packages installed: No packages are provided.");
+    if (packages.length === 0) return this.#logger.log("warn", "No packages installed: No packages are provided.");
 
     const subCommand = this.packageManager === PackageManager.Yarn ? "install" : "add";
     const flag = packageManagerFlags[type][this.packageManager];
     await execa(this.packageManager, [subCommand, flag, ...packages], { cwd: this.root, stdio: "inherit" });
-    return this.#logger.log(LogLevel.Info, `Packages installed: ${packages.join(",")}`);
+    return this.#logger.log("info", `Packages installed: ${packages.join(",")}`);
   }
 
   // istanbul ignore next
@@ -420,11 +420,11 @@ export default class Module {
   public async uninstall(packageNames: string | string[] = []): Promise<void> {
     const packages = arrify(packageNames);
 
-    if (packages.length === 0) return this.#logger.log(LogLevel.Warn, "No packages uninstalled: No packages are provided.");
+    if (packages.length === 0) return this.#logger.log("warn", "No packages uninstalled: No packages are provided.");
 
     const subCommand = this.packageManager === PackageManager.Yarn ? "uninstall" : "remove";
     await execa(this.packageManager, [subCommand, ...packages], { cwd: this.root, stdio: "inherit" });
-    return this.#logger.log(LogLevel.Info, `Packages uninstalled: ${packages.join(",")}`);
+    return this.#logger.log("info", `Packages uninstalled: ${packages.join(",")}`);
   }
 
   //

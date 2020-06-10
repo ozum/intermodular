@@ -1,12 +1,12 @@
 import { DataFile } from "edit-config";
 /** Package manager */
-export const enum PackageManager {
+export enum PackageManager {
   Npm = "npm",
   Yarn = "yarn",
 }
 
 /** Dependency types for Node.js modules. */
-export const enum DependencyType {
+export enum DependencyType {
   Dependencies = "dependencies",
   DevDependencies = "devDependencies",
   PeerDependencies = "peerDependencies",
