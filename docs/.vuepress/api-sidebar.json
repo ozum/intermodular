@@ -4,10 +4,6 @@
     "children": ["classes/intermodular", "classes/module"]
   },
   {
-    "title": "Enums",
-    "children": ["enums/dependencytype", "enums/packagemanager"]
-  },
-  {
     "title": "Interfaces",
     "children": ["interfaces/copyoptions"]
   }

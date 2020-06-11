@@ -398,11 +398,14 @@ export default class Module {
   public async install(packageNames: string | string[] = [], { type = "dependencies" as DependencyType } = {}): Promise<void> {
     const packages = arrify(packageNames);
 
-    if (packages.length === 0) return this.#logger.log("warn", "No packages installed: No packages are provided.");
+    if (packages.length === 0) {
+      await this.execute(this.packageManager, ["install"]);
+      return this.#logger.log("info", `'${this.packageManager} install' executed.`);
+    }
 
-    const subCommand = this.packageManager === "yarn" ? "install" : "add";
+    const subCommand = this.packageManager === "npm" ? "install" : "add";
     const flag = packageManagerFlags[type][this.packageManager];
-    await execa(this.packageManager, [subCommand, flag, ...packages], { cwd: this.root, stdio: "inherit" });
+    await this.execute(this.packageManager, [subCommand, flag, ...packages]);
     return this.#logger.log("info", `Packages installed: ${packages.join(",")}`);
   }
 
@@ -417,8 +420,8 @@ export default class Module {
 
     if (packages.length === 0) return this.#logger.log("warn", "No packages uninstalled: No packages are provided.");
 
-    const subCommand = this.packageManager === "yarn" ? "uninstall" : "remove";
-    await execa(this.packageManager, [subCommand, ...packages], { cwd: this.root, stdio: "inherit" });
+    const subCommand = this.packageManager === "npm" ? "uninstall" : "remove";
+    await this.execute(this.packageManager, [subCommand, ...packages]);
     return this.#logger.log("info", `Packages uninstalled: ${packages.join(",")}`);
   }
 
