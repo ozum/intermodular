@@ -50,11 +50,11 @@ describe("intermodular", () => {
     expect(localIntermodular.sourceModule.name).toBe("source-module");
   });
 
-  it("should have conifg if configuration is present.", async () => {
+  it("should have config if configuration is present.", async () => {
     expect(intermodular.config.data).toEqual({ x: 1 });
   });
 
-  it("should not have conifg if configuration is not present.", async () => {
+  it("should not have config if configuration is not present.", async () => {
     expect(selfIntermodular.config.data).toEqual({});
   });
 

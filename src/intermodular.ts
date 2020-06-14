@@ -158,7 +158,6 @@ export default class Intermodular {
       resolvedTarget instanceof Module ? resolvedTarget : Module.new({ cwd: resolvedTarget, logger }),
     ]);
 
-    // const config = (await targetModule.read(sourceModule.nameWithoutUser, { cosmiconfig: true })) as DataFile;
     const config = await DataFile.load(sourceModule.nameWithoutUser, { cosmiconfig: true, rootDir: targetModule.root, logger }); // Exclude from saveAll(), user may prefer not to use it.
 
     return new Intermodular(sourceModule, targetModule, config, logger, overwrite);
