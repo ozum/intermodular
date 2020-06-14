@@ -445,7 +445,7 @@ export default class Module {
   ): Promise<Module> {
     const root = await this.getRoot(options.cwd);
     const packageManager = options.packageManager || (await this.getPackageManager(root));
-    const manager = new Manager({ logger: options.logger, root });
+    const manager = new Manager({ logger: options.logger, root, saveIfChanged: true });
     const packageData = await manager.load("package.json");
     const isTypeScript = (await pathExists(join(root, "tsconfig.json"))) || packageData.get("types") !== undefined;
 
