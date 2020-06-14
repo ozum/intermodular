@@ -50,6 +50,25 @@ export default class Module {
     this.isTypeScript = isTypeScript;
   }
 
+  /**
+   * Creates a new [[Module]] instance from current instance, which shares
+   * [Data File Manager](https://www.npmjs.com/package/edit-config#manager) with current [[Module]].
+   * Multiple instance work over same files efficiently and without collision.
+   *
+   * @param options are options.
+   * @param options.logger is Winston compatible Logger to be used when logging.
+   * @param options.overwrite is whether to overwrite files by default.
+   * @returns [[Module]] instance.
+   */
+  public cloneWithSharedManager({ logger, overwrite }: { logger?: Logger; overwrite?: boolean } = {}): Module {
+    return new Module(this.root, this.#manager, this.package, {
+      logger: logger || this.#logger,
+      overwrite: overwrite || this.#overwrite,
+      packageManager: this.packageManager,
+      isTypeScript: this.isTypeScript,
+    });
+  }
+
   /** Name of the module as defined in `package.json`. */
   public get name(): string {
     return this.package.get("name");
@@ -438,6 +457,7 @@ export default class Module {
    * @param options.cwd is starting directory to start search for module root from.
    * @param options.logger is Winston compatible Logger to be used when logging.
    * @param options.packageManager is package manager used by module.
+   * @param options.overwrite is whether to overwrite files by default.
    * @returns [[Module]] instance.
    */
   public static async new(

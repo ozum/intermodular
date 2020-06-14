@@ -17,13 +17,15 @@ export default class Intermodular {
   /** Configuration for source module in target module as a [DataFile](https://www.npmjs.com/package/edit-config#class-datafile) instance. */
   public readonly config: DataFile;
 
+  /** Winston compatible logger. */
+  public readonly logger: Logger;
+
   #overwrite: boolean;
-  #logger: Logger;
 
   private constructor(sourceModule: Module, targetModule: Module, config: DataFile, logger: Logger = { log: () => {} }, overwrite = false) {
     this.sourceModule = sourceModule;
     this.targetModule = targetModule;
-    this.#logger = logger;
+    this.logger = logger;
     this.#overwrite = overwrite;
     this.config = config;
   }
@@ -35,7 +37,7 @@ export default class Intermodular {
    * @param message is the message to log.
    */
   public log(logLevel: LogLevel, message: string): void {
-    this.#logger.log(logLevel, message);
+    this.logger.log(logLevel, message);
   }
 
   /**
@@ -156,6 +158,7 @@ export default class Intermodular {
       resolvedTarget instanceof Module ? resolvedTarget : Module.new({ cwd: resolvedTarget, logger }),
     ]);
 
+    // const config = (await targetModule.read(sourceModule.nameWithoutUser, { cosmiconfig: true })) as DataFile;
     const config = await DataFile.load(sourceModule.nameWithoutUser, { cosmiconfig: true, rootDir: targetModule.root, logger }); // Exclude from saveAll(), user may prefer not to use it.
 
     return new Intermodular(sourceModule, targetModule, config, logger, overwrite);

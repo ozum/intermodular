@@ -100,6 +100,12 @@ describe("Module", () => {
     expect(await myModule.saveAll()).toBeUndefined();
   });
 
+  describe("cloneWithSharedManager", () => {
+    it("should clone", async () => {
+      expect(myModule.cloneWithSharedManager().name).toBe("source-module");
+    });
+  });
+
   describe("getDependencyVersion", () => {
     it("should get dependency version from all dependencies.", async () => {
       expect(myModule.getDependencyVersion("lodash.get")).toBe("4.4.2");
