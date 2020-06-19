@@ -137,4 +137,32 @@ describe("intermodular", () => {
       await expect(intermodular.copy("src", "package.json")).rejects.toThrow("Cannot overwrite non-directory");
     });
   });
+
+  describe("execute", () => {
+    it("should execute command", async () => {
+      expect((await intermodular.execute("ls", ["-al"], { stdio: undefined })).exitCode).toBe(0);
+    });
+
+    it("should execute command with `env.PATH` option.", async () => {
+      expect((await intermodular.execute("ls", ["-al"], { stdio: "inherit", env: { PATH: `xyz:${process.env.PATH}` } })).exitCode).toBe(0);
+    });
+
+    it("should execute command with `env.PATH` option 2.", async () => {
+      expect((await intermodular.execute("echo")).exitCode).toBe(0);
+    });
+  });
+
+  describe("command", () => {
+    it("should execute command", async () => {
+      expect((await intermodular.command("ls", { stdio: undefined })).exitCode).toBe(0);
+    });
+
+    it("should execute command with `env.PATH` option.", async () => {
+      expect((await intermodular.command("ls", { stdio: "inherit", env: { PATH: `xyz:${process.env.PATH}` } })).exitCode).toBe(0);
+    });
+
+    it("should execute command with `env.PATH` option 2.", async () => {
+      expect((await intermodular.command("echo")).exitCode).toBe(0);
+    });
+  });
 });

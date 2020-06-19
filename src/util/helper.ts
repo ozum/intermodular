@@ -1,6 +1,8 @@
 import { lstat } from "fs-extra";
 import { join, basename } from "path";
+import { Options as ExecaOptions } from "execa";
 import { PackageManager, DependencyType } from "./types";
+import type Module from "../module";
 
 /**
  * Returns `input` if it is an array, otherwise an array containing `input` as only element.
@@ -51,4 +53,35 @@ export async function isFromFileToDirectory(source: string, target: string): Pro
  */
 export async function getCopyTarget(source: string, target: string): Promise<string> {
   return join(target, (await isFromFileToDirectory(source, target)) ? basename(source) : "");
+}
+
+/**
+ * Returns execa args and options from optional args and options.
+ *
+ * @ignore
+ */
+export function getExecaArgs(
+  arg1?: string[] | ExecaOptions | ExecaOptions<null>,
+  arg2?: ExecaOptions | ExecaOptions<null>
+): [string[], ExecaOptions | ExecaOptions<null> | undefined] {
+  const [args, options] = Array.isArray(arg1) ? [arg1, arg2] : [[], arg1];
+  return [args, options];
+}
+
+/**
+ * Adds source module's `node_modules/.bin` to env.PATH of execa options.
+ *
+ * @ignore
+ * @example
+ * // Returns { a: 1, env: { PATH: `my_module/node_modules/.bin:xyz:${process.env.PATH}` } }
+ * getModifiedExecaOptions(myModule, { a: 1, env: { PATH: `xyz:${process.env.PATH}` } });
+ */
+export function getModifiedExecaOptions(
+  sourceModule: Module,
+  options?: ExecaOptions | ExecaOptions<null>
+): ExecaOptions | ExecaOptions<null> {
+  const sourcePath = sourceModule.pathOf("node_modules/.bin"); // `${this.sourceModule.pathOf("node_modules/.bin")}:${process.env.PATH}`;
+  const PATH = `${sourcePath}:${options?.env?.PATH ?? process.env.PATH}`; // If env.PATH is given in options, it should have added existing `process.env.PATH` if necessary. So no need to add again.
+  const env = { ...options?.env, PATH };
+  return { ...options, env };
 }

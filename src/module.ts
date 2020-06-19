@@ -5,7 +5,7 @@ import isEqual from "lodash.isequal";
 import { join, relative, isAbsolute } from "path";
 import pkgDir from "pkg-dir";
 import execa, { command, Options as ExecaOptions, ExecaReturnValue } from "execa";
-import { arrify, packageManagerFlags, isFromFileToDirectory } from "./util/helper";
+import { arrify, packageManagerFlags, isFromFileToDirectory, getExecaArgs } from "./util/helper";
 import { DependencyType, PackageManager, PredicateFileOperation } from "./util/types";
 
 const ALL_DEPENDENCIES = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
@@ -379,7 +379,7 @@ export default class Module {
   ): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
     const localDir = join(__dirname, "../node_modules/.bin");
     const defaultOptions: ExecaOptions = { stdio: "inherit", cwd: this.root, preferLocal: true, localDir };
-    const [args, options] = Array.isArray(arg2) ? [arg2, arg3] : [[], arg2];
+    const [args, options] = getExecaArgs(arg2, arg3);
     return execa(bin, args, { ...defaultOptions, ...options } as any);
   }
 
