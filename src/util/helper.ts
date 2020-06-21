@@ -1,7 +1,6 @@
 import { lstat } from "fs-extra";
 import { join, basename } from "path";
-import { Options as ExecaOptions } from "execa";
-import { PackageManager, DependencyType } from "./types";
+import { PackageManager, DependencyType, ExecuteOptions } from "./types";
 import type Module from "../module";
 
 /**
@@ -61,9 +60,9 @@ export async function getCopyTarget(source: string, target: string): Promise<str
  * @ignore
  */
 export function getExecaArgs(
-  arg1?: string[] | ExecaOptions | ExecaOptions<null>,
-  arg2?: ExecaOptions | ExecaOptions<null>
-): [string[], ExecaOptions | ExecaOptions<null> | undefined] {
+  arg1?: string[] | ExecuteOptions | ExecuteOptions<null>,
+  arg2?: ExecuteOptions | ExecuteOptions<null>
+): [string[], ExecuteOptions | ExecuteOptions<null> | undefined] {
   const [args, options] = Array.isArray(arg1) ? [arg1, arg2] : [[], arg1];
   return [args, options];
 }
@@ -74,12 +73,12 @@ export function getExecaArgs(
  * @ignore
  * @example
  * // Returns { a: 1, env: { PATH: `my_module/node_modules/.bin:xyz:${process.env.PATH}` } }
- * getModifiedExecaOptions(myModule, { a: 1, env: { PATH: `xyz:${process.env.PATH}` } });
+ * getModifiedExecuteOptions(myModule, { a: 1, env: { PATH: `xyz:${process.env.PATH}` } });
  */
-export function getModifiedExecaOptions(
+export function getModifiedExecuteOptions(
   sourceModule: Module,
-  options?: ExecaOptions | ExecaOptions<null>
-): ExecaOptions | ExecaOptions<null> {
+  options?: ExecuteOptions | ExecuteOptions<null>
+): ExecuteOptions | ExecuteOptions<null> {
   const sourcePath = sourceModule.pathOf("node_modules/.bin"); // `${this.sourceModule.pathOf("node_modules/.bin")}:${process.env.PATH}`;
   const PATH = `${sourcePath}:${options?.env?.PATH ?? process.env.PATH}`; // If env.PATH is given in options, it should have added existing `process.env.PATH` if necessary. So no need to add again.
   const env = { ...options?.env, PATH };

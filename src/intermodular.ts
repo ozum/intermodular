@@ -3,10 +3,10 @@ import { DataFile, Logger, LogLevel } from "edit-config";
 import { dirname } from "path";
 import parentModule from "parent-module";
 import { copy, CopyFilterAsync } from "fs-extra";
-import { Options as ExecaOptions, ExecaReturnValue } from "execa";
-import { CopyFilterFunction, CopyOptions } from "./util/types";
+import { ExecaReturnValue } from "execa";
+import { CopyFilterFunction, CopyOptions, ExecuteOptions } from "./util/types";
 import Module from "./module";
-import { getCopyTarget, getModifiedExecaOptions, getExecaArgs } from "./util/helper";
+import { getCopyTarget, getModifiedExecuteOptions, getExecaArgs } from "./util/helper";
 
 export default class Intermodular {
   /** [[Module]] instance of node module which is used as source for modification operations such as copy, update. */
@@ -138,8 +138,8 @@ export default class Intermodular {
    * intermodular.execute("ls"); // Run `ls`.
    * intermodular.execute("ls", ["-al"], { stdio: "inherit" }); // Run `ls -al`.
    */
-  public async execute(bin: string, args?: string[], options?: ExecaOptions): Promise<ExecaReturnValue>;
-  public async execute(bin: string, args?: string[], options?: ExecaOptions<null>): Promise<ExecaReturnValue<Buffer>>;
+  public async execute(bin: string, args?: string[], options?: ExecuteOptions): Promise<ExecaReturnValue>;
+  public async execute(bin: string, args?: string[], options?: ExecuteOptions<null>): Promise<ExecaReturnValue<Buffer>>;
   /**
    * Executes given command using `execa` with given arguments and options with cwd as target module's root. Applies sensible default options.
    * Additionally adds source module's `node_modules/.bin` to path.
@@ -152,12 +152,12 @@ export default class Intermodular {
    * intermodular.execute("ls"); // Run `ls`.
    * intermodular.execute("ls", { stdio: "inherit" }); // Run `ls`.
    */
-  public async execute(bin: string, options?: ExecaOptions): Promise<ExecaReturnValue>;
-  public async execute(bin: string, options?: ExecaOptions<null>): Promise<ExecaReturnValue<Buffer>>;
+  public async execute(bin: string, options?: ExecuteOptions): Promise<ExecaReturnValue>;
+  public async execute(bin: string, options?: ExecuteOptions<null>): Promise<ExecaReturnValue<Buffer>>;
   public async execute(
     bin: string,
-    arg2?: string[] | ExecaOptions | ExecaOptions<null>,
-    arg3?: ExecaOptions | ExecaOptions<null>
+    arg2?: string[] | ExecuteOptions | ExecuteOptions<null>,
+    arg3?: ExecuteOptions | ExecuteOptions<null>
   ): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
     const [args, options] = getExecaArgs(arg2, arg3);
     return this.sourceModule.execute(bin, args, options as any);
@@ -174,10 +174,10 @@ export default class Intermodular {
    * intermodular.command("ls"); // Run `ls`.
    * intermodular.command("ls -al", { stdio: "inherit" }); // Run `ls -al`.
    */
-  public async command(cmd: string, options?: ExecaOptions): Promise<ExecaReturnValue>;
-  public async command(cmd: string, options?: ExecaOptions<null>): Promise<ExecaReturnValue<Buffer>>;
-  public async command(cmd: string, options?: ExecaOptions | ExecaOptions<null>): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
-    return this.targetModule.command(cmd, getModifiedExecaOptions(this.sourceModule, options) as any);
+  public async command(cmd: string, options?: ExecuteOptions): Promise<ExecaReturnValue>;
+  public async command(cmd: string, options?: ExecuteOptions<null>): Promise<ExecaReturnValue<Buffer>>;
+  public async command(cmd: string, options?: ExecuteOptions | ExecuteOptions<null>): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
+    return this.targetModule.command(cmd, getModifiedExecuteOptions(this.sourceModule, options) as any);
   }
 
   //
