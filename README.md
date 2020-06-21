@@ -78,6 +78,39 @@ Easy file operations between node.js modules and auto logging to help building z
     - [`Optional` overwrite](#optional-overwrite)
     - [`Optional` preserveTimestamps](#optional-preservetimestamps)
     - [`Optional` recursive](#optional-recursive)
+- [Interface: ExecuteOptions ‹**EncodingType**›](#interface-executeoptions-%E2%80%B9encodingtype%E2%80%BA)
+  - [Type parameters](#type-parameters)
+  - [Hierarchy](#hierarchy-3)
+  - [Properties](#properties-3)
+    - [`Optional` `Readonly` all](#optional-readonly-all)
+    - [`Optional` `Readonly` argv0](#optional-readonly-argv0)
+    - [`Optional` `Readonly` buffer](#optional-readonly-buffer)
+    - [`Optional` `Readonly` cleanup](#optional-readonly-cleanup)
+    - [`Optional` `Readonly` cwd](#optional-readonly-cwd)
+    - [`Optional` `Readonly` detached](#optional-readonly-detached)
+    - [`Optional` `Readonly` encoding](#optional-readonly-encoding)
+    - [`Optional` `Readonly` env](#optional-readonly-env)
+    - [`Optional` `Readonly` execPath](#optional-readonly-execpath)
+    - [`Optional` exitOnProcessFailure](#optional-exitonprocessfailure)
+    - [`Optional` `Readonly` extendEnv](#optional-readonly-extendenv)
+    - [`Optional` `Readonly` gid](#optional-readonly-gid)
+    - [`Optional` `Readonly` input](#optional-readonly-input)
+    - [`Optional` `Readonly` killSignal](#optional-readonly-killsignal)
+    - [`Optional` `Readonly` localDir](#optional-readonly-localdir)
+    - [`Optional` `Readonly` maxBuffer](#optional-readonly-maxbuffer)
+    - [`Optional` `Readonly` preferLocal](#optional-readonly-preferlocal)
+    - [`Optional` `Readonly` reject](#optional-readonly-reject)
+    - [`Optional` `Readonly` serialization](#optional-readonly-serialization)
+    - [`Optional` `Readonly` shell](#optional-readonly-shell)
+    - [`Optional` `Readonly` stderr](#optional-readonly-stderr)
+    - [`Optional` `Readonly` stdin](#optional-readonly-stdin)
+    - [`Optional` `Readonly` stdio](#optional-readonly-stdio)
+    - [`Optional` `Readonly` stdout](#optional-readonly-stdout)
+    - [`Optional` `Readonly` stripFinalNewline](#optional-readonly-stripfinalnewline)
+    - [`Optional` `Readonly` timeout](#optional-readonly-timeout)
+    - [`Optional` `Readonly` uid](#optional-readonly-uid)
+    - [`Optional` `Readonly` windowsHide](#optional-readonly-windowshide)
+    - [`Optional` `Readonly` windowsVerbatimArguments](#optional-readonly-windowsverbatimarguments)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -127,7 +160,7 @@ await targetModule.execute("tsc", ["-b"]);
 
 Ƭ **CopyFilterFunction**: _function_
 
-_Defined in [util/types.ts:20](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L20)_
+_Defined in [src/util/types.ts:21](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L21)_
 
 Type for function to filter copied files.
 
@@ -154,7 +187,7 @@ Sync callback function to filter copied files.
 
 Ƭ **DependencyType**: _"dependencies" | "devDependencies" | "peerDependencies" | "optionalDependencies"_
 
-_Defined in [util/types.ts:7](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L7)_
+_Defined in [src/util/types.ts:8](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L8)_
 
 Dependency types for Node.js modules.
 
@@ -164,7 +197,7 @@ Dependency types for Node.js modules.
 
 Ƭ **PackageManager**: _"npm" | "yarn"_
 
-_Defined in [util/types.ts:4](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L4)_
+_Defined in [src/util/types.ts:5](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L5)_
 
 Package manager
 
@@ -174,7 +207,7 @@ Package manager
 
 Ƭ **PredicateFileOperation**: _function_
 
-_Defined in [util/types.ts:10](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L10)_
+_Defined in [src/util/types.ts:11](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L11)_
 
 Type of callback function to test whether related file operation should be done.
 
@@ -196,7 +229,7 @@ Callback function to test whether related file operation should be done.
 
 • **ALL_DEPENDENCIES**: _string[]_ = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"]
 
-_Defined in [module.ts:11](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L11)_
+_Defined in [src/module.ts:11](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L11)_
 
 # Classes
 
@@ -214,7 +247,7 @@ _Defined in [module.ts:11](https://github.com/ozum/intermodular/blob/d7cc4e6/src
 
 • **config**: _DataFile_
 
-_Defined in [intermodular.ts:19](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L19)_
+_Defined in [src/intermodular.ts:19](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L19)_
 
 Configuration for source module in target module as a [DataFile](https://www.npmjs.com/package/edit-config#class-datafile) instance.
 
@@ -224,7 +257,7 @@ Configuration for source module in target module as a [DataFile](https://www.npm
 
 • **logger**: _Logger_
 
-_Defined in [intermodular.ts:22](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L22)_
+_Defined in [src/intermodular.ts:22](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L22)_
 
 Winston compatible logger.
 
@@ -234,7 +267,7 @@ Winston compatible logger.
 
 • **sourceModule**: _[Module](#classesmodulemd)_
 
-_Defined in [intermodular.ts:13](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L13)_
+_Defined in [src/intermodular.ts:13](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L13)_
 
 [Module](#classesmodulemd) instance of node module which is used as source for modification operations such as copy, update.
 
@@ -244,7 +277,7 @@ _Defined in [intermodular.ts:13](https://github.com/ozum/intermodular/blob/d7cc4
 
 • **targetModule**: _[Module](#classesmodulemd)_
 
-_Defined in [intermodular.ts:16](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L16)_
+_Defined in [src/intermodular.ts:16](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L16)_
 
 [Module](#classesmodulemd) instance of node module which is used as target for modification operations such as copy, update.
 
@@ -254,7 +287,7 @@ _Defined in [intermodular.ts:16](https://github.com/ozum/intermodular/blob/d7cc4
 
 ▸ **command**(`cmd`: string, `options?`: ExecaOptions): _Promise‹ExecaReturnValue›_
 
-_Defined in [intermodular.ts:177](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L177)_
+_Defined in [src/intermodular.ts:177](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L177)_
 
 Executes given command using `execa.command` with cwd as target module's root. Additionally adds source module's `node_modules/.bin` to path.
 
@@ -278,7 +311,7 @@ intermodular.command("ls -al", { stdio: "inherit" }); // Run `ls -al`.
 
 ▸ **command**(`cmd`: string, `options?`: ExecaOptions‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [intermodular.ts:178](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L178)_
+_Defined in [src/intermodular.ts:178](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L178)_
 
 **Parameters:**
 
@@ -295,7 +328,7 @@ _Defined in [intermodular.ts:178](https://github.com/ozum/intermodular/blob/d7cc
 
 ▸ **copy**(`sourcePath`: string, `targetPath`: string, `copyOptions`: [CopyOptions](#interfacescopyoptionsmd)): _Promise‹void›_
 
-_Defined in [intermodular.ts:112](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L112)_
+_Defined in [src/intermodular.ts:112](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L112)_
 
 Copies a file or directory from `pathInSourceModule` relative to source module root to `pathInTargetModule`relative to
 target module root. The directory can have contents. Like cp -r.
@@ -324,7 +357,7 @@ copySync("src/config", ".");
 
 ▸ **execute**(`bin`: string, `args?`: string[], `options?`: ExecaOptions): _Promise‹ExecaReturnValue›_
 
-_Defined in [intermodular.ts:141](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L141)_
+_Defined in [src/intermodular.ts:141](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L141)_
 
 Executes given command using `execa` with given arguments and options with cwd as target module's root. Applies sensible default options.
 Additionally adds source module's `node_modules/.bin` to path.
@@ -350,7 +383,7 @@ intermodular.execute("ls", ["-al"], { stdio: "inherit" }); // Run `ls -al`.
 
 ▸ **execute**(`bin`: string, `args?`: string[], `options?`: ExecaOptions‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [intermodular.ts:142](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L142)_
+_Defined in [src/intermodular.ts:142](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L142)_
 
 **Parameters:**
 
@@ -364,7 +397,7 @@ _Defined in [intermodular.ts:142](https://github.com/ozum/intermodular/blob/d7cc
 
 ▸ **execute**(`bin`: string, `options?`: ExecaOptions): _Promise‹ExecaReturnValue›_
 
-_Defined in [intermodular.ts:155](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L155)_
+_Defined in [src/intermodular.ts:155](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L155)_
 
 Executes given command using `execa` with given arguments and options with cwd as target module's root. Applies sensible default options.
 Additionally adds source module's `node_modules/.bin` to path.
@@ -389,7 +422,7 @@ intermodular.execute("ls", { stdio: "inherit" }); // Run `ls`.
 
 ▸ **execute**(`bin`: string, `options?`: ExecaOptions‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [intermodular.ts:156](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L156)_
+_Defined in [src/intermodular.ts:156](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L156)_
 
 **Parameters:**
 
@@ -406,7 +439,7 @@ _Defined in [intermodular.ts:156](https://github.com/ozum/intermodular/blob/d7cc
 
 ▸ **log**(`logLevel`: LogLevel, `message`: string): _void_
 
-_Defined in [intermodular.ts:40](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L40)_
+_Defined in [src/intermodular.ts:40](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L40)_
 
 Logs given message with required level using logger provided during object construction.
 
@@ -425,7 +458,7 @@ Logs given message with required level using logger provided during object const
 
 ▸ **isEnvSet**(`variable`: string): _boolean_
 
-_Defined in [intermodular.ts:235](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L235)_
+_Defined in [src/intermodular.ts:235](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L235)_
 
 Returns whether `variable` is set in environment variables and not empty.
 
@@ -445,7 +478,7 @@ whether given environment variable is set and not empty.
 
 ▸ **new**(`__namedParameters`: object): _Promise‹[Intermodular](#classesintermodularmd)›_
 
-_Defined in [intermodular.ts:199](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L199)_
+_Defined in [src/intermodular.ts:199](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L199)_
 
 Creates and returns [Intermodular](#classesintermodularmd) instance.
 
@@ -472,7 +505,7 @@ are options
 
 ▸ **parseEnv**‹**T**›(`variable`: string, `defaultValue?`: T): _string | number | Record‹string, any› | T | undefined_
 
-_Defined in [intermodular.ts:249](https://github.com/ozum/intermodular/blob/d7cc4e6/src/intermodular.ts#L249)_
+_Defined in [src/intermodular.ts:249](https://github.com/ozum/intermodular/blob/6138aee/src/intermodular.ts#L249)_
 
 Parses and returns `variable` environment variable. If value is JSON object, parses using JSON5 and returns it as a JavaScript object.
 Otherwise returns `defaultValue`.
@@ -508,7 +541,7 @@ Class which provides information and modification methods for a module.
 
 • **isTypeScript**: _boolean_
 
-_Defined in [module.ts:31](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L31)_
+_Defined in [src/module.ts:31](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L31)_
 
 Whether module is a TypeScript project.
 
@@ -518,7 +551,7 @@ Whether module is a TypeScript project.
 
 • **package**: _DataFile_
 
-_Defined in [module.ts:28](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L28)_
+_Defined in [src/module.ts:28](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L28)_
 
 [DataFile](https://www.npmjs.com/package/edit-config#class-datafile) instance of `package.json`.
 
@@ -528,7 +561,7 @@ _Defined in [module.ts:28](https://github.com/ozum/intermodular/blob/d7cc4e6/src
 
 • **packageManager**: _[PackageManager](#packagemanager)_
 
-_Defined in [module.ts:25](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L25)_
+_Defined in [src/module.ts:25](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L25)_
 
 Package manager of the module.
 
@@ -538,7 +571,7 @@ Package manager of the module.
 
 • **root**: _string_
 
-_Defined in [module.ts:22](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L22)_
+_Defined in [src/module.ts:22](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L22)_
 
 Absolute path of the module's root directory, where `package.json` is located.
 
@@ -548,7 +581,7 @@ Absolute path of the module's root directory, where `package.json` is located.
 
 • **get name**(): _string_
 
-_Defined in [module.ts:73](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L73)_
+_Defined in [src/module.ts:73](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L73)_
 
 Name of the module as defined in `package.json`.
 
@@ -560,7 +593,7 @@ Name of the module as defined in `package.json`.
 
 • **get nameWithoutUser**(): _string_
 
-_Defined in [module.ts:78](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L78)_
+_Defined in [src/module.ts:78](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L78)_
 
 Name of the module without user name. For example: `typescript` for `@microsoft/typescript`.
 
@@ -572,7 +605,7 @@ Name of the module without user name. For example: `typescript` for `@microsoft/
 
 ▸ **cloneWithSharedManager**(`__namedParameters`: object): _[Module](#classesmodulemd)_
 
-_Defined in [module.ts:63](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L63)_
+_Defined in [src/module.ts:63](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L63)_
 
 Creates a new [Module](#classesmodulemd) instance from current instance, which shares
 [Data File Manager](https://www.npmjs.com/package/edit-config#manager) with current [Module](#classesmodulemd).
@@ -595,9 +628,9 @@ Multiple instance work over same files efficiently and without collision.
 
 ### command
 
-▸ **command**(`cmd`: string, `options?`: ExecaOptions): _Promise‹ExecaReturnValue›_
+▸ **command**(`cmd`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)): _Promise‹ExecaReturnValue›_
 
-_Defined in [module.ts:397](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L397)_
+_Defined in [src/module.ts:404](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L404)_
 
 Executes given command using `execa.command` with given options. Applies sensible default options.
 
@@ -610,25 +643,25 @@ module.command("ls -al", { stdio: "inherit" }); // Run `ls -al`.
 
 **Parameters:**
 
-| Name       | Type         | Description                                                 |
-| ---------- | ------------ | ----------------------------------------------------------- |
-| `cmd`      | string       | is command to execute.                                      |
-| `options?` | ExecaOptions | are passed to [Execa](https://www.npmjs.com/package/execa). |
+| Name       | Type                                          | Description                                                 |
+| ---------- | --------------------------------------------- | ----------------------------------------------------------- |
+| `cmd`      | string                                        | is command to execute.                                      |
+| `options?` | [ExecuteOptions](#interfacesexecuteoptionsmd) | are passed to [Execa](https://www.npmjs.com/package/execa). |
 
 **Returns:** _Promise‹ExecaReturnValue›_
 
 [[ExecaReturnValue]] instance.
 
-▸ **command**(`cmd`: string, `options?`: ExecaOptions‹null›): _Promise‹ExecaReturnValue‹Buffer››_
+▸ **command**(`cmd`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [module.ts:398](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L398)_
+_Defined in [src/module.ts:405](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L405)_
 
 **Parameters:**
 
-| Name       | Type               |
-| ---------- | ------------------ |
-| `cmd`      | string             |
-| `options?` | ExecaOptions‹null› |
+| Name       | Type                                                |
+| ---------- | --------------------------------------------------- |
+| `cmd`      | string                                              |
+| `options?` | [ExecuteOptions](#interfacesexecuteoptionsmd)‹null› |
 
 **Returns:** _Promise‹ExecaReturnValue‹Buffer››_
 
@@ -638,7 +671,7 @@ _Defined in [module.ts:398](https://github.com/ozum/intermodular/blob/d7cc4e6/sr
 
 ▸ **createDirectory**(`path`: string): _Promise‹void›_
 
-_Defined in [module.ts:304](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L304)_
+_Defined in [src/module.ts:304](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L304)_
 
 Ensures that the directory exists. If the directory structure does not exist, it is created similar to `mkdir -p`.
 
@@ -654,9 +687,9 @@ Ensures that the directory exists. If the directory structure does not exist, it
 
 ### execute
 
-▸ **execute**(`bin`: string, `args?`: string[], `options?`: ExecaOptions): _Promise‹ExecaReturnValue›_
+▸ **execute**(`bin`: string, `args?`: string[], `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)): _Promise‹ExecaReturnValue›_
 
-_Defined in [module.ts:360](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L360)_
+_Defined in [src/module.ts:360](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L360)_
 
 Executes given command using `execa` with given arguments and options. Applies sensible default options.
 
@@ -669,33 +702,33 @@ module.execute("ls", ["-al"], { stdio: "inherit" }); // Run `ls -al`.
 
 **Parameters:**
 
-| Name       | Type         | Description                                                 |
-| ---------- | ------------ | ----------------------------------------------------------- |
-| `bin`      | string       | is binary file to execute.                                  |
-| `args?`    | string[]     | are arguments to pass to executable.                        |
-| `options?` | ExecaOptions | are passed to [Execa](https://www.npmjs.com/package/execa). |
+| Name       | Type                                          | Description                                                 |
+| ---------- | --------------------------------------------- | ----------------------------------------------------------- |
+| `bin`      | string                                        | is binary file to execute.                                  |
+| `args?`    | string[]                                      | are arguments to pass to executable.                        |
+| `options?` | [ExecuteOptions](#interfacesexecuteoptionsmd) | are passed to [Execa](https://www.npmjs.com/package/execa). |
 
 **Returns:** _Promise‹ExecaReturnValue›_
 
 [[ExecaReturnValue]] instance.
 
-▸ **execute**(`bin`: string, `args?`: string[], `options?`: ExecaOptions‹null›): _Promise‹ExecaReturnValue‹Buffer››_
+▸ **execute**(`bin`: string, `args?`: string[], `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [module.ts:361](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L361)_
+_Defined in [src/module.ts:361](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L361)_
 
 **Parameters:**
 
-| Name       | Type               |
-| ---------- | ------------------ |
-| `bin`      | string             |
-| `args?`    | string[]           |
-| `options?` | ExecaOptions‹null› |
+| Name       | Type                                                |
+| ---------- | --------------------------------------------------- |
+| `bin`      | string                                              |
+| `args?`    | string[]                                            |
+| `options?` | [ExecuteOptions](#interfacesexecuteoptionsmd)‹null› |
 
 **Returns:** _Promise‹ExecaReturnValue‹Buffer››_
 
-▸ **execute**(`bin`: string, `options?`: ExecaOptions): _Promise‹ExecaReturnValue›_
+▸ **execute**(`bin`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)): _Promise‹ExecaReturnValue›_
 
-_Defined in [module.ts:373](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L373)_
+_Defined in [src/module.ts:373](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L373)_
 
 Executes given command using `execa` with given arguments and options. Applies sensible default options.
 
@@ -708,25 +741,25 @@ module.execute("ls", { stdio: "inherit" }); // Run `ls`.
 
 **Parameters:**
 
-| Name       | Type         | Description                                                 |
-| ---------- | ------------ | ----------------------------------------------------------- |
-| `bin`      | string       | is binary file to execute.                                  |
-| `options?` | ExecaOptions | are passed to [Execa](https://www.npmjs.com/package/execa). |
+| Name       | Type                                          | Description                                                 |
+| ---------- | --------------------------------------------- | ----------------------------------------------------------- |
+| `bin`      | string                                        | is binary file to execute.                                  |
+| `options?` | [ExecuteOptions](#interfacesexecuteoptionsmd) | are passed to [Execa](https://www.npmjs.com/package/execa). |
 
 **Returns:** _Promise‹ExecaReturnValue›_
 
 [[ExecaReturnValue]] instance.
 
-▸ **execute**(`bin`: string, `options?`: ExecaOptions‹null›): _Promise‹ExecaReturnValue‹Buffer››_
+▸ **execute**(`bin`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [module.ts:374](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L374)_
+_Defined in [src/module.ts:374](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L374)_
 
 **Parameters:**
 
-| Name       | Type               |
-| ---------- | ------------------ |
-| `bin`      | string             |
-| `options?` | ExecaOptions‹null› |
+| Name       | Type                                                |
+| ---------- | --------------------------------------------------- |
+| `bin`      | string                                              |
+| `options?` | [ExecuteOptions](#interfacesexecuteoptionsmd)‹null› |
 
 **Returns:** _Promise‹ExecaReturnValue‹Buffer››_
 
@@ -736,7 +769,7 @@ _Defined in [module.ts:374](https://github.com/ozum/intermodular/blob/d7cc4e6/sr
 
 ▸ **exists**(`path`: string): _Promise‹boolean›_
 
-_Defined in [module.ts:279](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L279)_
+_Defined in [src/module.ts:279](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L279)_
 
 Checks whether given path exists.
 
@@ -756,7 +789,7 @@ whether given path exists.
 
 ▸ **getDependencyVersion**(`moduleName`: string, `dependencyTypes`: string[]): _string | undefined_
 
-_Defined in [module.ts:89](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L89)_
+_Defined in [src/module.ts:89](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L89)_
 
 Fetches a dependent module's version from given [dependency types](#dependencytype).
 
@@ -777,7 +810,7 @@ version of the `moduleName` || undefined.
 
 ▸ **hasAnyDependency**(`moduleNames`: string | string[], `dependencyTypes`: string[]): _boolean_
 
-_Defined in [module.ts:101](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L101)_
+_Defined in [src/module.ts:101](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L101)_
 
 Checks whether given module or any of the modules exist in given [dependency types](#dependencytype).
 
@@ -798,7 +831,7 @@ whether `moduleName` exists in one of the dependency types.
 
 ▸ **ifAnyDependency**‹**T**, **F**›(`moduleNames`: string | string[]): _boolean_
 
-_Defined in [module.ts:105](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L105)_
+_Defined in [src/module.ts:105](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L105)_
 
 Checks single or multiple module's existence in any of the `package.json` dependencies.
 
@@ -820,7 +853,7 @@ Checks single or multiple module's existence in any of the `package.json` depend
 
 ▸ **ifAnyDependency**‹**T**, **F**›(`moduleNames`: string | string[], `t`: T): _T | false_
 
-_Defined in [module.ts:106](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L106)_
+_Defined in [src/module.ts:106](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L106)_
 
 Checks single or multiple module's existence in any of the `package.json` dependencies.
 
@@ -843,7 +876,7 @@ Checks single or multiple module's existence in any of the `package.json` depend
 
 ▸ **ifAnyDependency**‹**T**, **F**›(`moduleNames`: string | string[], `t`: T, `f`: F, `dependencyTypes?`: [DependencyType](#dependencytype)[]): _T | F_
 
-_Defined in [module.ts:107](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L107)_
+_Defined in [src/module.ts:107](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L107)_
 
 Checks single or multiple module's existence in any of the `package.json` dependencies.
 
@@ -872,7 +905,7 @@ Checks single or multiple module's existence in any of the `package.json` depend
 
 ▸ **install**(`packageNames`: string | string[], `__namedParameters`: object): _Promise‹void›_
 
-_Defined in [module.ts:417](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L417)_
+_Defined in [src/module.ts:431](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L431)_
 
 Installs node modules using specified package manager.
 
@@ -896,7 +929,7 @@ are package name or array of package names.
 
 ▸ **isDirectory**(`path`: string): _Promise‹boolean›_
 
-_Defined in [module.ts:289](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L289)_
+_Defined in [src/module.ts:289](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L289)_
 
 Returns whether given path is a directory.
 
@@ -916,7 +949,7 @@ whether given path is a directory.
 
 ▸ **isEqual**(`path`: string, `content`: string | Record‹string, any›): _Promise‹boolean›_
 
-_Defined in [module.ts:343](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L343)_
+_Defined in [src/module.ts:343](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L343)_
 
 Checks whether content of `pathInModule` file is equal to `data` by making string comparison (for strings)
 or deep comparison (for objects).
@@ -945,7 +978,7 @@ whether the file is equal to given `content`.
 
 ▸ **pathOf**(...`parts`: string[]): _string_
 
-_Defined in [module.ts:131](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L131)_
+_Defined in [src/module.ts:131](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L131)_
 
 Returns absolute path for given relative path to module root. If given path is an absolute path, returns it directly.
 
@@ -972,7 +1005,7 @@ absolute path to given destination.
 
 ▸ **read**(`path`: string, `options?`: ManagerLoadOptions): _Promise‹DataFile | string | undefined›_
 
-_Defined in [module.ts:181](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L181)_
+_Defined in [src/module.ts:181](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L181)_
 
 Reads and if possible returns DataFile otherwise file content. If file does not exist returns `undefined`.
 If `options.defaultData` is true, file will be created using `options.defaultData` if it does not exist.
@@ -998,7 +1031,7 @@ If `options.defaultData` is true, file will be created using `options.defaultDat
 
 ▸ **readData**(`path`: string, `options?`: ManagerLoadOptions): _Promise‹DataFile›_
 
-_Defined in [module.ts:167](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L167)_
+_Defined in [src/module.ts:167](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L167)_
 
 Reads file and creates `DataFile` instance using [Manager](https://www.npmjs.com/package/edit-config#class-manager).
 
@@ -1017,7 +1050,7 @@ Reads file and creates `DataFile` instance using [Manager](https://www.npmjs.com
 
 ▸ **readRaw**(`path`: string): _Promise‹string›_
 
-_Defined in [module.ts:157](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L157)_
+_Defined in [src/module.ts:157](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L157)_
 
 Asynchronously reads the entire contents of a file using `utf8` encoding.
 
@@ -1037,7 +1070,7 @@ file contents.
 
 ▸ **relativePathOf**(...`parts`: string[]): _string_
 
-_Defined in [module.ts:146](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L146)_
+_Defined in [src/module.ts:146](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L146)_
 
 Returns relative path to module root for given absolute path. If given path is a relative path, returns it directly.
 
@@ -1064,7 +1097,7 @@ path relative to module's root.
 
 ▸ **remove**(`path`: string, `__namedParameters`: object): _Promise‹string | undefined›_
 
-_Defined in [module.ts:254](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L254)_
+_Defined in [src/module.ts:254](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L254)_
 
 Removes file or directory relative to module's root. Removes directory even it has files in it.
 If the path does not exist, silently does nothing.
@@ -1091,7 +1124,7 @@ file path relative to module root if file is removed, `undefined` otherwise.
 
 ▸ **removeEmptyDirs**(`path`: string): _Promise‹string[]›_
 
-_Defined in [module.ts:267](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L267)_
+_Defined in [src/module.ts:267](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L267)_
 
 Removes empty directories recursively for given path relative to module root.
 
@@ -1111,7 +1144,7 @@ array of deleted directories.
 
 ▸ **rename**(`oldPath`: string, `newPath`: string, `__namedParameters`: object): _Promise‹boolean›_
 
-_Defined in [module.ts:316](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L316)_
+_Defined in [src/module.ts:316](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L316)_
 
 Renames given path.
 
@@ -1141,7 +1174,7 @@ whether file is renamed.
 
 ▸ **saveAll**(): _Promise‹void›_
 
-_Defined in [module.ts:406](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L406)_
+_Defined in [src/module.ts:420](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L420)_
 
 Saves all read [data files](https://www.npmjs.com/package/edit-config#class-datafile).
 
@@ -1153,7 +1186,7 @@ Saves all read [data files](https://www.npmjs.com/package/edit-config#class-data
 
 ▸ **uninstall**(`packageNames`: string | string[]): _Promise‹void›_
 
-_Defined in [module.ts:437](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L437)_
+_Defined in [src/module.ts:451](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L451)_
 
 Uninstalls node modules using specified package manager.
 
@@ -1171,7 +1204,7 @@ Uninstalls node modules using specified package manager.
 
 ▸ **write**(`path`: string, `content`: object | string, `__namedParameters`: object): _Promise‹string | DataFile | undefined›_
 
-_Defined in [module.ts:218](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L218)_
+_Defined in [src/module.ts:218](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L218)_
 
 Writes given content to file. If content is an object, it is serialized.
 If `prettier` configuration and module is available and content is formatted using `prettier`.
@@ -1204,7 +1237,7 @@ written content or [[DataFile]] if file is written, `undefined` otherwise.
 
 ▸ **new**(`options`: object): _Promise‹[Module](#classesmodulemd)›_
 
-_Defined in [module.ts:463](https://github.com/ozum/intermodular/blob/d7cc4e6/src/module.ts#L463)_
+_Defined in [src/module.ts:477](https://github.com/ozum/intermodular/blob/6138aee/src/module.ts#L477)_
 
 Creates and returns a [Module](#classesmodulemd) instance.
 
@@ -1243,7 +1276,7 @@ Copy options based on `fs-extra` [copy](https://github.com/jprichardson/node-fs-
 
 • **dereference**? : _undefined | false | true_
 
-_Defined in [util/types.ts:44](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L44)_
+_Defined in [src/util/types.ts:45](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L45)_
 
 Dereference symlinks, default is false.
 
@@ -1253,7 +1286,7 @@ Dereference symlinks, default is false.
 
 • **errorOnExist**? : _undefined | false | true_
 
-_Defined in [util/types.ts:50](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L50)_
+_Defined in [src/util/types.ts:51](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L51)_
 
 When overwrite is false and the destination exists, throw an error. Default is false.
 
@@ -1263,7 +1296,7 @@ When overwrite is false and the destination exists, throw an error. Default is f
 
 • **filter**? : _[CopyFilterFunction](#copyfilterfunction)_
 
-_Defined in [util/types.ts:52](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L52)_
+_Defined in [src/util/types.ts:53](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L53)_
 
 Function to filter copied files. Return true to include, false to exclude. Can also return a Promise that resolves to true or false (or pass in an async function)
 
@@ -1273,7 +1306,7 @@ Function to filter copied files. Return true to include, false to exclude. Can a
 
 • **overwrite**? : _undefined | false | true_
 
-_Defined in [util/types.ts:46](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L46)_
+_Defined in [src/util/types.ts:47](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L47)_
 
 Overwrite existing file or directory, default is true. Note that the copy operation will silently fail if you set this to false and the destination exists. Use the errorOnExist option to change this behavior.
 
@@ -1283,7 +1316,7 @@ Overwrite existing file or directory, default is true. Note that the copy operat
 
 • **preserveTimestamps**? : _undefined | false | true_
 
-_Defined in [util/types.ts:48](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L48)_
+_Defined in [src/util/types.ts:49](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L49)_
 
 When true, will set last modification and access times to the ones of the original source files. When false, timestamp behavior is OS-dependent. Default is false.
 
@@ -1293,6 +1326,442 @@ When true, will set last modification and access times to the ones of the origin
 
 • **recursive**? : _undefined | false | true_
 
-_Defined in [util/types.ts:54](https://github.com/ozum/intermodular/blob/d7cc4e6/src/util/types.ts#L54)_
+_Defined in [src/util/types.ts:55](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L55)_
 
 fs-extra.copy recursive option.
+
+<a name="interfacesexecuteoptionsmd"></a>
+
+# Interface: ExecuteOptions ‹**EncodingType**›
+
+Extended options for `module.execute` and `module.command`
+
+## Type parameters
+
+▪ **EncodingType**
+
+## Hierarchy
+
+- Options‹EncodingType›
+
+  ↳ **ExecuteOptions**
+
+## Properties
+
+### `Optional` `Readonly` all
+
+• **all**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[all](#optional-readonly-all)_
+
+Defined in node_modules/execa/index.d.ts:96
+
+Add an `.all` property on the promise and the resolved value. The property contains the output of the process with `stdout` and `stderr` interleaved.
+
+**`default`** false
+
+---
+
+### `Optional` `Readonly` argv0
+
+• **argv0**? : _undefined | string_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[argv0](#optional-readonly-argv0)_
+
+Defined in node_modules/execa/index.d.ts:129
+
+Explicitly set the value of `argv[0]` sent to the child process. This will be set to `command` or `file` if not specified.
+
+---
+
+### `Optional` `Readonly` buffer
+
+• **buffer**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[buffer](#optional-readonly-buffer)_
+
+Defined in node_modules/execa/index.d.ts:61
+
+Buffer the output from the spawned process. When set to `false`, you must read the output of `stdout` and `stderr` (or `all` if the `all` option is `true`). Otherwise the returned promise will not be resolved/rejected.
+
+If the spawned process fails, `error.stdout`, `error.stderr`, and `error.all` will contain the buffered data.
+
+**`default`** true
+
+---
+
+### `Optional` `Readonly` cleanup
+
+• **cleanup**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[cleanup](#optional-readonly-cleanup)_
+
+Defined in node_modules/execa/index.d.ts:23
+
+Kill the spawned process when the parent process exits unless either:
+
+- the spawned process is [`detached`](https://nodejs.org/api/child_process.html#child_process_options_detached)
+- the parent process is terminated abruptly, for example, with `SIGKILL` as opposed to `SIGTERM` or a normal exit
+
+**`default`** true
+
+---
+
+### `Optional` `Readonly` cwd
+
+• **cwd**? : _undefined | string_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[cwd](#optional-readonly-cwd)_
+
+Defined in node_modules/execa/index.d.ts:117
+
+Current working directory of the child process.
+
+**`default`** process.cwd()
+
+---
+
+### `Optional` `Readonly` detached
+
+• **detached**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[detached](#optional-readonly-detached)_
+
+Defined in node_modules/execa/index.d.ts:156
+
+Prepare child to run independently of its parent process. Specific behavior [depends on the platform](https://nodejs.org/api/child_process.html#child_process_options_detached).
+
+**`default`** false
+
+---
+
+### `Optional` `Readonly` encoding
+
+• **encoding**? : _EncodingType_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[encoding](#optional-readonly-encoding)_
+
+Defined in node_modules/execa/index.d.ts:185
+
+Specify the character encoding used to decode the `stdout` and `stderr` output. If set to `null`, then `stdout` and `stderr` will be a `Buffer` instead of a string.
+
+**`default`** 'utf8'
+
+---
+
+### `Optional` `Readonly` env
+
+• **env**? : _NodeJS.ProcessEnv_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[env](#optional-readonly-env)_
+
+Defined in node_modules/execa/index.d.ts:124
+
+Environment key-value pairs. Extends automatically from `process.env`. Set `extendEnv` to `false` if you don't want this.
+
+**`default`** process.env
+
+---
+
+### `Optional` `Readonly` execPath
+
+• **execPath**? : _undefined | string_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[execPath](#optional-readonly-execpath)_
+
+Defined in node_modules/execa/index.d.ts:52
+
+Path to the Node.js executable to use in child processes.
+
+This can be either an absolute path or a path relative to the `cwd` option.
+
+Requires `preferLocal` to be `true`.
+
+For example, this can be used together with [`get-node`](https://github.com/ehmicky/get-node) to run a specific Node.js version in a child process.
+
+**`default`** process.execPath
+
+---
+
+### `Optional` exitOnProcessFailure
+
+• **exitOnProcessFailure**? : _undefined | false | true_
+
+_Defined in [src/util/types.ts:61](https://github.com/ozum/intermodular/blob/6138aee/src/util/types.ts#L61)_
+
+Exits using `process.exit(errCode)` if error is originated from shell. Otherwise throws as usual. Errors originated from node.js always throw.
+
+---
+
+### `Optional` `Readonly` extendEnv
+
+• **extendEnv**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[extendEnv](#optional-readonly-extendenv)_
+
+Defined in node_modules/execa/index.d.ts:110
+
+Set to `false` if you don't want to extend the environment variables when providing the `env` property.
+
+**`default`** true
+
+---
+
+### `Optional` `Readonly` gid
+
+• **gid**? : _undefined | number_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[gid](#optional-readonly-gid)_
+
+Defined in node_modules/execa/index.d.ts:166
+
+Sets the group identity of the process.
+
+---
+
+### `Optional` `Readonly` input
+
+• **input**? : _string | Buffer | ReadableStream_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[input](#optional-readonly-input)_
+
+Defined in node_modules/execa/index.d.ts:227
+
+Write some input to the `stdin` of your binary.
+
+---
+
+### `Optional` `Readonly` killSignal
+
+• **killSignal**? : _string | number_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[killSignal](#optional-readonly-killsignal)_
+
+Defined in node_modules/execa/index.d.ts:206
+
+Signal value to be used when the spawned process will be killed.
+
+**`default`** 'SIGTERM'
+
+---
+
+### `Optional` `Readonly` localDir
+
+• **localDir**? : _undefined | string_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[localDir](#optional-readonly-localdir)_
+
+Defined in node_modules/execa/index.d.ts:39
+
+Preferred path to find locally installed binaries in (use with `preferLocal`).
+
+**`default`** process.cwd()
+
+---
+
+### `Optional` `Readonly` maxBuffer
+
+• **maxBuffer**? : _undefined | number_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[maxBuffer](#optional-readonly-maxbuffer)_
+
+Defined in node_modules/execa/index.d.ts:199
+
+Largest amount of data in bytes allowed on `stdout` or `stderr`. Default: 100 MB.
+
+**`default`** 100_000_000
+
+---
+
+### `Optional` `Readonly` preferLocal
+
+• **preferLocal**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[preferLocal](#optional-readonly-preferlocal)_
+
+Defined in node_modules/execa/index.d.ts:32
+
+Prefer locally installed binaries when looking for a binary to execute.
+
+If you `$ npm install foo`, you can then `execa('foo')`.
+
+**`default`** false
+
+---
+
+### `Optional` `Readonly` reject
+
+• **reject**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[reject](#optional-readonly-reject)_
+
+Defined in node_modules/execa/index.d.ts:89
+
+Setting this to `false` resolves the promise with the error instead of rejecting it.
+
+**`default`** true
+
+---
+
+### `Optional` `Readonly` serialization
+
+• **serialization**? : _"json" | "advanced"_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[serialization](#optional-readonly-serialization)_
+
+Defined in node_modules/execa/index.d.ts:149
+
+Specify the kind of serialization used for sending messages between processes when using the `stdio: 'ipc'` option or `execa.node()`:
+
+- `json`: Uses `JSON.stringify()` and `JSON.parse()`.
+- `advanced`: Uses [`v8.serialize()`](https://nodejs.org/api/v8.html#v8_v8_serialize_value)
+
+Requires Node.js `13.2.0` or later.
+
+[More info.](https://nodejs.org/api/child_process.html#child_process_advanced_serialization)
+
+**`default`** 'json'
+
+---
+
+### `Optional` `Readonly` shell
+
+• **shell**? : _boolean | string_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[shell](#optional-readonly-shell)_
+
+Defined in node_modules/execa/index.d.ts:178
+
+If `true`, runs `command` inside of a shell. Uses `/bin/sh` on UNIX and `cmd.exe` on Windows. A different shell can be specified as a string. The shell should understand the `-c` switch on UNIX or `/d /s /c` on Windows.
+
+We recommend against using this option since it is:
+
+- not cross-platform, encouraging shell-specific syntax.
+- slower, because of the additional shell interpretation.
+- unsafe, potentially allowing command injection.
+
+**`default`** false
+
+---
+
+### `Optional` `Readonly` stderr
+
+• **stderr**? : _StdioOption_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[stderr](#optional-readonly-stderr)_
+
+Defined in node_modules/execa/index.d.ts:82
+
+Same options as [`stdio`](https://nodejs.org/dist/latest-v6.x/docs/api/child_process.html#child_process_options_stdio).
+
+**`default`** 'pipe'
+
+---
+
+### `Optional` `Readonly` stdin
+
+• **stdin**? : _StdioOption_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[stdin](#optional-readonly-stdin)_
+
+Defined in node_modules/execa/index.d.ts:68
+
+Same options as [`stdio`](https://nodejs.org/dist/latest-v6.x/docs/api/child_process.html#child_process_options_stdio).
+
+**`default`** 'pipe'
+
+---
+
+### `Optional` `Readonly` stdio
+
+• **stdio**? : _"pipe" | "ignore" | "inherit" | keyof StdioOption[]_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[stdio](#optional-readonly-stdio)_
+
+Defined in node_modules/execa/index.d.ts:136
+
+Child's [stdio](https://nodejs.org/api/child_process.html#child_process_options_stdio) configuration.
+
+**`default`** 'pipe'
+
+---
+
+### `Optional` `Readonly` stdout
+
+• **stdout**? : _StdioOption_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[stdout](#optional-readonly-stdout)_
+
+Defined in node_modules/execa/index.d.ts:75
+
+Same options as [`stdio`](https://nodejs.org/dist/latest-v6.x/docs/api/child_process.html#child_process_options_stdio).
+
+**`default`** 'pipe'
+
+---
+
+### `Optional` `Readonly` stripFinalNewline
+
+• **stripFinalNewline**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[stripFinalNewline](#optional-readonly-stripfinalnewline)_
+
+Defined in node_modules/execa/index.d.ts:103
+
+Strip the final [newline character](https://en.wikipedia.org/wiki/Newline) from the output.
+
+**`default`** true
+
+---
+
+### `Optional` `Readonly` timeout
+
+• **timeout**? : _undefined | number_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[timeout](#optional-readonly-timeout)_
+
+Defined in node_modules/execa/index.d.ts:192
+
+If `timeout` is greater than `0`, the parent will send the signal identified by the `killSignal` property (the default is `SIGTERM`) if the child runs longer than `timeout` milliseconds.
+
+**`default`** 0
+
+---
+
+### `Optional` `Readonly` uid
+
+• **uid**? : _undefined | number_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[uid](#optional-readonly-uid)_
+
+Defined in node_modules/execa/index.d.ts:161
+
+Sets the user identity of the process.
+
+---
+
+### `Optional` `Readonly` windowsHide
+
+• **windowsHide**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[windowsHide](#optional-readonly-windowshide)_
+
+Defined in node_modules/execa/index.d.ts:220
+
+On Windows, do not create a new console window. Please note this also prevents `CTRL-C` [from working](https://github.com/nodejs/node/issues/29837) on Windows.
+
+**`default`** true
+
+---
+
+### `Optional` `Readonly` windowsVerbatimArguments
+
+• **windowsVerbatimArguments**? : _undefined | false | true_
+
+_Inherited from [ExecuteOptions](#interfacesexecuteoptionsmd).[windowsVerbatimArguments](#optional-readonly-windowsverbatimarguments)_
+
+Defined in node_modules/execa/index.d.ts:213
+
+If `true`, no quoting or escaping of arguments is done on Windows. Ignored on other platforms. This is set to `true` automatically when the `shell` option is `true`.
+
+**`default`** false
