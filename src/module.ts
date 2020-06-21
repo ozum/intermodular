@@ -4,9 +4,9 @@ import { outputFile, pathExists, readFile, remove, rename, lstat, ensureDir } fr
 import isEqual from "lodash.isequal";
 import { join, relative, isAbsolute } from "path";
 import pkgDir from "pkg-dir";
-import execa, { command, Options as ExecaOptions, ExecaReturnValue } from "execa";
+import execa, { command, ExecaReturnValue } from "execa";
 import { arrify, packageManagerFlags, isFromFileToDirectory, getExecaArgs } from "./util/helper";
-import { DependencyType, PackageManager, PredicateFileOperation } from "./util/types";
+import { DependencyType, PackageManager, PredicateFileOperation, ExecuteOptions } from "./util/types";
 
 const ALL_DEPENDENCIES = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
 
@@ -357,8 +357,8 @@ export default class Module {
    * module.execute("ls"); // Run `ls`.
    * module.execute("ls", ["-al"], { stdio: "inherit" }); // Run `ls -al`.
    */
-  public async execute(bin: string, args?: string[], options?: ExecaOptions): Promise<ExecaReturnValue>;
-  public async execute(bin: string, args?: string[], options?: ExecaOptions<null>): Promise<ExecaReturnValue<Buffer>>;
+  public async execute(bin: string, args?: string[], options?: ExecuteOptions): Promise<ExecaReturnValue>;
+  public async execute(bin: string, args?: string[], options?: ExecuteOptions<null>): Promise<ExecaReturnValue<Buffer>>;
   /**
    * Executes given command using `execa` with given arguments and options. Applies sensible default options.
    *
@@ -370,17 +370,24 @@ export default class Module {
    * module.execute("ls"); // Run `ls`.
    * module.execute("ls", { stdio: "inherit" }); // Run `ls`.
    */
-  public async execute(bin: string, options?: ExecaOptions): Promise<ExecaReturnValue>;
-  public async execute(bin: string, options?: ExecaOptions<null>): Promise<ExecaReturnValue<Buffer>>;
+  public async execute(bin: string, options?: ExecuteOptions): Promise<ExecaReturnValue>;
+  public async execute(bin: string, options?: ExecuteOptions<null>): Promise<ExecaReturnValue<Buffer>>;
   public async execute(
     bin: string,
-    arg2?: string[] | ExecaOptions | ExecaOptions<null>,
-    arg3?: ExecaOptions | ExecaOptions<null>
+    arg2?: string[] | ExecuteOptions | ExecuteOptions<null>,
+    arg3?: ExecuteOptions | ExecuteOptions<null>
   ): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
     const localDir = join(__dirname, "../node_modules/.bin");
-    const defaultOptions: ExecaOptions = { stdio: "inherit", cwd: this.root, preferLocal: true, localDir };
+    const defaultOptions: ExecuteOptions = { stdio: "inherit", cwd: this.root, preferLocal: true, localDir };
     const [args, options] = getExecaArgs(arg2, arg3);
-    return execa(bin, args, { ...defaultOptions, ...options } as any);
+    const combinedOptions = { ...defaultOptions, ...options };
+
+    try {
+      return execa(bin, args, combinedOptions as any);
+    } catch (error) /* istanbul ignore next */ {
+      if (error.exitCode && combinedOptions.exitOnProcessFailure) process.exit(error.exitCode); // Error originated from shell command.
+      throw error; // Error from node.js
+    }
   }
 
   /**
@@ -394,12 +401,19 @@ export default class Module {
    * module.command("ls"); // Run `ls`.
    * module.command("ls -al", { stdio: "inherit" }); // Run `ls -al`.
    */
-  public async command(cmd: string, options?: ExecaOptions): Promise<ExecaReturnValue>;
-  public async command(cmd: string, options?: ExecaOptions<null>): Promise<ExecaReturnValue<Buffer>>;
-  public async command(cmd: string, options?: ExecaOptions | ExecaOptions<null>): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
+  public async command(cmd: string, options?: ExecuteOptions): Promise<ExecaReturnValue>;
+  public async command(cmd: string, options?: ExecuteOptions<null>): Promise<ExecaReturnValue<Buffer>>;
+  public async command(cmd: string, options?: ExecuteOptions | ExecuteOptions<null>): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
     const localDir = join(__dirname, "../node_modules/.bin");
-    const defaultOptions: ExecaOptions = { stdio: "inherit", cwd: this.root, preferLocal: true, localDir };
-    return command(cmd, { ...defaultOptions, ...options } as any);
+    const defaultOptions: ExecuteOptions = { stdio: "inherit", cwd: this.root, preferLocal: true, localDir };
+    const combinedOptions = { ...defaultOptions, ...options };
+
+    try {
+      return command(cmd, combinedOptions as any);
+    } catch (error) /* istanbul ignore next */ {
+      if (error.exitCode && combinedOptions.exitOnProcessFailure) process.exit(error.exitCode); // Error originated from shell command.
+      throw error; // Error from node.js
+    }
   }
 
   /** Saves all read {@link https://www.npmjs.com/package/edit-config#class-datafile data files}. */

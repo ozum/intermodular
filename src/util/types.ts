@@ -1,4 +1,5 @@
 import { DataFile } from "edit-config";
+import type { Options as ExecaOptions } from "execa";
 
 /** Package manager */
 export type PackageManager = "npm" | "yarn";
@@ -52,4 +53,10 @@ export interface CopyOptions {
   filter?: CopyFilterFunction;
   /** fs-extra.copy recursive option. */
   recursive?: boolean;
+}
+
+/** Extended options for `module.execute` and `module.command` */
+export interface ExecuteOptions<EncodingType = string> extends ExecaOptions<EncodingType> {
+  /** Exits using `process.exit(errCode)` if error is originated from shell. Otherwise throws as usual. Errors originated from node.js always throw. */
+  exitOnProcessFailure?: boolean;
 }
