@@ -5,6 +5,6 @@
   },
   {
     "title": "Interfaces",
-    "children": ["interfaces/copyoptions"]
+    "children": ["interfaces/copyoptions", "interfaces/executeoptions"]
   }
 ]

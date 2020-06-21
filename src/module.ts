@@ -383,7 +383,7 @@ export default class Module {
     const combinedOptions = { ...defaultOptions, ...options };
 
     try {
-      return execa(bin, args, combinedOptions as any);
+      return await execa(bin, args, combinedOptions as any); // return await is necessary, otherwise does not catch error.
     } catch (error) /* istanbul ignore next */ {
       if (error.exitCode && combinedOptions.exitOnProcessFailure) process.exit(error.exitCode); // Error originated from shell command.
       throw error; // Error from node.js
@@ -409,7 +409,7 @@ export default class Module {
     const combinedOptions = { ...defaultOptions, ...options };
 
     try {
-      return command(cmd, combinedOptions as any);
+      return await command(cmd, combinedOptions as any); // return await is necessary, otherwise does not catch error.
     } catch (error) /* istanbul ignore next */ {
       if (error.exitCode && combinedOptions.exitOnProcessFailure) process.exit(error.exitCode); // Error originated from shell command.
       throw error; // Error from node.js
