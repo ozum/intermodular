@@ -1,5 +1,5 @@
-import { DataFile } from "edit-config";
-import type { Options as ExecaOptions } from "execa";
+import type { DataFile } from "edit-config";
+import type { Options as ExecaOptions, StdioOption as ExecaStdioOption } from "execa";
 
 /** Package manager */
 export type PackageManager = "npm" | "yarn";
@@ -60,3 +60,6 @@ export interface ExecuteOptions<EncodingType = string> extends ExecaOptions<Enco
   /** Exits using `process.exit(errCode)` if error is originated from shell. Otherwise throws as usual. Errors originated from node.js always throw. */
   exitOnProcessFailure?: boolean;
 }
+
+/** Stdio option to be used with `command` and `execute` methods. */
+export type StdioOption = "pipe" | "ignore" | "inherit" | readonly ExecaStdioOption[];

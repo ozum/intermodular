@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { DataFile, Logger, LogLevel } from "edit-config";
-import { ExecaReturnValue, StdioOption } from "execa";
+import { ExecaReturnValue } from "execa";
 import { dirname } from "path";
 import parentModule from "parent-module";
 import { copy, CopyFilterAsync } from "fs-extra";
 
-import { CopyFilterFunction, CopyOptions, ExecuteOptions } from "./util/types";
+import { CopyFilterFunction, CopyOptions, ExecuteOptions, StdioOption } from "./util/types";
 import Module from "./module";
 import { getCopyTarget, getModifiedExecuteOptions, getExecaArgs } from "./util/helper";
 

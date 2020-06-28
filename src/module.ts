@@ -4,9 +4,9 @@ import { outputFile, pathExists, readFile, remove, rename, lstat, ensureDir } fr
 import isEqual from "lodash.isequal";
 import { join, relative, isAbsolute } from "path";
 import pkgDir from "pkg-dir";
-import execa, { StdioOption, command, ExecaReturnValue } from "execa";
+import execa, { command, ExecaReturnValue } from "execa";
 import { arrify, packageManagerFlags, isFromFileToDirectory, getExecaArgs } from "./util/helper";
-import { DependencyType, PackageManager, PredicateFileOperation, ExecuteOptions } from "./util/types";
+import { DependencyType, PackageManager, PredicateFileOperation, ExecuteOptions, StdioOption } from "./util/types";
 
 const ALL_DEPENDENCIES = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
 
@@ -382,7 +382,7 @@ export default class Module {
     arg3?: ExecuteOptions | ExecuteOptions<null>
   ): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
     const localDir = join(__dirname, "../node_modules/.bin");
-    const defaultOptions: ExecuteOptions = { stdio: "inherit", cwd: this.root, preferLocal: true, localDir };
+    const defaultOptions: ExecuteOptions = { stdio: this.#commandStdio, cwd: this.root, preferLocal: true, localDir };
     const [args, options] = getExecaArgs(arg2, arg3);
     const combinedOptions = { ...defaultOptions, ...options };
 
@@ -409,7 +409,7 @@ export default class Module {
   public async command(cmd: string, options?: ExecuteOptions<null>): Promise<ExecaReturnValue<Buffer>>;
   public async command(cmd: string, options?: ExecuteOptions | ExecuteOptions<null>): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
     const localDir = join(__dirname, "../node_modules/.bin");
-    const defaultOptions: ExecuteOptions = { stdio: "inherit", cwd: this.root, preferLocal: true, localDir };
+    const defaultOptions: ExecuteOptions = { stdio: this.#commandStdio, cwd: this.root, preferLocal: true, localDir };
     const combinedOptions = { ...defaultOptions, ...options };
 
     try {
