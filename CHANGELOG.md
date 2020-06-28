@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.32.0](https://github.com/ozum/intermodular/compare/v0.5.9...v0.32.0) (2020-06-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Sync file operation methods are removed and async methods are added.
+
+### Features
+
+* accept absolute paths in all methods ([f2a50d9](https://github.com/ozum/intermodular/commit/f2a50d9674b8fd00ef866be48ea0ec68d6321191))
+* accept Module as source and root ([6bb6dc1](https://github.com/ozum/intermodular/commit/6bb6dc118d48e4a4d3219a90bb19b0a3f648d3f2))
+* add intermodular execute methods ([98d27f0](https://github.com/ozum/intermodular/commit/98d27f061112337501463e85d501d64586038980))
+* add log method ([b50b440](https://github.com/ozum/intermodular/commit/b50b440dd268963ba9bec35a7b7a89032b65a719))
+* add package manager to install all modules ([d1305b6](https://github.com/ozum/intermodular/commit/d1305b65fbc97462fce73f839ad6c02930caea5a))
+* add stdio default option for command and execute methods ([9a84ec3](https://github.com/ozum/intermodular/commit/9a84ec3097e5c4374fa4e408f1e2e0f316f0cece))
+* allow any path in module ([f5c3bae](https://github.com/ozum/intermodular/commit/f5c3bae4b549bba59e376c9f7f6df02682f25948))
+* make methods async ([1a437d5](https://github.com/ozum/intermodular/commit/1a437d5576406f77a090b4906c9421a187bb11d4))
+* module's execute and command methods optionally exit from process ([80c3e66](https://github.com/ozum/intermodular/commit/80c3e66f10f3a597007b5eeb741675e0d7ab9872))
+* reload reloads all config files ([1450ddb](https://github.com/ozum/intermodular/commit/1450ddb80386909ee11e28b54ae1bb4739324e1e))
+
+
+### Bug Fixes
+
+* don't save unchanged data files ([d32bb42](https://github.com/ozum/intermodular/commit/d32bb428594973f23482cb77a10ae2f9ef891090))
+* export commonjs build ([a678589](https://github.com/ozum/intermodular/commit/a678589a82cbd91bc69217bd169cd81db191ccdc))
+* export Module ([d87258f](https://github.com/ozum/intermodular/commit/d87258f78145ec4dfd5983a5a55c828918acf665))
+* fix data-file assign with string value ([9589637](https://github.com/ozum/intermodular/commit/95896370d913cb20e55addb29e2ce94afe0e2751))
+* fix error catching of execute and command ([a212223](https://github.com/ozum/intermodular/commit/a21222342a9b276724ff5388adfa2c9a45e25c56))
+* fix execa options type definitions ([22e482d](https://github.com/ozum/intermodular/commit/22e482dbb54733cc580886a300bcad666b290255))
+* fix intermodular.command target ([7919413](https://github.com/ozum/intermodular/commit/79194138c83a6c08e65b9ec13559d3e7ead332ad))
+* fix module config type declaration ([97c46d7](https://github.com/ozum/intermodular/commit/97c46d7c7edd2581b7d1ff4098268aace37484a4))
+* move # from default value into function body ([9766735](https://github.com/ozum/intermodular/commit/9766735395703645a464f4c584f27cadf5b1350c))
+* reexport log related types ([a222d08](https://github.com/ozum/intermodular/commit/a222d08bcb80ce9aceeb7cb22b97bdeab12e387d))
+* remove enum types ([cab673b](https://github.com/ozum/intermodular/commit/cab673bba244027533bb6b2f71f19204d3aa56f7))
+* remove remaining enums ([d1193d9](https://github.com/ozum/intermodular/commit/d1193d9de6de5664eed8e3ab38c600a38c74f1d9))
+* update packages ([531a0a0](https://github.com/ozum/intermodular/commit/531a0a0a330575aecfe41e2190342143d6594c47))
+* update packages ([c8a75a3](https://github.com/ozum/intermodular/commit/c8a75a30105d4f293798cadaa5f3d7d5b25a2eec))
+* update packages ([e66c913](https://github.com/ozum/intermodular/commit/e66c913fb0556c823e7a5486b49572de91dbd211))
+
 ## [0.31.0](https://github.com/ozum/intermodular/compare/v0.5.9...v0.31.0) (2020-06-28)
 
 
