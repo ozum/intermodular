@@ -4,7 +4,7 @@ import { outputFile, pathExists, readFile, remove, rename, lstat, ensureDir } fr
 import isEqual from "lodash.isequal";
 import { join, relative, isAbsolute } from "path";
 import pkgDir from "pkg-dir";
-import execa, { command, ExecaReturnValue } from "execa";
+import execa, { StdioOption, command, ExecaReturnValue } from "execa";
 import { arrify, packageManagerFlags, isFromFileToDirectory, getExecaArgs } from "./util/helper";
 import { DependencyType, PackageManager, PredicateFileOperation, ExecuteOptions } from "./util/types";
 
@@ -17,6 +17,7 @@ export default class Module {
   #logger: Logger;
   #overwrite: boolean;
   #manager: Manager;
+  #commandStdio: StdioOption; // Default stdio option to be used with `execute` and `command`.
 
   /** Absolute path of the module's root directory, where `package.json` is located. */
   public readonly root: string;
@@ -39,7 +40,8 @@ export default class Module {
       packageManager = "npm",
       overwrite = false,
       isTypeScript,
-    }: { logger?: Logger; packageManager?: PackageManager; overwrite?: boolean; isTypeScript: boolean }
+      commandStdio = "inherit",
+    }: { logger?: Logger; packageManager?: PackageManager; overwrite?: boolean; isTypeScript: boolean; commandStdio?: StdioOption }
   ) {
     this.root = root;
     this.#logger = logger;
@@ -48,6 +50,7 @@ export default class Module {
     this.#manager = manager;
     this.package = packageData;
     this.isTypeScript = isTypeScript;
+    this.#commandStdio = commandStdio;
   }
 
   /**
@@ -66,6 +69,7 @@ export default class Module {
       overwrite: overwrite || this.#overwrite,
       packageManager: this.packageManager,
       isTypeScript: this.isTypeScript,
+      commandStdio: this.#commandStdio,
     });
   }
 
@@ -472,10 +476,11 @@ export default class Module {
    * @param options.logger is Winston compatible Logger to be used when logging.
    * @param options.packageManager is package manager used by module.
    * @param options.overwrite is whether to overwrite files by default.
+   * @param options.commandStdio is the default `stdio` option to be used with `command` and `execute` methods.
    * @returns [[Module]] instance.
    */
   public static async new(
-    options: { cwd?: string; logger?: Logger; packageManager?: PackageManager; overwrite?: boolean } = {}
+    options: { cwd?: string; logger?: Logger; packageManager?: PackageManager; overwrite?: boolean; commandStdio?: StdioOption } = {}
   ): Promise<Module> {
     const root = await this.getRoot(options.cwd);
     const packageManager = options.packageManager || (await this.getPackageManager(root));

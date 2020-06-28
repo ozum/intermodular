@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { DataFile, Logger, LogLevel } from "edit-config";
+import { ExecaReturnValue, StdioOption } from "execa";
 import { dirname } from "path";
 import parentModule from "parent-module";
 import { copy, CopyFilterAsync } from "fs-extra";
-import { ExecaReturnValue } from "execa";
+
 import { CopyFilterFunction, CopyOptions, ExecuteOptions } from "./util/types";
 import Module from "./module";
 import { getCopyTarget, getModifiedExecuteOptions, getExecaArgs } from "./util/helper";
@@ -21,13 +22,10 @@ export default class Intermodular {
   /** Winston compatible logger. */
   public readonly logger: Logger;
 
-  #overwrite: boolean;
-
-  private constructor(sourceModule: Module, targetModule: Module, config: DataFile, logger: Logger = { log: () => {} }, overwrite = false) {
+  private constructor(sourceModule: Module, targetModule: Module, config: DataFile, logger: Logger = { log: () => {} }) {
     this.sourceModule = sourceModule;
     this.targetModule = targetModule;
     this.logger = logger;
-    this.#overwrite = overwrite;
     this.config = config;
   }
 
@@ -201,7 +199,14 @@ export default class Intermodular {
     target,
     logger,
     overwrite,
-  }: { source?: string | Module; target?: string | Module; logger?: Logger; overwrite?: boolean } = {}): Promise<Intermodular> {
+    commandStdio,
+  }: {
+    source?: string | Module;
+    target?: string | Module;
+    logger?: Logger;
+    overwrite?: boolean;
+    commandStdio?: StdioOption;
+  } = {}): Promise<Intermodular> {
     const [resolvedSource, resolvedTarget]: Array<string | Module | undefined> = await Promise.all([
       source || dirname(parentModule() as string), // Do not move parentModule() into another method, otherwise it resolves this file, because it's caller would be this method.
       target || process.env.INIT_CWD || process.cwd(),
@@ -210,13 +215,13 @@ export default class Intermodular {
     this.assertSourceAndTarget(resolvedSource, resolvedTarget);
 
     const [sourceModule, targetModule] = await Promise.all([
-      resolvedSource instanceof Module ? resolvedSource : Module.new({ cwd: resolvedSource, logger }),
-      resolvedTarget instanceof Module ? resolvedTarget : Module.new({ cwd: resolvedTarget, logger }),
+      resolvedSource instanceof Module ? resolvedSource : Module.new({ cwd: resolvedSource, logger, commandStdio, overwrite }),
+      resolvedTarget instanceof Module ? resolvedTarget : Module.new({ cwd: resolvedTarget, logger, commandStdio, overwrite }),
     ]);
 
     const config = await DataFile.load(sourceModule.nameWithoutUser, { cosmiconfig: true, rootDir: targetModule.root, logger }); // Exclude from saveAll(), user may prefer not to use it.
 
-    return new Intermodular(sourceModule, targetModule, config, logger, overwrite);
+    return new Intermodular(sourceModule, targetModule, config, logger);
   }
 
   // istanbul ignore next
