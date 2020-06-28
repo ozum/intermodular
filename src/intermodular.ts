@@ -158,7 +158,7 @@ export default class Intermodular {
     arg3?: ExecuteOptions | ExecuteOptions<null>
   ): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
     const [args, options] = getExecaArgs(arg2, arg3);
-    return this.sourceModule.execute(bin, args, options as any);
+    return this.targetModule.execute(bin, args, getModifiedExecuteOptions(this.sourceModule, options) as any);
   }
 
   /**
