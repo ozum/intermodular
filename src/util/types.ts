@@ -1,5 +1,5 @@
 import type { DataFile } from "edit-config";
-import type { Options as ExecaOptions, StdioOption as ExecaStdioOption } from "execa";
+import type { Options as ExecaOptions } from "execa";
 
 /** Package manager */
 export type PackageManager = "npm" | "yarn";
@@ -61,5 +61,5 @@ export interface ExecuteOptions<EncodingType = string> extends ExecaOptions<Enco
   exitOnProcessFailure?: boolean;
 }
 
-/** Stdio option to be used with `command` and `execute` methods. */
-export type StdioOption = "pipe" | "ignore" | "inherit" | readonly ExecaStdioOption[];
+// /** Stdio option to be used with `command` and `execute` methods. */
+export type StdioOption = ExecaOptions["stdio"];
