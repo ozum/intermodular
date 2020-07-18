@@ -75,6 +75,7 @@ Easy file operations between node.js modules and auto logging to help building z
   - [Properties](#properties-2)
     - [`Optional` dereference](#optional-dereference)
     - [`Optional` errorOnExist](#optional-erroronexist)
+    - [`Optional` excludeDirFromReturn](#optional-excludedirfromreturn)
     - [`Optional` filter](#optional-filter)
     - [`Optional` overwrite](#optional-overwrite)
     - [`Optional` preserveTimestamps](#optional-preservetimestamps)
@@ -161,7 +162,7 @@ await targetModule.execute("tsc", ["-b"]);
 
 Ƭ **CopyFilterFunction**: _function_
 
-_Defined in [src/util/types.ts:21](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L21)_
+_Defined in [src/util/types.ts:21](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L21)_
 
 Type for function to filter copied files.
 
@@ -188,7 +189,7 @@ Sync callback function to filter copied files.
 
 Ƭ **DependencyType**: _"dependencies" | "devDependencies" | "peerDependencies" | "optionalDependencies"_
 
-_Defined in [src/util/types.ts:8](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L8)_
+_Defined in [src/util/types.ts:8](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L8)_
 
 Dependency types for Node.js modules.
 
@@ -198,7 +199,7 @@ Dependency types for Node.js modules.
 
 Ƭ **PackageManager**: _"npm" | "yarn"_
 
-_Defined in [src/util/types.ts:5](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L5)_
+_Defined in [src/util/types.ts:5](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L5)_
 
 Package manager
 
@@ -208,7 +209,7 @@ Package manager
 
 Ƭ **PredicateFileOperation**: _function_
 
-_Defined in [src/util/types.ts:11](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L11)_
+_Defined in [src/util/types.ts:11](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L11)_
 
 Type of callback function to test whether related file operation should be done.
 
@@ -230,7 +231,7 @@ Callback function to test whether related file operation should be done.
 
 Ƭ **StdioOption**: _ExecaOptions["stdio"]_
 
-_Defined in [src/util/types.ts:65](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L65)_
+_Defined in [src/util/types.ts:67](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L67)_
 
 ## Variables
 
@@ -238,7 +239,7 @@ _Defined in [src/util/types.ts:65](https://github.com/ozum/intermodular/blob/db4
 
 • **ALL_DEPENDENCIES**: _string[]_ = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"]
 
-_Defined in [src/module.ts:11](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L11)_
+_Defined in [src/module.ts:11](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L11)_
 
 # Classes
 
@@ -256,7 +257,7 @@ _Defined in [src/module.ts:11](https://github.com/ozum/intermodular/blob/db409d0
 
 • **config**: _DataFile_
 
-_Defined in [src/intermodular.ts:20](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L20)_
+_Defined in [src/intermodular.ts:19](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L19)_
 
 Configuration for source module in target module as a [DataFile](https://www.npmjs.com/package/edit-config#class-datafile) instance.
 
@@ -266,7 +267,7 @@ Configuration for source module in target module as a [DataFile](https://www.npm
 
 • **logger**: _Logger_
 
-_Defined in [src/intermodular.ts:23](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L23)_
+_Defined in [src/intermodular.ts:22](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L22)_
 
 Winston compatible logger.
 
@@ -276,7 +277,7 @@ Winston compatible logger.
 
 • **sourceModule**: _[Module](#classesmodulemd)_
 
-_Defined in [src/intermodular.ts:14](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L14)_
+_Defined in [src/intermodular.ts:13](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L13)_
 
 [Module](#classesmodulemd) instance of node module which is used as source for modification operations such as copy, update.
 
@@ -286,7 +287,7 @@ _Defined in [src/intermodular.ts:14](https://github.com/ozum/intermodular/blob/d
 
 • **targetModule**: _[Module](#classesmodulemd)_
 
-_Defined in [src/intermodular.ts:17](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L17)_
+_Defined in [src/intermodular.ts:16](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L16)_
 
 [Module](#classesmodulemd) instance of node module which is used as target for modification operations such as copy, update.
 
@@ -296,7 +297,7 @@ _Defined in [src/intermodular.ts:17](https://github.com/ozum/intermodular/blob/d
 
 ▸ **command**(`cmd`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)): _Promise‹ExecaReturnValue›_
 
-_Defined in [src/intermodular.ts:175](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L175)_
+_Defined in [src/intermodular.ts:187](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L187)_
 
 Executes given command using `execa.command` with cwd as target module's root. Additionally adds source module's `node_modules/.bin` to path.
 
@@ -320,7 +321,7 @@ intermodular.command("ls -al", { stdio: "inherit" }); // Run `ls -al`.
 
 ▸ **command**(`cmd`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [src/intermodular.ts:176](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L176)_
+_Defined in [src/intermodular.ts:188](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L188)_
 
 **Parameters:**
 
@@ -335,9 +336,9 @@ _Defined in [src/intermodular.ts:176](https://github.com/ozum/intermodular/blob/
 
 ### copy
 
-▸ **copy**(`sourcePath`: string, `targetPath`: string, `copyOptions`: [CopyOptions](#interfacescopyoptionsmd)): _Promise‹void›_
+▸ **copy**(`sourcePath`: string, `targetPath`: string, `copyOptions`: [CopyOptions](#interfacescopyoptionsmd)): _Promise‹string[]›_
 
-_Defined in [src/intermodular.ts:110](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L110)_
+_Defined in [src/intermodular.ts:121](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L121)_
 
 Copies a file or directory from `pathInSourceModule` relative to source module root to `pathInTargetModule`relative to
 target module root. The directory can have contents. Like cp -r.
@@ -347,7 +348,8 @@ target module root. The directory can have contents. Like cp -r.
 
 ```typescript
 // Copy everything in `/path/to/project/node_modules/module-a/src/config/` to `/path/to/project/`
-copySync("src/config", ".");
+const copiedPaths = copySync("src/config", ".");
+const copiedFiles = copySync("src/config", ".", { excludeDirFromReturn: true });
 ```
 
 **Parameters:**
@@ -358,7 +360,9 @@ copySync("src/config", ".");
 | `targetPath`  | string                                  | sourcePath | is destination to copy to. Cannot be a directory. |
 | `copyOptions` | [CopyOptions](#interfacescopyoptionsmd) | {}         | -                                                 |
 
-**Returns:** _Promise‹void›_
+**Returns:** _Promise‹string[]›_
+
+copied files and directories. Directories can be optionally excluded.
 
 ---
 
@@ -366,7 +370,7 @@ copySync("src/config", ".");
 
 ▸ **execute**(`bin`: string, `args?`: string[], `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)): _Promise‹ExecaReturnValue›_
 
-_Defined in [src/intermodular.ts:139](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L139)_
+_Defined in [src/intermodular.ts:151](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L151)_
 
 Executes given command using `execa` with given arguments and options with cwd as target module's root. Applies sensible default options.
 Additionally adds source module's `node_modules/.bin` to path.
@@ -392,7 +396,7 @@ intermodular.execute("ls", ["-al"], { stdio: "inherit" }); // Run `ls -al`.
 
 ▸ **execute**(`bin`: string, `args?`: string[], `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [src/intermodular.ts:140](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L140)_
+_Defined in [src/intermodular.ts:152](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L152)_
 
 **Parameters:**
 
@@ -406,7 +410,7 @@ _Defined in [src/intermodular.ts:140](https://github.com/ozum/intermodular/blob/
 
 ▸ **execute**(`bin`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)): _Promise‹ExecaReturnValue›_
 
-_Defined in [src/intermodular.ts:153](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L153)_
+_Defined in [src/intermodular.ts:165](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L165)_
 
 Executes given command using `execa` with given arguments and options with cwd as target module's root. Applies sensible default options.
 Additionally adds source module's `node_modules/.bin` to path.
@@ -431,7 +435,7 @@ intermodular.execute("ls", { stdio: "inherit" }); // Run `ls`.
 
 ▸ **execute**(`bin`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [src/intermodular.ts:154](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L154)_
+_Defined in [src/intermodular.ts:166](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L166)_
 
 **Parameters:**
 
@@ -448,7 +452,7 @@ _Defined in [src/intermodular.ts:154](https://github.com/ozum/intermodular/blob/
 
 ▸ **log**(`logLevel`: LogLevel, `message`: string): _void_
 
-_Defined in [src/intermodular.ts:38](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L38)_
+_Defined in [src/intermodular.ts:37](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L37)_
 
 Logs given message with required level using logger provided during object construction.
 
@@ -467,7 +471,7 @@ Logs given message with required level using logger provided during object const
 
 ▸ **isEnvSet**(`variable`: string): _boolean_
 
-_Defined in [src/intermodular.ts:240](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L240)_
+_Defined in [src/intermodular.ts:252](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L252)_
 
 Returns whether `variable` is set in environment variables and not empty.
 
@@ -487,7 +491,7 @@ whether given environment variable is set and not empty.
 
 ▸ **new**(`__namedParameters`: object): _Promise‹[Intermodular](#classesintermodularmd)›_
 
-_Defined in [src/intermodular.ts:197](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L197)_
+_Defined in [src/intermodular.ts:209](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L209)_
 
 Creates and returns [Intermodular](#classesintermodularmd) instance.
 
@@ -515,7 +519,7 @@ are options
 
 ▸ **parseEnv**‹**T**›(`variable`: string, `defaultValue?`: T): _string | number | Record‹string, any› | T | undefined_
 
-_Defined in [src/intermodular.ts:254](https://github.com/ozum/intermodular/blob/db409d0/src/intermodular.ts#L254)_
+_Defined in [src/intermodular.ts:266](https://github.com/ozum/intermodular/blob/bdf97ba/src/intermodular.ts#L266)_
 
 Parses and returns `variable` environment variable. If value is JSON object, parses using JSON5 and returns it as a JavaScript object.
 Otherwise returns `defaultValue`.
@@ -551,7 +555,7 @@ Class which provides information and modification methods for a module.
 
 • **isTypeScript**: _boolean_
 
-_Defined in [src/module.ts:32](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L32)_
+_Defined in [src/module.ts:32](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L32)_
 
 Whether module is a TypeScript project.
 
@@ -561,7 +565,7 @@ Whether module is a TypeScript project.
 
 • **package**: _DataFile_
 
-_Defined in [src/module.ts:29](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L29)_
+_Defined in [src/module.ts:29](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L29)_
 
 [DataFile](https://www.npmjs.com/package/edit-config#class-datafile) instance of `package.json`.
 
@@ -571,7 +575,7 @@ _Defined in [src/module.ts:29](https://github.com/ozum/intermodular/blob/db409d0
 
 • **packageManager**: _[PackageManager](#packagemanager)_
 
-_Defined in [src/module.ts:26](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L26)_
+_Defined in [src/module.ts:26](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L26)_
 
 Package manager of the module.
 
@@ -581,7 +585,7 @@ Package manager of the module.
 
 • **root**: _string_
 
-_Defined in [src/module.ts:23](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L23)_
+_Defined in [src/module.ts:23](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L23)_
 
 Absolute path of the module's root directory, where `package.json` is located.
 
@@ -591,7 +595,7 @@ Absolute path of the module's root directory, where `package.json` is located.
 
 • **get name**(): _string_
 
-_Defined in [src/module.ts:77](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L77)_
+_Defined in [src/module.ts:77](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L77)_
 
 Name of the module as defined in `package.json`.
 
@@ -603,7 +607,7 @@ Name of the module as defined in `package.json`.
 
 • **get nameWithoutUser**(): _string_
 
-_Defined in [src/module.ts:82](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L82)_
+_Defined in [src/module.ts:82](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L82)_
 
 Name of the module without user name. For example: `typescript` for `@microsoft/typescript`.
 
@@ -615,7 +619,7 @@ Name of the module without user name. For example: `typescript` for `@microsoft/
 
 ▸ **cloneWithSharedManager**(`__namedParameters`: object): _[Module](#classesmodulemd)_
 
-_Defined in [src/module.ts:66](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L66)_
+_Defined in [src/module.ts:66](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L66)_
 
 Creates a new [Module](#classesmodulemd) instance from current instance, which shares
 [Data File Manager](https://www.npmjs.com/package/edit-config#manager) with current [Module](#classesmodulemd).
@@ -640,7 +644,7 @@ Multiple instance work over same files efficiently and without collision.
 
 ▸ **command**(`cmd`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)): _Promise‹ExecaReturnValue›_
 
-_Defined in [src/module.ts:408](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L408)_
+_Defined in [src/module.ts:408](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L408)_
 
 Executes given command using `execa.command` with given options. Applies sensible default options.
 
@@ -664,7 +668,7 @@ module.command("ls -al", { stdio: "inherit" }); // Run `ls -al`.
 
 ▸ **command**(`cmd`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [src/module.ts:409](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L409)_
+_Defined in [src/module.ts:409](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L409)_
 
 **Parameters:**
 
@@ -681,7 +685,7 @@ _Defined in [src/module.ts:409](https://github.com/ozum/intermodular/blob/db409d
 
 ▸ **createDirectory**(`path`: string): _Promise‹void›_
 
-_Defined in [src/module.ts:308](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L308)_
+_Defined in [src/module.ts:308](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L308)_
 
 Ensures that the directory exists. If the directory structure does not exist, it is created similar to `mkdir -p`.
 
@@ -699,7 +703,7 @@ Ensures that the directory exists. If the directory structure does not exist, it
 
 ▸ **execute**(`bin`: string, `args?`: string[], `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)): _Promise‹ExecaReturnValue›_
 
-_Defined in [src/module.ts:364](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L364)_
+_Defined in [src/module.ts:364](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L364)_
 
 Executes given command using `execa` with given arguments and options. Applies sensible default options.
 
@@ -724,7 +728,7 @@ module.execute("ls", ["-al"], { stdio: "inherit" }); // Run `ls -al`.
 
 ▸ **execute**(`bin`: string, `args?`: string[], `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [src/module.ts:365](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L365)_
+_Defined in [src/module.ts:365](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L365)_
 
 **Parameters:**
 
@@ -738,7 +742,7 @@ _Defined in [src/module.ts:365](https://github.com/ozum/intermodular/blob/db409d
 
 ▸ **execute**(`bin`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)): _Promise‹ExecaReturnValue›_
 
-_Defined in [src/module.ts:377](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L377)_
+_Defined in [src/module.ts:377](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L377)_
 
 Executes given command using `execa` with given arguments and options. Applies sensible default options.
 
@@ -762,7 +766,7 @@ module.execute("ls", { stdio: "inherit" }); // Run `ls`.
 
 ▸ **execute**(`bin`: string, `options?`: [ExecuteOptions](#interfacesexecuteoptionsmd)‹null›): _Promise‹ExecaReturnValue‹Buffer››_
 
-_Defined in [src/module.ts:378](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L378)_
+_Defined in [src/module.ts:378](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L378)_
 
 **Parameters:**
 
@@ -779,7 +783,7 @@ _Defined in [src/module.ts:378](https://github.com/ozum/intermodular/blob/db409d
 
 ▸ **exists**(`path`: string): _Promise‹boolean›_
 
-_Defined in [src/module.ts:283](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L283)_
+_Defined in [src/module.ts:283](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L283)_
 
 Checks whether given path exists.
 
@@ -799,7 +803,7 @@ whether given path exists.
 
 ▸ **getDependencyVersion**(`moduleName`: string, `dependencyTypes`: string[]): _string | undefined_
 
-_Defined in [src/module.ts:93](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L93)_
+_Defined in [src/module.ts:93](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L93)_
 
 Fetches a dependent module's version from given [dependency types](#dependencytype).
 
@@ -820,7 +824,7 @@ version of the `moduleName` || undefined.
 
 ▸ **hasAnyDependency**(`moduleNames`: string | string[], `dependencyTypes`: string[]): _boolean_
 
-_Defined in [src/module.ts:105](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L105)_
+_Defined in [src/module.ts:105](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L105)_
 
 Checks whether given module or any of the modules exist in given [dependency types](#dependencytype).
 
@@ -841,7 +845,7 @@ whether `moduleName` exists in one of the dependency types.
 
 ▸ **ifAnyDependency**‹**T**, **F**›(`moduleNames`: string | string[]): _boolean_
 
-_Defined in [src/module.ts:109](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L109)_
+_Defined in [src/module.ts:109](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L109)_
 
 Checks single or multiple module's existence in any of the `package.json` dependencies.
 
@@ -863,7 +867,7 @@ Checks single or multiple module's existence in any of the `package.json` depend
 
 ▸ **ifAnyDependency**‹**T**, **F**›(`moduleNames`: string | string[], `t`: T): _T | false_
 
-_Defined in [src/module.ts:110](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L110)_
+_Defined in [src/module.ts:110](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L110)_
 
 Checks single or multiple module's existence in any of the `package.json` dependencies.
 
@@ -886,7 +890,7 @@ Checks single or multiple module's existence in any of the `package.json` depend
 
 ▸ **ifAnyDependency**‹**T**, **F**›(`moduleNames`: string | string[], `t`: T, `f`: F, `dependencyTypes?`: [DependencyType](#dependencytype)[]): _T | F_
 
-_Defined in [src/module.ts:111](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L111)_
+_Defined in [src/module.ts:111](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L111)_
 
 Checks single or multiple module's existence in any of the `package.json` dependencies.
 
@@ -915,7 +919,7 @@ Checks single or multiple module's existence in any of the `package.json` depend
 
 ▸ **install**(`packageNames`: string | string[], `__namedParameters`: object): _Promise‹void›_
 
-_Defined in [src/module.ts:435](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L435)_
+_Defined in [src/module.ts:435](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L435)_
 
 Installs node modules using specified package manager.
 
@@ -939,7 +943,7 @@ are package name or array of package names.
 
 ▸ **isDirectory**(`path`: string): _Promise‹boolean›_
 
-_Defined in [src/module.ts:293](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L293)_
+_Defined in [src/module.ts:293](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L293)_
 
 Returns whether given path is a directory.
 
@@ -959,7 +963,7 @@ whether given path is a directory.
 
 ▸ **isEqual**(`path`: string, `content`: string | Record‹string, any›): _Promise‹boolean›_
 
-_Defined in [src/module.ts:347](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L347)_
+_Defined in [src/module.ts:347](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L347)_
 
 Checks whether content of `pathInModule` file is equal to `data` by making string comparison (for strings)
 or deep comparison (for objects).
@@ -988,7 +992,7 @@ whether the file is equal to given `content`.
 
 ▸ **pathOf**(...`parts`: string[]): _string_
 
-_Defined in [src/module.ts:135](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L135)_
+_Defined in [src/module.ts:135](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L135)_
 
 Returns absolute path for given relative path to module root. If given path is an absolute path, returns it directly.
 
@@ -1015,7 +1019,7 @@ absolute path to given destination.
 
 ▸ **read**(`path`: string, `options?`: ManagerLoadOptions): _Promise‹DataFile | string | undefined›_
 
-_Defined in [src/module.ts:185](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L185)_
+_Defined in [src/module.ts:185](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L185)_
 
 Reads and if possible returns DataFile otherwise file content. If file does not exist returns `undefined`.
 If `options.defaultData` is true, file will be created using `options.defaultData` if it does not exist.
@@ -1041,7 +1045,7 @@ If `options.defaultData` is true, file will be created using `options.defaultDat
 
 ▸ **readData**(`path`: string, `options?`: ManagerLoadOptions): _Promise‹DataFile›_
 
-_Defined in [src/module.ts:171](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L171)_
+_Defined in [src/module.ts:171](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L171)_
 
 Reads file and creates `DataFile` instance using [Manager](https://www.npmjs.com/package/edit-config#class-manager).
 
@@ -1060,7 +1064,7 @@ Reads file and creates `DataFile` instance using [Manager](https://www.npmjs.com
 
 ▸ **readRaw**(`path`: string): _Promise‹string›_
 
-_Defined in [src/module.ts:161](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L161)_
+_Defined in [src/module.ts:161](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L161)_
 
 Asynchronously reads the entire contents of a file using `utf8` encoding.
 
@@ -1080,7 +1084,7 @@ file contents.
 
 ▸ **relativePathOf**(...`parts`: string[]): _string_
 
-_Defined in [src/module.ts:150](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L150)_
+_Defined in [src/module.ts:150](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L150)_
 
 Returns relative path to module root for given absolute path. If given path is a relative path, returns it directly.
 
@@ -1107,7 +1111,7 @@ path relative to module's root.
 
 ▸ **remove**(`path`: string, `__namedParameters`: object): _Promise‹string | undefined›_
 
-_Defined in [src/module.ts:258](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L258)_
+_Defined in [src/module.ts:258](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L258)_
 
 Removes file or directory relative to module's root. Removes directory even it has files in it.
 If the path does not exist, silently does nothing.
@@ -1134,7 +1138,7 @@ file path relative to module root if file is removed, `undefined` otherwise.
 
 ▸ **removeEmptyDirs**(`path`: string): _Promise‹string[]›_
 
-_Defined in [src/module.ts:271](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L271)_
+_Defined in [src/module.ts:271](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L271)_
 
 Removes empty directories recursively for given path relative to module root.
 
@@ -1154,7 +1158,7 @@ array of deleted directories.
 
 ▸ **rename**(`oldPath`: string, `newPath`: string, `__namedParameters`: object): _Promise‹boolean›_
 
-_Defined in [src/module.ts:320](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L320)_
+_Defined in [src/module.ts:320](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L320)_
 
 Renames given path.
 
@@ -1184,7 +1188,7 @@ whether file is renamed.
 
 ▸ **saveAll**(): _Promise‹void›_
 
-_Defined in [src/module.ts:424](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L424)_
+_Defined in [src/module.ts:424](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L424)_
 
 Saves all read [data files](https://www.npmjs.com/package/edit-config#class-datafile).
 
@@ -1196,7 +1200,7 @@ Saves all read [data files](https://www.npmjs.com/package/edit-config#class-data
 
 ▸ **uninstall**(`packageNames`: string | string[]): _Promise‹void›_
 
-_Defined in [src/module.ts:455](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L455)_
+_Defined in [src/module.ts:455](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L455)_
 
 Uninstalls node modules using specified package manager.
 
@@ -1214,7 +1218,7 @@ Uninstalls node modules using specified package manager.
 
 ▸ **write**(`path`: string, `content`: object | string, `__namedParameters`: object): _Promise‹string | DataFile | undefined›_
 
-_Defined in [src/module.ts:222](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L222)_
+_Defined in [src/module.ts:222](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L222)_
 
 Writes given content to file. If content is an object, it is serialized.
 If `prettier` configuration and module is available and content is formatted using `prettier`.
@@ -1247,7 +1251,7 @@ written content or [[DataFile]] if file is written, `undefined` otherwise.
 
 ▸ **new**(`options`: object): _Promise‹[Module](#classesmodulemd)›_
 
-_Defined in [src/module.ts:482](https://github.com/ozum/intermodular/blob/db409d0/src/module.ts#L482)_
+_Defined in [src/module.ts:482](https://github.com/ozum/intermodular/blob/bdf97ba/src/module.ts#L482)_
 
 Creates and returns a [Module](#classesmodulemd) instance.
 
@@ -1287,7 +1291,7 @@ Copy options based on `fs-extra` [copy](https://github.com/jprichardson/node-fs-
 
 • **dereference**? : _undefined | false | true_
 
-_Defined in [src/util/types.ts:45](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L45)_
+_Defined in [src/util/types.ts:45](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L45)_
 
 Dereference symlinks, default is false.
 
@@ -1297,9 +1301,19 @@ Dereference symlinks, default is false.
 
 • **errorOnExist**? : _undefined | false | true_
 
-_Defined in [src/util/types.ts:51](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L51)_
+_Defined in [src/util/types.ts:51](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L51)_
 
 When overwrite is false and the destination exists, throw an error. Default is false.
+
+---
+
+### `Optional` excludeDirFromReturn
+
+• **excludeDirFromReturn**? : _undefined | false | true_
+
+_Defined in [src/util/types.ts:57](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L57)_
+
+Whether to exclude directories from return value. If this is true only paths of copied files returned but not directories.
 
 ---
 
@@ -1307,7 +1321,7 @@ When overwrite is false and the destination exists, throw an error. Default is f
 
 • **filter**? : _[CopyFilterFunction](#copyfilterfunction)_
 
-_Defined in [src/util/types.ts:53](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L53)_
+_Defined in [src/util/types.ts:53](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L53)_
 
 Function to filter copied files. Return true to include, false to exclude. Can also return a Promise that resolves to true or false (or pass in an async function)
 
@@ -1317,7 +1331,7 @@ Function to filter copied files. Return true to include, false to exclude. Can a
 
 • **overwrite**? : _undefined | false | true_
 
-_Defined in [src/util/types.ts:47](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L47)_
+_Defined in [src/util/types.ts:47](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L47)_
 
 Overwrite existing file or directory, default is true. Note that the copy operation will silently fail if you set this to false and the destination exists. Use the errorOnExist option to change this behavior.
 
@@ -1327,7 +1341,7 @@ Overwrite existing file or directory, default is true. Note that the copy operat
 
 • **preserveTimestamps**? : _undefined | false | true_
 
-_Defined in [src/util/types.ts:49](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L49)_
+_Defined in [src/util/types.ts:49](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L49)_
 
 When true, will set last modification and access times to the ones of the original source files. When false, timestamp behavior is OS-dependent. Default is false.
 
@@ -1337,7 +1351,7 @@ When true, will set last modification and access times to the ones of the origin
 
 • **recursive**? : _undefined | false | true_
 
-_Defined in [src/util/types.ts:55](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L55)_
+_Defined in [src/util/types.ts:55](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L55)_
 
 fs-extra.copy recursive option.
 
@@ -1498,7 +1512,7 @@ For example, this can be used together with [`get-node`](https://github.com/ehmi
 
 • **exitOnProcessFailure**? : _undefined | false | true_
 
-_Defined in [src/util/types.ts:61](https://github.com/ozum/intermodular/blob/db409d0/src/util/types.ts#L61)_
+_Defined in [src/util/types.ts:63](https://github.com/ozum/intermodular/blob/bdf97ba/src/util/types.ts#L63)_
 
 Exits using `process.exit(errCode)` if error is originated from shell. Otherwise throws as usual. Errors originated from node.js always throw.
 
