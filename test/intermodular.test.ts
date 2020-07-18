@@ -1,8 +1,7 @@
 import tmp from "tmp-promise";
-import { DataFile } from "edit-config";
 import { copy, ensureDir } from "fs-extra";
 import { join } from "path";
-import Intermodular from "../src/index";
+import Intermodular, { DataFile } from "../src/index";
 
 let intermodular: Intermodular;
 let selfIntermodular: Intermodular;
