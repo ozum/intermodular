@@ -53,6 +53,8 @@ export interface CopyOptions {
   filter?: CopyFilterFunction;
   /** fs-extra.copy recursive option. */
   recursive?: boolean;
+  /** Whether to exclude directories from return value. If this is true only paths of copied files returned but not directories. */
+  excludeDirFromReturn?: boolean;
 }
 
 /** Extended options for `module.execute` and `module.command` */

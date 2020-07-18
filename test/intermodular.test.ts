@@ -16,7 +16,7 @@ function getFilename(extension = "") {
 beforeAll(async () => {
   dir = await tmp.dir({ unsafeCleanup: true });
   await copy(join(__dirname, "test-helper"), dir.path);
-  await ensureDir(join(dir.path, "source-module/src/empty-dir"));
+  await ensureDir(join(dir.path, "source-module/src/empty-dir")); // Git does not have empty dirs. So create one.
   intermodular = await Intermodular.new({ source: join(dir.path, "source-module"), target: join(dir.path, "target-module") });
   selfIntermodular = await Intermodular.new();
 });
@@ -87,31 +87,35 @@ describe("intermodular", () => {
   describe("copy", () => {
     it("should copy directory into same directory.", async () => {
       expect(await intermodular.targetModule.exists("src")).toBe(false);
-      await intermodular.copy("src");
+      const copiedFiles = await intermodular.copy("src");
       expect(await intermodular.targetModule.exists("src")).toBe(true);
+      expect(copiedFiles).toEqual(["src", "src/index.json", "src/empty-dir"]);
     });
 
     it("should not copy if filter is false.", async () => {
       expect(await intermodular.targetModule.exists("copy-source")).toBe(false);
       await intermodular.targetModule.createDirectory("copy-source/");
-      await intermodular.copy("copy-source", "copy-source", {
+      const copiedFiles = await intermodular.copy("copy-source", "copy-source", {
+        excludeDirFromReturn: true,
         filter: (sourcePath, targetPath, isSourceDirectory, isTargetDirectory, sourceContent) =>
           isSourceDirectory || (sourceContent instanceof DataFile && sourceContent.data.x === 1),
       });
       expect(await intermodular.targetModule.exists(join("copy-source/a"))).toBe(false);
       expect(await intermodular.targetModule.exists(join("copy-source/b"))).toBe(true);
+      expect(copiedFiles).toEqual(["copy-source/b"]);
     });
 
     it("should return if source and target are same.", async () => {
-      expect(await selfIntermodular.copy("src")).toBeUndefined();
+      expect(await selfIntermodular.copy("src")).toEqual([]);
     });
 
     it("should copy file into directory.", async () => {
       const fileName = getFilename();
       await intermodular.targetModule.createDirectory(fileName);
       expect(await intermodular.targetModule.exists(join(fileName, "a"))).toBe(false);
-      await intermodular.copy("copy-source/a", fileName);
+      const copiedFiles = await intermodular.copy("copy-source/a", fileName);
       expect(await intermodular.targetModule.exists(join(fileName, "a"))).toBe(true);
+      expect(copiedFiles).toEqual([join(fileName, "a")]);
     });
 
     it("should copy to target root.", async () => {
@@ -133,18 +137,23 @@ describe("intermodular", () => {
       expect(await intermodular.targetModule.package.get("name")).toBe("target-module");
     });
 
-    it("should throw when a directory tried to be copied into a file path.", async () => {
-      await expect(intermodular.copy("src", "package.json")).rejects.toThrow("Cannot overwrite non-directory");
+    it("should tolarate when a directory tried to be copied into a file path when overwrite is false.", async () => {
+      const copiedFiles = await intermodular.copy("src", "package.json");
+      expect(copiedFiles).toEqual([]);
+    });
+
+    it("should throw when a directory tried to be copied into a file path with overwrite.", async () => {
+      await expect(intermodular.copy("src", "package.json", { overwrite: true })).rejects.toThrow("Cannot overwrite non-directory");
     });
   });
 
   describe("execute", () => {
     it("should execute command", async () => {
-      expect((await intermodular.execute("ls", ["-al"], { stdio: undefined })).exitCode).toBe(0);
+      expect((await intermodular.execute("ls", ["-al"], { stdio: "pipe" })).exitCode).toBe(0);
     });
 
     it("should execute command with `env.PATH` option.", async () => {
-      expect((await intermodular.execute("ls", ["-al"], { stdio: "inherit", env: { PATH: `xyz:${process.env.PATH}` } })).exitCode).toBe(0);
+      expect((await intermodular.execute("ls", ["-al"], { stdio: "pipe", env: { PATH: `xyz:${process.env.PATH}` } })).exitCode).toBe(0);
     });
 
     it("should execute command with `env.PATH` option 2.", async () => {
@@ -154,11 +163,11 @@ describe("intermodular", () => {
 
   describe("command", () => {
     it("should execute command", async () => {
-      expect((await intermodular.command("ls", { stdio: undefined })).exitCode).toBe(0);
+      expect((await intermodular.command("ls", { stdio: "pipe" })).exitCode).toBe(0);
     });
 
     it("should execute command with `env.PATH` option.", async () => {
-      expect((await intermodular.command("ls", { stdio: "inherit", env: { PATH: `xyz:${process.env.PATH}` } })).exitCode).toBe(0);
+      expect((await intermodular.command("ls", { stdio: "pipe", env: { PATH: `xyz:${process.env.PATH}` } })).exitCode).toBe(0);
     });
 
     it("should execute command with `env.PATH` option 2.", async () => {

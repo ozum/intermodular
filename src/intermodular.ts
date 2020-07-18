@@ -4,8 +4,7 @@ import { ExecaReturnValue } from "execa";
 import { dirname } from "path";
 import parentModule from "parent-module";
 import { copy, CopyFilterAsync } from "fs-extra";
-
-import { CopyFilterFunction, CopyOptions, ExecuteOptions, StdioOption } from "./util/types";
+import { CopyOptions, ExecuteOptions, StdioOption } from "./util/types";
 import Module from "./module";
 import { getCopyTarget, getModifiedExecuteOptions, getExecaArgs } from "./util/helper";
 
@@ -46,22 +45,30 @@ export default class Intermodular {
    *
    * @param filter `intermodular` copy filter function.
    * @param overwrite is whether overwirte option is passed to `fs-extra` `copy` function.
-   * @returns `fs-extra` `copy` compatible filter function and log function.
+   * @param excludeDirFromReturn is wether to return copied files only. If this is true, directories are excluded from return value.
+   * @returns `fs-extra` `copy` compatible filter function and log function and function to get copied paths.
    */
-  private getCopyFilterAndLogFunctions(filter?: CopyFilterFunction, overwrite = true): [CopyFilterAsync, (e?: Error) => void] {
-    const copied = new Map();
+  private getCopyFilterAndLogFunctions({
+    filter,
+    overwrite,
+    excludeDirFromReturn,
+  }: CopyOptions): [CopyFilterAsync, (e?: Error) => void, () => string[]] {
+    const pairStatus: Map<string, boolean> = new Map();
     const logs: Array<[LogLevel, string]> = [];
+    const copiedPaths: string[] = [];
 
     /** Delete last log message if thereis an error. execute log() for each log message. */
     const logFunction = (error?: Error): void => {
-      if (error) logs.pop(); // If error thrown during copy last log entry  would be false, because it is prepared before copy action.
+      if (error) logs.pop(); // If error thrown during copy last log entry would be false, because it is prepared before copy action.
       logs.forEach((log) => this.log(log[0], log[1]));
     };
 
+    const getCopiedPathsFunction = (): string[] => copiedPaths;
+
     /** filter function to be provided to `fs-extra` `copy`. */
     const filterFunction = async (fullSourcePath: string, fullTargetPath: string): Promise<boolean> => {
-      const key = `'${fullSourcePath}' → '${fullTargetPath}'`;
-      if (copied.has(key)) return copied.get(key); // Filter called twice see: https://github.com/jprichardson/node-fs-extra/issues/809
+      const pair = `'${fullSourcePath}' → '${fullTargetPath}'`;
+      if (pairStatus.has(pair)) return pairStatus.get(pair) === true; // Filter called twice see: https://github.com/jprichardson/node-fs-extra/issues/809
 
       let rejected: string | undefined;
 
@@ -88,10 +95,12 @@ export default class Intermodular {
       if (sourceIsDir && !rejected) logs.push(["info", `Starting to copy files between directories: ${filePair}`]);
       else logs.push([logLevel, `File ${rejected ? "not " : ""}copied: ${rejected ?? ""}${filePair}`]);
 
-      copied.set(key, !rejected);
+      pairStatus.set(pair, !rejected);
+      if (!rejected && (!sourceIsDir || !excludeDirFromReturn)) copiedPaths.push(relativeTarget);
+
       return !rejected;
     };
-    return [filterFunction, logFunction];
+    return [filterFunction, logFunction, getCopiedPathsFunction];
   }
 
   /**
@@ -102,25 +111,28 @@ export default class Intermodular {
    * @param sourcePath is source to copy from.
    * @param targetPath is destination to copy to. Cannot be a directory.
    * @param options are options.
+   * @returns copied files and directories. Directories can be optionally excluded.
    *
    * @example
    * // Copy everything in `/path/to/project/node_modules/module-a/src/config/` to `/path/to/project/`
-   * copySync("src/config", ".");
+   * const copiedPaths = copySync("src/config", ".");
+   * const copiedFiles = copySync("src/config", ".", { excludeDirFromReturn: true });
    */
-  public async copy(sourcePath: string, targetPath: string = sourcePath, copyOptions: CopyOptions = {}): Promise<void> {
+  public async copy(sourcePath: string, targetPath: string = sourcePath, copyOptions: CopyOptions = {}): Promise<string[]> {
     const source = this.sourceModule.pathOf(sourcePath);
     const target = await getCopyTarget(source, this.targetModule.pathOf(targetPath));
-    const { overwrite } = copyOptions;
-    if (source === target) return;
-    const [filter, log] = this.getCopyFilterAndLogFunctions(copyOptions.filter, overwrite);
+    if (source === target) return [];
+    const [augmentedFilter, logCopyOperation, getCopiedPaths] = this.getCopyFilterAndLogFunctions(copyOptions);
 
     try {
-      await copy(source, target, { overwrite, ...copyOptions, filter });
-      log();
+      await copy(source, target, { ...copyOptions, filter: augmentedFilter });
+      logCopyOperation();
     } catch (error) {
-      log(error);
+      logCopyOperation(error);
       throw error;
     }
+
+    return getCopiedPaths();
   }
 
   /**
