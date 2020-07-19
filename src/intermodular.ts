@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { DataFile, Logger, LogLevel } from "edit-config";
 import { ExecaReturnValue } from "execa";
-import { dirname } from "path";
+import { dirname, extname } from "path";
 import parentModule from "parent-module";
 import { copy, CopyFilterAsync } from "fs-extra";
+import isEqual from "lodash.isequal";
 import { CopyOptions, ExecuteOptions, StdioOption } from "./util/types";
 import Module from "./module";
 import { getCopyTarget, getModifiedExecuteOptions, getExecaArgs } from "./util/helper";
+
+import swc = require("@swc/core"); // eslint-disable-line import/order
 
 export default class Intermodular {
   /** [[Module]] instance of node module which is used as source for modification operations such as copy, update. */
@@ -188,6 +191,33 @@ export default class Intermodular {
   public async command(cmd: string, options?: ExecuteOptions<null>): Promise<ExecaReturnValue<Buffer>>;
   public async command(cmd: string, options?: ExecuteOptions | ExecuteOptions<null>): Promise<ExecaReturnValue | ExecaReturnValue<Buffer>> {
     return this.targetModule.command(cmd, getModifiedExecuteOptions(this.sourceModule, options) as any);
+  }
+
+  /**
+   * Returns whether given files from source module and target module are equal using method described below:
+   * - For data files such as `JSON` or `YAML`, returns whether they are deeply equal. (Objects does not have to have same key order.)
+   * - For `.js` and `.ts` files, files are transpiled and minified then copmpared. (To overcome comment and simple format changes.)
+   * - For other files returns whether their string content are equal.
+   *
+   * @param sourceModuleFilePath is the file path relative to source module root.
+   * @param targetModuleFilePath is the file path relative to target module root. If not provided uses same relative path as `sourceModuleFilePath`.
+   * @returns whether given files are equivalent.
+   *
+   * @example
+   * intermodular("module-files/src/address.js", "src/address.js");
+   * intermodular("module-files/config/.eslintrc", ".eslintrc");
+   * intermodular("module-files/some.txt", "some.txt");
+   */
+  public async areEquivalentFiles(sourceModuleFilePath: string, targetModuleFilePath: string = sourceModuleFilePath): Promise<boolean> {
+    const left = await this.sourceModule.read(sourceModuleFilePath);
+    const right = await this.targetModule.read(targetModuleFilePath);
+    const sourceExtension = [".js", ".ts"];
+    const parserOptions: swc.Options = { sourceMaps: true, minify: true, jsc: { parser: { syntax: "typescript" } } };
+
+    if (left === undefined || right === undefined) return false;
+    if (sourceExtension.includes(extname(sourceModuleFilePath)) && sourceExtension.includes(extname(targetModuleFilePath)))
+      return (await swc.transform(left as string, parserOptions)).code === (await swc.transform(right as string, parserOptions)).code;
+    return isEqual(left, right);
   }
 
   //

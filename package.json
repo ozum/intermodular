@@ -55,6 +55,7 @@
     "validate": "npm-run-all -p lint test"
   },
   "dependencies": {
+    "@swc/core": "^1.2.7",
     "delete-empty": "^3.0.0",
     "edit-config": "^1.7.4",
     "execa": "^4.0.2",

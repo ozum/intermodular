@@ -1,5 +1,6 @@
 import type { DataFile } from "edit-config";
 import type { Options as ExecaOptions } from "execa";
+import type Stream from "stream";
 
 /** Package manager */
 export type PackageManager = "npm" | "yarn";
@@ -61,7 +62,9 @@ export interface CopyOptions {
 export interface ExecuteOptions<EncodingType = string> extends ExecaOptions<EncodingType> {
   /** Exits using `process.exit(errCode)` if error is originated from shell. Otherwise throws as usual. Errors originated from node.js always throw. */
   exitOnProcessFailure?: boolean;
+  /** The options.stdio option is used to configure the pipes that are established between the parent and child process. */
+  stdio?: StdioOption;
 }
 
 // /** Stdio option to be used with `command` and `execute` methods. */
-export type StdioOption = ExecaOptions["stdio"];
+export type StdioOption = "pipe" | "ignore" | "inherit" | Array<"pipe" | "ipc" | "ignore" | "inherit" | Stream | number | undefined>; // export type StdioOption = ExecaOptions["stdio"];

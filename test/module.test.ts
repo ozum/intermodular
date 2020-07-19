@@ -160,7 +160,7 @@ describe("Module", () => {
     });
 
     it("should read cosmiconfig data.", async () => {
-      const dataFile = (await myModule.read("eslint", { cosmiconfig: true })) as DataFile;
+      const dataFile = (await myModule.read("some", { cosmiconfig: true })) as DataFile;
       expect(dataFile.data).toEqual({ a: 1 });
     });
 

@@ -173,4 +173,26 @@ describe("intermodular", () => {
       expect((await intermodular.command("echo")).exitCode).toBe(0);
     });
   });
+
+  describe("areEquivalentFiles", () => {
+    it("should return true if both TypeScript files are equivalent.", async () => {
+      expect(await intermodular.areEquivalentFiles("equivalent/address.ts")).toBe(true);
+    });
+
+    it("should return true if both JavaScript files are equivalent.", async () => {
+      expect(await intermodular.areEquivalentFiles("equivalent/address.js", "equivalent/address.js")).toBe(true);
+    });
+
+    it("should return false if both TypeScript files are not equivalent.", async () => {
+      expect(await intermodular.areEquivalentFiles("equivalent/address.ts", "equivalent/person.ts")).toBe(false);
+    });
+
+    it("should return true if both text files are equivalent.", async () => {
+      expect(await intermodular.areEquivalentFiles("equivalent/text.abcd")).toBe(true);
+    });
+
+    it("should return false if one of the files does not exists.", async () => {
+      expect(await intermodular.areEquivalentFiles("equivalent/xxx.xxx")).toBe(false);
+    });
+  });
 });
