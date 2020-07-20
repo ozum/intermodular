@@ -209,13 +209,16 @@ export default class Intermodular {
    * intermodular("module-files/some.txt", "some.txt");
    */
   public async areEquivalentFiles(sourceModuleFilePath: string, targetModuleFilePath: string = sourceModuleFilePath): Promise<boolean> {
-    const left = await this.sourceModule.read(sourceModuleFilePath);
-    const right = await this.targetModule.read(targetModuleFilePath);
     const sourceExtension = [".js", ".ts"];
+    const isSource = sourceExtension.includes(extname(sourceModuleFilePath)) && sourceExtension.includes(extname(targetModuleFilePath));
+    const readMethod = isSource ? "readRaw" : "read";
+    const left = await this.sourceModule[readMethod](sourceModuleFilePath);
+    const right = await this.targetModule[readMethod](targetModuleFilePath);
     const parserOptions: swc.Options = { sourceMaps: true, minify: true, jsc: { parser: { syntax: "typescript" } } };
 
     if (left === undefined || right === undefined) return false;
-    if (sourceExtension.includes(extname(sourceModuleFilePath)) && sourceExtension.includes(extname(targetModuleFilePath)))
+    if (left instanceof DataFile && right instanceof DataFile) return isEqual(left.data, right.data);
+    if (isSource)
       return (await swc.transform(left as string, parserOptions)).code === (await swc.transform(right as string, parserOptions)).code;
     return isEqual(left, right);
   }
